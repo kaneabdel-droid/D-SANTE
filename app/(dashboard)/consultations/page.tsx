@@ -1,6 +1,7 @@
 import { getConsultations, getServicesMedicaux } from './actions'
 import { getPatients } from '../patients/actions'
 import NouvelleConsultationModal from './NouvelleConsultationModal'
+import { DownloadOrdonnanceButton } from '@/components/DownloadOrdonnanceButton'
 import Link from 'next/link'
 import {
   Stethoscope, Search, Pill, FileText, Calendar,
@@ -218,15 +219,34 @@ export default async function ConsultationsPage(props: {
 
               {/* Ordonnance / Prescriptions rattachées */}
               {lignes.length > 0 && (
-                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-2">
-                  <div className="flex items-center justify-between">
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
                       <Pill className="w-4 h-4 text-primary" />
                       Ordonnance Médicale ({presc?.numero_ordonnance})
                     </span>
-                    <span className="text-[10px] font-mono text-foreground-muted">
-                      {lignes.length} spécialité(s)
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-foreground-muted mr-1">
+                        {lignes.length} spécialité(s)
+                      </span>
+                      <DownloadOrdonnanceButton
+                        data={{
+                          structureNom: 'D-Santé Médical',
+                          medecinNom: 'Médecin Traitant',
+                          patientNom: pat?.nom || 'Patient',
+                          patientPrenom: pat?.prenom || '',
+                          patientIpp: pat?.ipp || 'N/A',
+                          datePrescription: presc?.date_prescription || cs.date_consultation || new Date().toISOString().split('T')[0],
+                          lignes: lignes.map((lig: any) => ({
+                            medicamentNom: lig.designation,
+                            posologie: lig.posologie,
+                            dureeJours: lig.duree_jours || 7,
+                            instructions: lig.instructions,
+                          })),
+                          notes: cs.conduite_a_tenir,
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-1.5 pt-1">

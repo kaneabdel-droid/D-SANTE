@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { OfflineStatusIndicator } from '@/components/OfflineStatusIndicator'
 import {
   HeartPulse, LayoutDashboard, Users, Activity, Stethoscope,
   BedDouble, Syringe, Pill, Receipt, BookOpen, Wrench,
@@ -237,6 +238,9 @@ export default function ClientLayout({
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>
+
+        {/* Témoin de connexion et synchronisation Hors-Ligne (Poste de santé isolé) */}
+        <OfflineStatusIndicator />
       </div>
     </div>
   )

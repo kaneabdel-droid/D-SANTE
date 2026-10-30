@@ -128,3 +128,106 @@ export async function ajouterPatient(formData: FormData) {
     return { error: err.message || 'Erreur lors de l’enregistrement du patient' }
   }
 }
+
+export async function getPatientComplet(patientId: string) {
+  const supabase = await createClient()
+
+  try {
+    const [
+      { data: patient },
+      { data: dossier },
+      { data: constantes },
+      { data: consultations },
+      { data: hospitalisations },
+      { data: factures },
+    ] = await Promise.all([
+      supabase
+        .from('patients')
+        .select('*, organismes_assurances(nom, type_organisme, taux_couverture_defaut)')
+        .eq('id', patientId)
+        .maybeSingle(),
+      supabase
+        .from('dossiers_medicaux')
+        .select('*')
+        .eq('patient_id', patientId)
+        .maybeSingle(),
+      supabase
+        .from('constantes_vitales')
+        .select('*')
+        .eq('patient_id', patientId)
+        .order('created_at', { ascending: false })
+        .limit(10),
+      supabase
+        .from('consultations')
+        .select('*, prescriptions(*, lignes_prescriptions(*))')
+        .eq('patient_id', patientId)
+        .order('date_consultation', { ascending: false })
+        .limit(10),
+      supabase
+        .from('hospitalisations')
+        .select('*, lits(numero_lit, chambre, categorie)')
+        .eq('patient_id', patientId)
+        .order('date_entree', { ascending: false })
+        .limit(5),
+      supabase
+        .from('factures_sante')
+        .select('*')
+        .eq('patient_id', patientId)
+        .order('date_facture', { ascending: false })
+        .limit(10),
+    ])
+
+    return {
+      patient,
+      dossier,
+      constantes: constantes || [],
+      consultations: consultations || [],
+      hospitalisations: hospitalisations || [],
+      factures: factures || [],
+    }
+  } catch (err: any) {
+    return { error: err.message }
+  }
+}
+
+export async function mettreAJourDossierMedical(patientId: string, formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const allergiesStr = (formData.get('allergies') as string)?.trim() || ''
+  const antecedents_medicaux = (formData.get('antecedents_medicaux') as string)?.trim() || null
+  const antecedents_chirurgicaux = (formData.get('antecedents_chirurgicaux') as string)?.trim() || null
+  const antecedents_familiaux = (formData.get('antecedents_familiaux') as string)?.trim() || null
+  const traitements_chroniques = (formData.get('traitements_chroniques') as string)?.trim() || null
+  const remarques_praticien = (formData.get('remarques_praticien') as string)?.trim() || null
+
+  const allergiesArray = allergiesStr
+    .split(',')
+    .map((a) => a.trim())
+    .filter(Boolean)
+
+  const structureId = tenant?.structureId || '00000000-0000-0000-0000-000000000001'
+
+  try {
+    const { error } = await supabase
+      .from('dossiers_medicaux')
+      .upsert({
+        patient_id: patientId,
+        structure_id: structureId,
+        allergies: allergiesArray,
+        antecedents_medicaux,
+        antecedents_chirurgicaux,
+        antecedents_familiaux,
+        traitements_chroniques,
+        remarques_praticien,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'patient_id' })
+
+    if (error) return { error: error.message }
+
+    revalidatePath(`/patients/${patientId}`)
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la mise à jour du dossier' }
+  }
+}

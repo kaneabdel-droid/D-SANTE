@@ -1,6 +1,7 @@
 import { getFactures, encaisserFacture } from './actions'
 import { getPatients, getOrganismesAssurances } from '../patients/actions'
 import NouvelleFactureModal from './NouvelleFactureModal'
+import { DownloadFactureButton } from '@/components/DownloadFactureButton'
 import {
   Receipt, ShieldCheck, CheckCircle2, Clock,
   Wallet, DollarSign, ArrowUpRight, Filter
@@ -217,27 +218,54 @@ export default async function FacturationPage(props: {
                       </span>
                     </td>
 
-                    {/* Action Encaissement */}
+                    {/* Action Encaissement & Téléchargement */}
                     <td className="py-3.5 px-4 text-right">
-                      {!estPaye ? (
-                        <form
-                          action={async () => {
-                            'use server'
-                            await encaisserFacture(fac.id, 'especes')
+                      <div className="flex items-center justify-end gap-2">
+                        <DownloadFactureButton
+                          size="sm"
+                          data={{
+                            structureNom: 'D-Santé Médical',
+                            factureNumero: fac.numero_facture,
+                            dateEmission: fac.date_facture,
+                            patientNom: pat?.nom || 'Patient',
+                            patientPrenom: pat?.prenom || '',
+                            patientIpp: pat?.ipp || 'N/A',
+                            organismeAssurance: org?.nom,
+                            tauxCouverture: fac.montant_total_brut > 0 ? Math.round((fac.part_assurance / fac.montant_total_brut) * 100) : 0,
+                            lignes: [
+                              {
+                                designation: 'Actes & Soins Médicaux Ambulatoires',
+                                type: 'consultation',
+                                quantite: 1,
+                                prixUnitaire: fac.montant_total_brut,
+                                total: fac.montant_total_brut,
+                              }
+                            ],
+                            montantTotal: fac.montant_total_brut,
+                            partAssurance: fac.part_assurance,
+                            partPatient: fac.part_patient,
+                            montantPaye: fac.montant_regle_patient || 0,
+                            resteAPayer: fac.part_patient - (fac.montant_regle_patient || 0),
+                            statutPaiement: fac.statut_paiement_patient,
+                            modePaiement: fac.moyen_paiement,
                           }}
-                        >
-                          <button
-                            type="submit"
-                            className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-bold transition-colors"
+                        />
+                        {!estPaye && (
+                          <form
+                            action={async () => {
+                              'use server'
+                              await encaisserFacture(fac.id, 'especes')
+                            }}
                           >
-                            Encaisser
-                          </button>
-                        </form>
-                      ) : (
-                        <span className="text-[11px] text-foreground-muted font-mono">
-                          Reçu OK
-                        </span>
-                      )}
+                            <button
+                              type="submit"
+                              className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-bold transition-colors cursor-pointer"
+                            >
+                              Encaisser
+                            </button>
+                          </form>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 )

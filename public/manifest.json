@@ -1,0 +1,40 @@
+{
+  "name": "D-Santé - Système Intégré Hospitalier & Médical",
+  "short_name": "D-Santé",
+  "description": "Plateforme hospitalière complète, parcours patient, triage, urgences, consultations, pharmacie et facturation IPM/CMU pour le Sénégal et l'Afrique de l'Ouest",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#0d9488",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Triage & Urgences",
+      "short_name": "Triage",
+      "description": "Prise des constantes et triage",
+      "url": "/triage",
+      "icons": [{ "src": "/favicon.ico", "sizes": "64x64" }]
+    },
+    {
+      "name": "Consultations",
+      "short_name": "Consultations",
+      "description": "Nouvelle consultation & ordonnance",
+      "url": "/consultations",
+      "icons": [{ "src": "/favicon.ico", "sizes": "64x64" }]
+    },
+    {
+      "name": "Caisse & Facturation",
+      "short_name": "Caisse",
+      "description": "Facturation tiers-payant & reçus",
+      "url": "/facturation",
+      "icons": [{ "src": "/favicon.ico", "sizes": "64x64" }]
+    }
+  ]
+}
