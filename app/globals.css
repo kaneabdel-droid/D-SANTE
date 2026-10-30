@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+:root,
+.theme-sante {
+  /* Thème Santé & Médical - Vert Émeraude & Menthe Clinique */
+  --background: #F4F7F6;
+  --surface: #FFFFFF;
+  --foreground: #09090B;
+  --foreground-muted: #475569;
+  --sidebar: #EBF3F0;
+  --surface-border: #E2E8F0;
+
+  --primary: #0D9488; /* Vert Sarcelle Médical / Clinique */
+  --primary-hover: #0F766E;
+  --secondary: #0284C7; /* Bleu Diagnostic */
+  --danger: #E11D48; /* Alerte Vitale Rouge */
+  --success: #16A34A; /* Paramètre Normal / Vert */
+  --warning: #F59E0B; /* Vigilance / Ambre */
+  --info: #0284C7; /* Information / Mutuelle */
+}
+
+.theme-hopital {
+  /* Thème Hôpital & CHR - Bleu Sérum Hospitalier & Cobalt */
+  --background: #F0F4F8;
+  --surface: #FFFFFF;
+  --foreground: #0F172A;
+  --foreground-muted: #334155;
+  --sidebar: #E2ECF5;
+  --surface-border: #E2E8F0;
+
+  --primary: #0284C7; /* Bleu Sérum / Stéthoscope */
+  --primary-hover: #0369A1;
+  --secondary: #4F46E5;
+  --danger: #DC2626;
+  --success: #059669;
+  --warning: #D97706;
+  --info: #0284C7;
+}
+
+.theme-maternite {
+  /* Thème Maternité & Pédiatrie - Rose Doux & Lavande Apaisante */
+  --background: #FDF4F5;
+  --surface: #FFFFFF;
+  --foreground: #1E1B4B;
+  --foreground-muted: #64748B;
+  --sidebar: #FCE7EB;
+  --surface-border: #F1D4DB;
+
+  --primary: #E11D48; /* Rose Corail Maternité */
+  --primary-hover: #BE123C;
+  --secondary: #8B5CF6;
+  --danger: #DC2626;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --info: #0EA5E9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
+  --color-sidebar: var(--sidebar);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar soignée */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Optimisation impression ordonnances et tickets thermiques */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-target {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
