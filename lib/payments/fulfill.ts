@@ -32,3 +32,4 @@ export async function fulfillSubscriptionPayment(
     return { success: false, error: err.message }
   }
 }
+

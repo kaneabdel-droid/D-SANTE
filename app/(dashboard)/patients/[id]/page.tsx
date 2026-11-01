@@ -391,3 +391,4 @@ export default async function PatientDetailPage(props: {
     </div>
   )
 }
+

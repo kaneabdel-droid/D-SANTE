@@ -50,3 +50,4 @@ export function DownloadFactureButton({ data, variant = 'outline', size = 'sm' }
     </button>
   )
 }
+

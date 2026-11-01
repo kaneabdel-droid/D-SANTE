@@ -198,11 +198,10 @@ export default async function FacturationPage(props: {
                     {/* Statut Patient */}
                     <td className="py-3.5 px-4">
                       <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                          estPaye
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${estPaye
                             ? 'bg-emerald-500/10 text-emerald-600'
                             : 'bg-danger/10 text-danger'
-                        }`}
+                          }`}
                       >
                         {estPaye ? (
                           <>

@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { OfflineStatusIndicator } from '@/components/OfflineStatusIndicator'
+import { warmAppOfflineCache } from '@/lib/offline/warmer'
 import {
   HeartPulse, LayoutDashboard, Users, Activity, Stethoscope,
   BedDouble, Syringe, Pill, Receipt, BookOpen, Wrench,
   UserCog, CreditCard, Settings, Menu, X, Bell, ChevronDown,
-  LogOut, ShieldAlert, Sparkles, Building2
+  LogOut, ShieldAlert, Sparkles, Building2, Network
 } from 'lucide-react'
 
 type NavItem = {
@@ -41,6 +42,26 @@ export default function ClientLayout({
     const saved = localStorage.getItem('d-sante-theme') || 'theme-sante'
     setCurrentTheme(saved)
     document.documentElement.className = saved
+
+    document.cookie = 'demba_offline_active=1; path=/; max-age=2592000; SameSite=Lax'
+    if (typeof navigator !== 'undefined' && navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'SET_OFFLINE_SESSION', active: true })
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      const routesToWarm = [
+        '/dashboard',
+        '/triage',
+        '/consultations',
+        '/hospitalisation',
+        '/pharmacie',
+        '/patients',
+        '/soins',
+        '/facturation',
+        '/comptabilite',
+      ]
+      warmAppOfflineCache(routesToWarm, 'demba-offline-dsante-v4')
+    }
   }, [])
 
   const changeTheme = (themeClass: string) => {
@@ -58,6 +79,7 @@ export default function ClientLayout({
     { name: 'Soins Infirmiers', href: '/soins', icon: Syringe },
     { name: 'Pharmacie & Stocks', href: '/pharmacie', icon: Pill },
     { name: 'Caisse & Tiers-Payant', href: '/facturation', icon: Receipt },
+    { name: 'Liaison Pharma & IPM', href: '/interop', icon: Network, badge: 'Réseau' },
     { name: 'Comptabilité SYSCOHADA', href: '/comptabilite', icon: BookOpen },
     { name: 'Matériel Biomédical', href: '/materiel', icon: Wrench },
     { name: 'Personnel & Gardes', href: '/personnel', icon: UserCog },
@@ -82,9 +104,8 @@ export default function ClientLayout({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-0 -translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-0 -translate-x-full'
+          }`}
       >
         {/* Brand header */}
         <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between">
@@ -131,11 +152,10 @@ export default function ClientLayout({
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  active
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${active
                     ? 'bg-primary text-white shadow-sm'
                     : 'text-foreground-muted hover:text-foreground hover:bg-black/5'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-primary'}`} />
@@ -143,9 +163,8 @@ export default function ClientLayout({
                 </div>
                 {item.badge && (
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
-                      active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
-                    }`}
+                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
+                      }`}
                   >
                     {item.badge}
                   </span>
@@ -165,9 +184,8 @@ export default function ClientLayout({
                   key={th.id}
                   onClick={() => changeTheme(th.id)}
                   title={th.label}
-                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${
-                    currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
-                  }`}
+                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
+                    }`}
                 />
               ))}
             </div>

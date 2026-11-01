@@ -26,60 +26,60 @@ export default async function ConsultationsPage(props: {
     consultations && consultations.length > 0
       ? consultations
       : [
-          {
-            id: 'demo-cs-1',
-            numero_consultation: 'CS-2610-0012',
-            date_consultation: '2026-10-30',
-            type_consultation: 'generale',
-            motif: 'Fièvre, céphalées, courbatures depuis 48h',
-            diagnostic_principal: 'Accès palustre simple',
-            code_cim10: 'B54',
-            conduite_a_tenir: 'CTA 3 jours, paracétamol si fièvre > 38.5°C',
-            patients: {
-              nom: 'Diallo',
-              prenom: 'Aminata',
-              ipp: 'PAT-2610-001',
-              sexe: 'F',
-              date_naissance: '1992-04-15',
-            },
-            prescriptions: [
-              {
-                id: 'ord-1',
-                numero_ordonnance: 'ORD-2610-0012',
-                lignes_prescriptions: [
-                  { id: 'l1', designation: 'Artéméther/Luméfantrine 20/120mg', posologie: '4 cp/j pendant 3j' },
-                  { id: 'l2', designation: 'Paracétamol 1g comprimé', posologie: '1 cp toutes les 6h en cas de douleur/fièvre' },
-                ],
-              },
-            ],
+        {
+          id: 'demo-cs-1',
+          numero_consultation: 'CS-2610-0012',
+          date_consultation: '2026-10-30',
+          type_consultation: 'generale',
+          motif: 'Fièvre, céphalées, courbatures depuis 48h',
+          diagnostic_principal: 'Accès palustre simple',
+          code_cim10: 'B54',
+          conduite_a_tenir: 'CTA 3 jours, paracétamol si fièvre > 38.5°C',
+          patients: {
+            nom: 'Diallo',
+            prenom: 'Aminata',
+            ipp: 'PAT-2610-001',
+            sexe: 'F',
+            date_naissance: '1992-04-15',
           },
-          {
-            id: 'demo-cs-2',
-            numero_consultation: 'CS-2610-0013',
-            date_consultation: '2026-10-29',
-            type_consultation: 'prenatale',
-            motif: 'Consultation prénatale du 3ème trimestre',
-            diagnostic_principal: 'Grossesse évolutive de 32 SA sans complication',
-            code_cim10: 'Z34.8',
-            conduite_a_tenir: 'Continuer fer/folates, repos, RDV échographie du T3',
-            patients: {
-              nom: 'Ba',
-              prenom: 'Aïssatou',
-              ipp: 'PAT-2610-003',
-              sexe: 'F',
-              date_naissance: '2001-08-05',
+          prescriptions: [
+            {
+              id: 'ord-1',
+              numero_ordonnance: 'ORD-2610-0012',
+              lignes_prescriptions: [
+                { id: 'l1', designation: 'Artéméther/Luméfantrine 20/120mg', posologie: '4 cp/j pendant 3j' },
+                { id: 'l2', designation: 'Paracétamol 1g comprimé', posologie: '1 cp toutes les 6h en cas de douleur/fièvre' },
+              ],
             },
-            prescriptions: [
-              {
-                id: 'ord-2',
-                numero_ordonnance: 'ORD-2610-0013',
-                lignes_prescriptions: [
-                  { id: 'l3', designation: 'Fer + Acide Folique', posologie: '1 comprimé par jour' },
-                ],
-              },
-            ],
+          ],
+        },
+        {
+          id: 'demo-cs-2',
+          numero_consultation: 'CS-2610-0013',
+          date_consultation: '2026-10-29',
+          type_consultation: 'prenatale',
+          motif: 'Consultation prénatale du 3ème trimestre',
+          diagnostic_principal: 'Grossesse évolutive de 32 SA sans complication',
+          code_cim10: 'Z34.8',
+          conduite_a_tenir: 'Continuer fer/folates, repos, RDV échographie du T3',
+          patients: {
+            nom: 'Ba',
+            prenom: 'Aïssatou',
+            ipp: 'PAT-2610-003',
+            sexe: 'F',
+            date_naissance: '2001-08-05',
           },
-        ]
+          prescriptions: [
+            {
+              id: 'ord-2',
+              numero_ordonnance: 'ORD-2610-0013',
+              lignes_prescriptions: [
+                { id: 'l3', designation: 'Fer + Acide Folique', posologie: '1 comprimé par jour' },
+              ],
+            },
+          ],
+        },
+      ]
 
   const typeLabels: Record<string, string> = {
     generale: 'Médecine Générale',
@@ -127,11 +127,10 @@ export default async function ConsultationsPage(props: {
             <Link
               key={t.id}
               href={`/consultations?type=${t.id}`}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                isActive
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isActive
                   ? 'bg-primary text-white shadow-xs'
                   : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
-              }`}
+                }`}
             >
               {t.label}
             </Link>
