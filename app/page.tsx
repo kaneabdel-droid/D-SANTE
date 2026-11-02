@@ -248,6 +248,32 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Démo Interactive Médicale Callout */}
+      <section className="py-16 bg-gradient-to-b from-primary/5 via-surface to-background border-t border-surface-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl p-8 sm:p-12 bg-gradient-to-r from-teal-500/10 via-surface to-emerald-500/10 border-2 border-primary/20 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm">
+            <div className="space-y-3 max-w-xl">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-primary px-3 py-1 rounded-full bg-primary/10">
+                Simulateur Clinique en Ligne
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground font-heading">
+                Testez D-SANTÉ directement sans inscription
+              </h3>
+              <p className="text-xs sm:text-sm text-foreground-muted leading-relaxed">
+                Expérimentez en direct le triage des constantes, la consultation avec anamnèse CIM-10, la génération instantanée d&apos;ordonnances PDF A5 et l&apos;accord de substitution interopérable avec D-Pharma.
+              </p>
+            </div>
+            <Link
+              href="/decouvrir-dsante"
+              className="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider shrink-0 flex items-center gap-2 shadow-md shadow-primary/20 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Lancer la Démo Interactive</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Tarifs & Abonnements */}
       <section className="py-16 lg:py-20 bg-surface/50 border-y border-surface-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
@@ -339,6 +365,98 @@ export default function HomePage() {
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Création Établissement de Santé Express Section */}
+      <section id="creation-etablissement" className="py-20 bg-gradient-to-b from-surface/80 via-background to-surface/80 border-t border-surface-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-emerald-500/10 via-surface to-teal-500/10 border-2 border-primary/20 relative overflow-hidden shadow-sm">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">
+                Enrôlement Rapide en 3 Étapes
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground font-heading tracking-tight">
+                Créez votre établissement de santé sur D-SANTÉ
+              </h2>
+              <p className="text-foreground-muted text-xs sm:text-sm mt-3 leading-relaxed">
+                Rejoignez le réseau national de digitalisation médicale. Démarrez un essai de 7 jours sans carte bancaire, avec assistance et formation des équipes soignantes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
+                  1
+                </div>
+                <h4 className="font-bold text-foreground text-sm mb-1">Renseignez votre structure</h4>
+                <p className="text-foreground-muted text-xs">
+                  Nom de l&apos;hôpital, clinique ou poste, type d&apos;établissement et téléphone WhatsApp officiel.
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
+                  2
+                </div>
+                <h4 className="font-bold text-foreground text-sm mb-1">Choisissez votre niveau</h4>
+                <p className="text-foreground-muted text-xs">
+                  Poste (10k), Centre/Clinique (12.5k) ou Hôpital (15k), mensuel ou annuel (-10% à -15%).
+                </p>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
+                  3
+                </div>
+                <h4 className="font-bold text-foreground text-sm mb-1">Accès clinique immédiat</h4>
+                <p className="text-foreground-muted text-xs">
+                  Vos praticiens soignants peuvent immédiatement débuter le triage et les consultations.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/signup"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-primary/20 transition-all"
+              >
+                <span>Créer mon établissement de santé</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/guide"
+                className="w-full sm:w-auto px-6 py-4 rounded-xl bg-surface-hover hover:bg-surface-border text-foreground font-bold text-xs uppercase tracking-wider border border-surface-border transition-all flex items-center justify-center gap-2"
+              >
+                <BookOpen className="w-4 h-4 text-foreground-muted" />
+                <span>Consulter le guide pratique</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Guide d'Utilisation Callout Section */}
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl p-8 sm:p-12 bg-surface border border-surface-border flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
+          <div>
+            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">
+              Documentation & Protocoles
+            </span>
+            <h3 className="text-2xl font-extrabold text-foreground font-heading">
+              Guide complet d&apos;utilisation clinique
+            </h3>
+            <p className="text-xs sm:text-sm text-foreground-muted mt-2 max-w-xl">
+              Fiches pratiques pour chaque corps de métier : triage d&apos;accueil, consultations d&apos;urgence, prescription d&apos;ordonnances A5, relève soignante et facturation Tiers-Payant IPM / CMU.
+            </p>
+          </div>
+          <Link
+            href="/guide"
+            className="px-6 py-3.5 rounded-xl bg-surface-hover hover:bg-surface-border text-foreground font-bold text-xs uppercase tracking-wider shrink-0 flex items-center gap-2 border border-surface-border transition-all"
+          >
+            <BookOpen className="w-4 h-4 text-primary" />
+            <span>Lire le guide soignant</span>
+          </Link>
         </div>
       </section>
 

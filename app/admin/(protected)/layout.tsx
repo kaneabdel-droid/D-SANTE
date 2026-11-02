@@ -68,6 +68,14 @@ export default async function AdminProtectedLayout({
             </Link>
 
             <Link
+              href="/admin/passerelles"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              Passerelles Maketou & Chariow
+            </Link>
+
+            <Link
               href="/admin/abonnements"
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors"
             >

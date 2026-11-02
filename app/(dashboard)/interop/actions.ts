@@ -59,7 +59,7 @@ export async function getEchangesCliniquePharma(filtreType?: string) {
   let query = supabase
     .from('echanges_clinique_pharmacie')
     .select('*')
-    .eq('structure_sante_id', structureId)
+    .or(`structure_sante_id.eq.${structureId},structure_sante_id.is.null`)
     .order('created_at', { ascending: false })
 
   if (filtreType && filtreType !== 'tous') {
