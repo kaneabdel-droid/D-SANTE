@@ -5,10 +5,11 @@ import { EchangeCliniquePharma, BordereauIpm } from './actions'
 import { ValidationSubstitutionModal } from './ValidationSubstitutionModal'
 import { SignalApprovisionnementModal } from './SignalApprovisionnementModal'
 import { GenererBordereauIpmModal } from './GenererBordereauIpmModal'
+import { TransmettreEmailIpmModal } from './TransmettreEmailIpmModal'
 import {
   Network, Pill, AlertTriangle, TrendingUp, FileCheck2,
   Building2, CheckCircle2, Clock, XCircle, Send, ArrowUpRight,
-  ShieldCheck, Filter, Search, Plus
+  ShieldCheck, Filter, Search, Plus, Mail
 } from 'lucide-react'
 
 export function InteropClient({
@@ -20,6 +21,7 @@ export function InteropClient({
 }) {
   const [activeTab, setActiveTab] = useState<'substitutions' | 'signaux' | 'ipm'>('substitutions')
   const [selectedEchange, setSelectedEchange] = useState<EchangeCliniquePharma | null>(null)
+  const [selectedBordereauEmail, setSelectedBordereauEmail] = useState<BordereauIpm | null>(null)
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [isBordereauModalOpen, setIsBordereauModalOpen] = useState(false)
 
@@ -45,6 +47,12 @@ export function InteropClient({
       )}
       {isBordereauModalOpen && (
         <GenererBordereauIpmModal onClose={() => setIsBordereauModalOpen(false)} />
+      )}
+      {selectedBordereauEmail && (
+        <TransmettreEmailIpmModal
+          bordereau={selectedBordereauEmail}
+          onClose={() => setSelectedBordereauEmail(null)}
+        />
       )}
 
       {/* Header */}
@@ -317,6 +325,7 @@ export function InteropClient({
                   <th className="py-3 px-4 text-right">Montant Réclamé</th>
                   <th className="py-3 px-4 text-right">Montant Admis</th>
                   <th className="py-3 px-4 text-center">Statut</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border">
@@ -371,6 +380,16 @@ export function InteropClient({
                             </>
                           )}
                         </span>
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => setSelectedBordereauEmail(b)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-surface-border text-foreground hover:bg-surface hover:text-teal-600 font-semibold text-xs transition-colors"
+                          title="Transmettre par email à l'IPM"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-teal-600" />
+                          <span>Envoyer par mail</span>
+                        </button>
                       </td>
                     </tr>
                   )

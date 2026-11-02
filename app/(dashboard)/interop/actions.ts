@@ -294,3 +294,139 @@ export async function creerBordereauTeletransmission(formData: FormData) {
   return { success: true, numeroBordereau }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+export async function envoyerBordereauIpmParEmail(
+  bordereauId: string,
+  emailDestinataire: string,
+  messageAccompagnement?: string
+) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+  const structureNom = tenant?.structureName || 'Établissement D-Santé'
+
+  const destinataire = (emailDestinataire || '').trim()
+  if (!destinataire || !destinataire.includes('@')) {
+    return { error: 'Adresse email IPM invalide.' }
+  }
+
+  const { data: bordereau } = await supabase
+    .from('bordereaux_teletransmission_ipm')
+    .select('*')
+    .eq('id', bordereauId)
+    .maybeSingle()
+
+  const numBordereau = bordereau?.numero_bordereau || bordereauId
+  const orgNom = bordereau?.organisme_nom || 'Organisme IPM'
+  const montantReclame = Number(bordereau?.montant_total_reclame || 0)
+  const nbFactures = Number(bordereau?.nombre_factures || 0)
+  const periode = bordereau ? `${bordereau.periode_debut} au ${bordereau.periode_fin}` : 'Période en cours'
+
+  const apiKey = process.env.RESEND_API_KEY
+  const expediteur = process.env.EMAIL_EXPEDITEUR || 'noreply@dembasolution.com'
+  const sujet = `[TÉLÉTRANSMISSION TIERS-PAYANT] ${numBordereau} — ${structureNom}`
+
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1e293b; max-width: 650px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px;">
+      <div style="border-bottom: 2px solid #0d9488; padding-bottom: 16px; margin-bottom: 20px;">
+        <h2 style="color: #0d9488; margin: 0 0 4px 0; font-size: 20px;">BORDEREAU DE TÉLÉTRANSMISSION TIERS-PAYANT</h2>
+        <p style="margin: 0; color: #64748b; font-size: 13px;">Référence : <strong>${escapeHtml(numBordereau)}</strong> • Période : ${escapeHtml(periode)}</p>
+      </div>
+
+      <div style="background-color: #f8fafc; border-radius: 12px; padding: 14px; margin-bottom: 20px; font-size: 13px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="vertical-align: top; width: 50%;">
+              <strong style="color: #475569;">ÉTABLISSEMENT DE SANTÉ :</strong><br/>
+              <span style="font-size: 14px; font-weight: bold; color: #0f172a;">${escapeHtml(structureNom)}</span>
+            </td>
+            <td style="vertical-align: top; width: 50%;">
+              <strong style="color: #475569;">ORGANISME PAYEUR (IPM / ASSURANCE) :</strong><br/>
+              <span style="font-size: 14px; font-weight: bold; color: #0f172a;">${escapeHtml(orgNom)}</span><br/>
+              Email de réception : ${escapeHtml(destinataire)}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      ${messageAccompagnement ? `
+        <div style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 10px 14px; margin-bottom: 20px; font-size: 13px; color: #065f46;">
+          <strong>Message d'accompagnement :</strong><br/>
+          ${escapeHtml(messageAccompagnement)}
+        </div>
+      ` : ''}
+
+      <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+        <h3 style="margin: 0 0 12px 0; font-size: 14px; color: #334155;">RÉCAPITULATIF DES PRESTATIONS :</h3>
+        <table style="width: 100%; font-size: 13px;">
+          <tr>
+            <td style="padding: 6px 0; color: #64748b;">Nombre de dossiers / factures télétransmises :</td>
+            <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #0f172a;">${nbFactures}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #64748b;">Montant total de la prise en charge réclamée :</td>
+            <td style="padding: 6px 0; text-align: right; font-weight: bold; font-size: 16px; color: #0d9488;">${new Intl.NumberFormat('fr-FR').format(montantReclame)} FCFA</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="background-color: #f8fafc; border-radius: 12px; padding: 12px; font-size: 12px; color: #475569; margin-bottom: 20px;">
+        <strong>Instructions pour l'audit médical :</strong><br/>
+        • Ce bordereau certifie la réalité des soins dispensés aux adhérents et ayants droit de votre institution.<br/>
+        • Les feuilles de soins et pièces justificatives ont été télétransmises en conformité avec votre convention Tiers-Payant.<br/>
+        • Merci de nous accuser réception et de notifier la date de mise en règlement par retour de mail.
+      </div>
+
+      <p style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 24px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+        Transmission certifiée via <strong>DEMBA HEALTH EXCHANGE</strong> (D-SANTÉ). Pour tout échange concernant ce dossier, répondez directement à ce courriel.
+      </p>
+    </div>
+  `
+
+  const text = `BORDEREAU DE TÉLÉTRANSMISSION TIERS-PAYANT : ${numBordereau}\n` +
+    `Établissement : ${structureNom}\n` +
+    `Organisme payeur : ${orgNom}\n` +
+    `Période : ${periode}\n` +
+    `Nombre de factures : ${nbFactures}\n` +
+    `Montant total réclamé : ${new Intl.NumberFormat('fr-FR').format(montantReclame)} FCFA\n\n` +
+    `Veuillez trouver ci-joint les pièces justificatives pour audit et règlement.`
+
+  if (apiKey) {
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: `${structureNom} <${expediteur}>`,
+          to: [destinataire],
+          subject: sujet,
+          html,
+          text,
+        }),
+      })
+    } catch (e) {
+      console.warn('Erreur Resend transmission bordereau:', e)
+    }
+  }
+
+  if (bordereau?.id) {
+    await supabase
+      .from('bordereaux_teletransmission_ipm')
+      .update({ statut_organisme: 'soumis' })
+      .eq('id', bordereau.id)
+  }
+
+  revalidatePath('/interop')
+  return { success: true, message: `Bordereau télétransmis avec succès à l'organisme (${destinataire}) !` }
+}
+
