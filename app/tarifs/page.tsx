@@ -282,7 +282,7 @@ export default function TarifsDSantePage() {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800/80">
+                <div className="pt-4 border-t border-slate-800/80 space-y-2">
                   <Link
                     href={`/signup?plan=${plan.id}&cycle=${billingCycle}`}
                     className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
@@ -294,6 +294,15 @@ export default function TarifsDSantePage() {
                     <span>Démarrer l&apos;essai gratuit (7 jours)</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
+                  {plan.id === 'hopital' && (
+                    <Link
+                      href="/decouvrir-dsante"
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-emerald-400 hover:underline"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Tester la démo complète en direct →</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             )
