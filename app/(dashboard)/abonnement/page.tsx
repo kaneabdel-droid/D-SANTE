@@ -11,9 +11,10 @@ export default async function AbonnementPage() {
   const plans = [
     {
       id: 'poste_sante',
-      nom: 'Poste & Dispensaire',
-      prix: '25 000',
+      nom: 'Poste de Santé & Dispensaire',
+      prix: '10 000',
       periode: 'FCFA / mois',
+      prixAnnuel: '108 000 FCFA / an (-10%)',
       desc: 'Idéal pour les postes de santé ruraux, dispensaires et cabinets infirmiers.',
       fonctionnalites: [
         'Fichier Patients & IPP illimités',
@@ -21,22 +22,23 @@ export default async function AbonnementPage() {
         'Consultations de base & CPN',
         'Dépôt de médicaments d’urgence',
         'Caisse recettes guichet simple',
-        'Mode Hors-Ligne (PWA / Sync)',
+        'Mode PWA 100% Hors-Ligne',
       ],
       populaire: false,
     },
     {
       id: 'centre_medical',
       nom: 'Centre Médical & Clinique',
-      prix: '65 000',
+      prix: '12 500',
       periode: 'FCFA / mois',
+      prixAnnuel: '135 000 FCFA / an (-10%)',
       desc: 'Conçu pour les cliniques privées, maternités et centres de santé urbains.',
       fonctionnalites: [
         'Toutes les fonctions Poste de Santé',
         'Jusqu’à 15 praticiens soignants',
         'Dossier Médical Partagé complet',
-        'Ordonnances sécurisées avec QR code',
-        'Hospitalisation (jusqu’à 20 lits)',
+        'Ordonnances sécurisées avec QR code & PDF',
+        'Hospitalisation (jusqu’à 30 lits)',
         'Facturation Tiers-Payant (IPM & CMU)',
         'Pharmacie interne avec suivi des péremptions',
       ],
@@ -45,8 +47,9 @@ export default async function AbonnementPage() {
     {
       id: 'hopital',
       nom: 'Hôpital & Polyclinique',
-      prix: '150 000',
+      prix: '15 000',
       periode: 'FCFA / mois',
+      prixAnnuel: '153 000 FCFA / an (-15%)',
       desc: 'Pour les centres hospitaliers régionaux, polycliniques et cliniques chirurgicales.',
       fonctionnalites: [
         'Utilisateurs & Praticiens illimités',
@@ -54,6 +57,8 @@ export default async function AbonnementPage() {
         'Capacité de lits illimitée',
         'Gestion des blocs opératoires',
         'Comptabilité SYSCOHADA complète',
+        'Télétransmission dématérialisée IPM / CMU',
+        'Portail Espace Patient dédié',
         'Inventaire biomédical & Maintenance',
         'Support technique dédié 24/7',
       ],
@@ -104,12 +109,17 @@ export default async function AbonnementPage() {
                 </div>
 
                 <div className="pt-2">
-                  <span className="text-3xl sm:text-4xl font-black font-mono text-foreground">
-                    {p.prix}
-                  </span>
-                  <span className="text-xs font-bold text-foreground-muted ml-1.5">
-                    {p.periode}
-                  </span>
+                  <div className="flex items-baseline">
+                    <span className="text-3xl sm:text-4xl font-black font-mono text-foreground">
+                      {p.prix}
+                    </span>
+                    <span className="text-xs font-bold text-foreground-muted ml-1.5">
+                      {p.periode}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-emerald-600 font-semibold mt-0.5">
+                    Ou {p.prixAnnuel}
+                  </p>
                 </div>
 
                 <div className="pt-4 border-t border-surface-border/60 space-y-2.5">
