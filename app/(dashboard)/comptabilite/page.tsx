@@ -1,4 +1,5 @@
 import { getEcrituresComptables } from './actions'
+import ImportJournauxModal from './ImportJournauxModal'
 import Link from 'next/link'
 import {
   FileText, ArrowDownRight, ArrowUpRight, CheckCircle2,
@@ -86,7 +87,8 @@ export default async function ComptabilitePage(props: {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <ImportJournauxModal />
           <span className="px-3 py-1.5 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-bold flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4" />
             <span>Partie Double Rigoureuse</span>
