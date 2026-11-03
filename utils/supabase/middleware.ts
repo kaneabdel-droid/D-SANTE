@@ -5,6 +5,7 @@ import { isAdminEmail } from "@/lib/admin/auth";
 
 const PUBLIC_PREFIXES = [
   "/login",
+  "/signup",
   "/mot-de-passe-oublie",
   "/auth",
   "/api",
@@ -80,7 +81,7 @@ export async function updateSession(request: NextRequest) {
 
   const { data: sessionData } = await supabase.auth.getUser();
   const connecte = Boolean(sessionData?.user);
-  const estPublic = PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
+  const estPublic = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 
   if (!connecte && !estPublic) {
     const url = request.nextUrl.clone();
@@ -88,9 +89,9 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (connecte && pathname === "/login") {
+  if (connecte && (pathname === "/login" || pathname === "/signup")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
