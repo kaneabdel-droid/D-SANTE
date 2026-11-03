@@ -1,5 +1,6 @@
 import { getEcrituresComptables } from './actions'
 import ImportJournauxModal from './ImportJournauxModal'
+import ArchiveComptableButton from './ArchiveComptableButton'
 import Link from 'next/link'
 import {
   FileText, ArrowDownRight, ArrowUpRight, CheckCircle2,
@@ -88,6 +89,12 @@ export default async function ComptabilitePage(props: {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <ArchiveComptableButton
+            nomStructure="Centre Hospitalier / Clinique D-Santé"
+            ecritures={ecrituresAffichees}
+            totalDebits={totalDebits}
+            totalCredits={totalCredits}
+          />
           <ImportJournauxModal />
           <span className="px-3 py-1.5 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-bold flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4" />
