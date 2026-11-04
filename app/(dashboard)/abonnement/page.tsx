@@ -29,9 +29,9 @@ export default async function AbonnementPage() {
     {
       id: 'centre_medical',
       nom: 'Centre Médical & Clinique',
-      prix: '12 500',
+      prix: '15 000',
       periode: 'FCFA / mois',
-      prixAnnuel: '135 000 FCFA / an (-10%)',
+      prixAnnuel: '162 000 FCFA / an (-10%)',
       desc: 'Conçu pour les cliniques privées, maternités et centres de santé urbains.',
       fonctionnalites: [
         'Toutes les fonctions Poste de Santé',
@@ -47,9 +47,9 @@ export default async function AbonnementPage() {
     {
       id: 'hopital',
       nom: 'Hôpital & Polyclinique',
-      prix: '15 000',
+      prix: '20 000',
       periode: 'FCFA / mois',
-      prixAnnuel: '153 000 FCFA / an (-15%)',
+      prixAnnuel: '204 000 FCFA / an (-15%)',
       desc: 'Pour les centres hospitaliers régionaux, polycliniques et cliniques chirurgicales.',
       fonctionnalites: [
         'Utilisateurs & Praticiens illimités',

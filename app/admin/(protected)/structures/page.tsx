@@ -204,11 +204,10 @@ export default function StructuresPage() {
                 </div>
 
                 <span
-                  className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                    s.status === 'actif'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
-                  }`}
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${s.status === 'actif'
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
+                    }`}
                 >
                   {s.status}
                 </span>
@@ -256,11 +255,10 @@ export default function StructuresPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => toggleLock(s.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                    s.status === 'actif'
-                      ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20'
-                      : 'bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20'
-                  }`}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${s.status === 'actif'
+                    ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20'
+                    : 'bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20'
+                    }`}
                 >
                   {s.status === 'actif' ? (
                     <>
@@ -341,9 +339,9 @@ export default function StructuresPage() {
                     onChange={(e) => setNewTier(e.target.value)}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
                   >
-                    <option value="poste_sante">Poste de santé (25 000 F/m)</option>
-                    <option value="clinique">Clinique Pro (65 000 F/m)</option>
-                    <option value="hopital">Hôpital & Réseau (150 000 F/m)</option>
+                    <option value="poste_sante">Poste de santé (10 000 F/m)</option>
+                    <option value="clinique">Centre & Clinique (15 000 F/m)</option>
+                    <option value="hopital">Hôpital & Polyclinique (20 000 F/m)</option>
                   </select>
                 </div>
               </div>

@@ -33,8 +33,8 @@ export function ClientSignupForm({
         <div className="grid grid-cols-3 gap-2">
           {[
             { id: 'poste', label: 'Poste de Santé', price: '10.000 F/m' },
-            { id: 'clinique', label: 'Clinique / Centre', price: '12.500 F/m' },
-            { id: 'hopital', label: 'Hôpital / EPS', price: '15.000 F/m' },
+            { id: 'clinique', label: 'Clinique / Centre', price: '15.000 F/m' },
+            { id: 'hopital', label: 'Hôpital / EPS', price: '20.000 F/m' },
           ].map((p) => (
             <button
               key={p.id}

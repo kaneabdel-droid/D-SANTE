@@ -44,7 +44,7 @@ export function SuperAdminDashboardClient() {
       contact: '+221 33 889 94 70',
       email: 'contact@madeleine.sn',
       tier: 'clinique',
-      prix: '12 500 FCFA/m',
+      prix: '15 000 FCFA/m',
       lits: 45,
       medecins: 18,
       status: 'actif',
@@ -59,7 +59,7 @@ export function SuperAdminDashboardClient() {
       contact: '+221 33 825 00 00',
       email: 'direction@polyclinique-ucad.sn',
       tier: 'hopital',
-      prix: '15 000 FCFA/m',
+      prix: '20 000 FCFA/m',
       lits: 80,
       medecins: 32,
       status: 'actif',
@@ -89,7 +89,7 @@ export function SuperAdminDashboardClient() {
       contact: '+221 78 520 11 22',
       email: 'albaraka.sante@gmail.com',
       tier: 'clinique',
-      prix: '12 500 FCFA/m',
+      prix: '15 000 FCFA/m',
       lits: 12,
       medecins: 5,
       status: 'actif',
@@ -127,8 +127,8 @@ export function SuperAdminDashboardClient() {
     e.preventDefault()
     const prixMap = {
       poste_sante: '10 000 FCFA/m',
-      clinique: '12 500 FCFA/m',
-      hopital: '15 000 FCFA/m',
+      clinique: '15 000 FCFA/m',
+      hopital: '20 000 FCFA/m',
     }
 
     const newEntry = {
@@ -173,13 +173,13 @@ export function SuperAdminDashboardClient() {
       prev.map((s) => {
         if (s.id === id) {
           let nextTier: 'poste_sante' | 'clinique' | 'hopital' = 'clinique'
-          let nextPrix = '12 500 FCFA/m'
+          let nextPrix = '15 000 FCFA/m'
           if (s.tier === 'poste_sante') {
             nextTier = 'clinique'
-            nextPrix = '12 500 FCFA/m'
+            nextPrix = '15 000 FCFA/m'
           } else if (s.tier === 'clinique') {
             nextTier = 'hopital'
-            nextPrix = '15 000 FCFA/m'
+            nextPrix = '20 000 FCFA/m'
           } else {
             nextTier = 'poste_sante'
             nextPrix = '10 000 FCFA/m'
@@ -576,8 +576,8 @@ export function SuperAdminDashboardClient() {
                     className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white focus:outline-hidden focus:border-emerald-500"
                   >
                     <option value="poste_sante">Poste de Santé (10 000 F/m)</option>
-                    <option value="clinique">Centre & Clinique (12 500 F/m)</option>
-                    <option value="hopital">Hôpital & Polyclinique (15 000 F/m)</option>
+                    <option value="clinique">Centre & Clinique (15 000 F/m)</option>
+                    <option value="hopital">Hôpital & Polyclinique (20 000 F/m)</option>
                   </select>
                 </div>
                 <div>

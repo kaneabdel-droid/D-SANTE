@@ -33,10 +33,10 @@ export function ParametragePasserelles() {
   // Produits Maketou D-Santé
   const [mktPosteMensuel, setMktPosteMensuel] = useState('PRD-MKT-POSTE-10K')
   const [mktPosteAnnuel, setMktPosteAnnuel] = useState('PRD-MKT-POSTE-108K')
-  const [mktCliniqueMensuel, setMktCliniqueMensuel] = useState('PRD-MKT-CLIN-12500')
-  const [mktCliniqueAnnuel, setMktCliniqueAnnuel] = useState('PRD-MKT-CLIN-135K')
-  const [mktHopitalMensuel, setMktHopitalMensuel] = useState('PRD-MKT-HOP-15K')
-  const [mktHopitalAnnuel, setMktHopitalAnnuel] = useState('PRD-MKT-HOP-153K')
+  const [mktCliniqueMensuel, setMktCliniqueMensuel] = useState('PRD-MKT-CLIN-15K')
+  const [mktCliniqueAnnuel, setMktCliniqueAnnuel] = useState('PRD-MKT-CLIN-162K')
+  const [mktHopitalMensuel, setMktHopitalMensuel] = useState('PRD-MKT-HOP-20K')
+  const [mktHopitalAnnuel, setMktHopitalAnnuel] = useState('PRD-MKT-HOP-204K')
 
   // Config Chariow Santé
   const [chariowActif, setChariowActif] = useState(true)
@@ -44,8 +44,8 @@ export function ParametragePasserelles() {
   const [chariowApiKey, setChariowApiKey] = useState('ch_live_sante_91827364510293847561')
   const [chariowSecret, setChariowSecret] = useState('ch_whsec_sante_8273649182736491')
   const [chariowProdPoste, setChariowProdPoste] = useState('CH-PRD-POSTE-10K')
-  const [chariowProdClinique, setChariowProdClinique] = useState('CH-PRD-CLINIQUE-12K5')
-  const [chariowProdHopital, setChariowProdHopital] = useState('CH-PRD-HOPITAL-15K')
+  const [chariowProdClinique, setChariowProdClinique] = useState('CH-PRD-CLINIQUE-15K')
+  const [chariowProdHopital, setChariowProdHopital] = useState('CH-PRD-HOPITAL-20K')
 
   const toggleSecret = (key: string) => {
     setShowSecrets((prev) => ({ ...prev, [key]: !prev[key] }))
@@ -290,19 +290,19 @@ export function ParametragePasserelles() {
 
               <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-white">Centre & Clinique (12.5k/m)</span>
-                  <span className="text-emerald-400 font-mono">12 500 F</span>
+                  <span className="font-bold text-white">Centre & Clinique (15k/m)</span>
+                  <span className="text-emerald-400 font-mono">15 000 F</span>
                 </div>
                 <input
                   type="text"
-                  placeholder="ID Mensuel (12 500 F)"
+                  placeholder="ID Mensuel (15 000 F)"
                   value={mktCliniqueMensuel}
                   onChange={(e) => setMktCliniqueMensuel(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-hidden focus:border-emerald-500"
                 />
                 <input
                   type="text"
-                  placeholder="ID Annuel (135 000 F)"
+                  placeholder="ID Annuel (162 000 F)"
                   value={mktCliniqueAnnuel}
                   onChange={(e) => setMktCliniqueAnnuel(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-hidden focus:border-emerald-500"
@@ -311,19 +311,19 @@ export function ParametragePasserelles() {
 
               <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-white">Hôpital & Polyclinique (15k/m)</span>
-                  <span className="text-emerald-400 font-mono">15 000 F</span>
+                  <span className="font-bold text-white">Hôpital & Polyclinique (20k/m)</span>
+                  <span className="text-emerald-400 font-mono">20 000 F</span>
                 </div>
                 <input
                   type="text"
-                  placeholder="ID Mensuel (15 000 F)"
+                  placeholder="ID Mensuel (20 000 F)"
                   value={mktHopitalMensuel}
                   onChange={(e) => setMktHopitalMensuel(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-hidden focus:border-emerald-500"
                 />
                 <input
                   type="text"
-                  placeholder="ID Annuel (153 000 F)"
+                  placeholder="ID Annuel (204 000 F)"
                   value={mktHopitalAnnuel}
                   onChange={(e) => setMktHopitalAnnuel(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-white focus:outline-hidden focus:border-emerald-500"

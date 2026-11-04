@@ -80,8 +80,8 @@ export default function HomePage() {
     {
       id: 'clinique',
       name: 'Centre de Santé & Clinique',
-      mensuel: '12 500',
-      annuel: '135 000',
+      mensuel: '15 000',
+      annuel: '162 000',
       remise: '-10%',
       desc: 'Cliniques de jour, centres médico-sociaux et maternités urbaines.',
       features: ['Dossier 360° complet', 'Ordonnances PDF A5', 'Lits jusqu’à 30 lits', 'Facturation IPM / CMU', 'Liaison D-Pharma'],
@@ -91,8 +91,8 @@ export default function HomePage() {
     {
       id: 'hopital',
       name: 'Hôpital & Polyclinique',
-      mensuel: '15 000',
-      annuel: '153 000',
+      mensuel: '20 000',
+      annuel: '204 000',
       remise: '-15%',
       desc: 'Centres hospitaliers régionaux, polycliniques et cliniques chirurgicales.',
       features: ['Capacité lits illimitée', 'Blocs opératoires', 'Comptabilité SYSCOHADA', 'Télétransmission IPM', 'Portail Espace Patient'],
@@ -401,7 +401,7 @@ export default function HomePage() {
                 </div>
                 <h4 className="font-bold text-foreground text-sm mb-1">Choisissez votre niveau</h4>
                 <p className="text-foreground-muted text-xs">
-                  Poste (10k), Centre/Clinique (12.5k) ou Hôpital (15k), mensuel ou annuel (-10% à -15%).
+                  Poste (10k), Centre/Clinique (15k) ou Hôpital (20k), mensuel ou annuel (-10% à -15%).
                 </p>
               </div>
 
