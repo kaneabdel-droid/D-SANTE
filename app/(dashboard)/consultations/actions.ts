@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { ensurePatientExists } from '../patients/actions'
 import { revalidatePath } from 'next/cache'
 
 export async function getConsultations(filtre?: string, patientId?: string) {
@@ -87,6 +88,9 @@ export async function creerConsultation(formData: FormData, prescriptionsLignesJ
   const numero_consultation = `CS-${dateCode}-${randNum}`
 
   try {
+    // 0. Garantir la présence du patient en base
+    await ensurePatientExists(patient_id, structureId)
+
     // 1. Insertion de la consultation
     const { data: consultation, error: errCons } = await supabase
       .from('consultations')

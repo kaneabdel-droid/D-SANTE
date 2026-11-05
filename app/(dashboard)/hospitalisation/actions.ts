@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { ensurePatientExists } from '../patients/actions'
 import { revalidatePath } from 'next/cache'
 
 export async function getLitsEtHospitalisations() {
@@ -60,6 +61,9 @@ export async function admettrePatient(formData: FormData) {
   const numero_sejour = `SEJ-${dateCode}-${randNum}`
 
   try {
+    // 0. Garantir la présence du patient en base
+    await ensurePatientExists(patient_id, structureId)
+
     // 1. Créer le séjour d'hospitalisation
     const { error: errHosp } = await supabase.from('hospitalisations').insert({
       structure_id: structureId,

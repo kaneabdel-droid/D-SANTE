@@ -89,32 +89,42 @@ export default function CloturerSortieModal({
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto text-left">
-          <div className="bg-surface border border-surface-border w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute right-5 top-5 p-1 rounded-lg text-foreground-muted hover:text-foreground hover:bg-black/5"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* En-tête */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-2xl bg-danger/10 text-danger flex items-center justify-center">
-                <LogOut className="w-5 h-5" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/60 backdrop-blur-xs overflow-hidden text-left">
+          <div className="bg-surface border border-surface-border w-full max-w-lg max-h-[92vh] sm:max-h-[88vh] rounded-2xl sm:rounded-3xl shadow-2xl relative flex flex-col my-auto overflow-hidden">
+            {/* En-tête fixe */}
+            <div className="p-4 sm:p-6 pb-3 border-b border-surface-border/60 shrink-0 flex items-center justify-between bg-surface">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-danger/10 text-danger flex items-center justify-center shrink-0">
+                  <LogOut className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-xl font-bold font-heading text-foreground">
+                    Clôture du Séjour & Sortie
+                  </h3>
+                  <p className="text-xs text-foreground-muted">
+                    Libération de la place d'hospitalisation et enregistrement du bilan de sortie.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg sm:text-xl font-bold font-heading text-foreground">
-                  Clôture du Séjour & Sortie
-                </h3>
-                <p className="text-xs text-foreground-muted">
-                  Libération de la place d'hospitalisation et enregistrement du bilan de sortie.
-                </p>
-              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-black/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            {/* Récapitulatif patient et séjour */}
-            <div className="p-3.5 bg-background rounded-2xl border border-surface-border space-y-1.5 mb-4 text-xs">
+            {error && (
+              <div className="mx-4 sm:mx-6 mt-3 p-3 bg-danger/10 border border-danger/20 text-danger rounded-xl text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleCloturer} className="flex flex-col flex-1 overflow-hidden">
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
+                {/* Récapitulatif patient et séjour */}
+                <div className="p-3.5 bg-background rounded-2xl border border-surface-border space-y-1.5 mb-2 text-xs">
               <div className="flex justify-between items-center">
                 <span className="font-bold text-foreground text-sm flex items-center gap-1.5">
                   <User className="w-4 h-4 text-primary" />
@@ -138,14 +148,6 @@ export default function CloturerSortieModal({
               </div>
             </div>
 
-            {error && (
-              <div className="mb-4 p-3 bg-danger/10 border border-danger/20 text-danger rounded-xl text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleCloturer} className="space-y-4">
               {/* Mode de sortie */}
               <div>
                 <label className="block text-xs font-semibold text-foreground mb-1.5">
@@ -194,8 +196,10 @@ export default function CloturerSortieModal({
                 />
               </div>
 
-              {/* Boutons d'action */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-surface-border">
+              </div>
+
+              {/* Boutons d'action fixes en bas */}
+              <div className="p-4 sm:p-6 pt-3 border-t border-surface-border/60 shrink-0 flex items-center justify-end gap-3 bg-surface">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}

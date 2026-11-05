@@ -56,37 +56,41 @@ export default function NouveauTriageModal({
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-surface border border-surface-border w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl relative my-8">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute right-5 top-5 p-1 rounded-lg text-foreground-muted hover:text-foreground hover:bg-black/5"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-2xl bg-danger/10 text-danger flex items-center justify-center">
-                <HeartPulse className="w-5 h-5 animate-pulse" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/60 backdrop-blur-xs overflow-hidden">
+          <div className="bg-surface border border-surface-border w-full max-w-2xl max-h-[92vh] sm:max-h-[88vh] rounded-2xl sm:rounded-3xl shadow-2xl relative flex flex-col my-auto overflow-hidden">
+            {/* En-tête fixe */}
+            <div className="p-4 sm:p-6 pb-3 border-b border-surface-border/60 shrink-0 flex items-center justify-between bg-surface">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-danger/10 text-danger flex items-center justify-center shrink-0">
+                  <HeartPulse className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-xl font-bold font-heading text-foreground">
+                    Fiche de Triage & Constantes Vitales
+                  </h3>
+                  <p className="text-xs text-foreground-muted">
+                    Évaluation clinique immédiate et classification du niveau d&apos;urgence.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg sm:text-xl font-bold font-heading text-foreground">
-                  Fiche de Triage & Constantes Vitales
-                </h3>
-                <p className="text-xs text-foreground-muted">
-                  Évaluation clinique immédiate et classification du niveau d&apos;urgence.
-                </p>
-              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1.5 rounded-lg text-foreground-muted hover:text-foreground hover:bg-black/5"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
             {error && (
-              <div className="my-4 p-3 bg-danger/10 border border-danger/20 text-danger rounded-xl text-xs flex items-center gap-2">
+              <div className="mx-4 sm:mx-6 mt-3 p-3 bg-danger/10 border border-danger/20 text-danger rounded-xl text-xs flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+              {/* Corps défilable */}
+              <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
               {/* Choix du patient */}
               <div>
                 <label className="block text-xs font-semibold text-foreground mb-1">
@@ -277,7 +281,10 @@ export default function NouveauTriageModal({
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-3">
+              </div>
+
+              {/* Boutons validation fixes en bas */}
+              <div className="p-4 sm:p-6 pt-3 border-t border-surface-border/60 shrink-0 flex items-center justify-end gap-3 bg-surface">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
@@ -288,7 +295,7 @@ export default function NouveauTriageModal({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2.5 rounded-xl bg-danger text-white text-xs font-bold hover:bg-danger/90 shadow-sm disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-danger text-white text-xs font-bold hover:bg-danger/90 shadow-sm disabled:opacity-50 cursor-pointer"
                 >
                   {isSubmitting ? 'Analyse & Enregistrement...' : 'Valider le Triage'}
                 </button>

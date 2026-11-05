@@ -32,10 +32,10 @@ export function ValidationSubstitutionModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-surface border border-surface-border rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+      <div className="bg-surface border border-surface-border rounded-2xl sm:rounded-3xl max-w-lg w-full max-h-[92vh] sm:max-h-[88vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-surface-border pb-4">
+        <div className="p-4 sm:p-6 pb-3 flex items-start justify-between border-b border-surface-border shrink-0 bg-surface">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5" />
@@ -57,6 +57,9 @@ export function ValidationSubstitutionModal({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Corps défilable */}
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 text-xs">
 
         {/* Détails du Patient */}
         <div className="bg-background rounded-2xl p-3.5 border border-surface-border flex items-center justify-between text-xs">
@@ -135,31 +138,32 @@ export function ValidationSubstitutionModal({
             className="w-full px-3.5 py-2.5 rounded-xl border border-surface-border bg-background text-foreground text-xs focus:outline-none focus:border-primary"
           />
         </div>
+      </div>
 
-        {/* Actions : Approuver ou Refuser */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          <button
-            onClick={() => handleDecision('rejete')}
-            disabled={loading}
-            className="py-2.5 px-4 rounded-xl border border-danger/30 text-danger hover:bg-danger/10 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <XCircle className="w-4 h-4" />
-            <span>Refuser la Substitution</span>
-          </button>
+      {/* Actions : Approuver ou Refuser fixes en bas */}
+      <div className="p-4 sm:p-6 pt-3 border-t border-surface-border shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-surface">
+        <button
+          onClick={() => handleDecision('rejete')}
+          disabled={loading}
+          className="py-2.5 px-4 rounded-xl border border-danger/30 text-danger hover:bg-danger/10 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+        >
+          <XCircle className="w-4 h-4" />
+          <span>Refuser la Substitution</span>
+        </button>
 
-          <button
-            onClick={() => handleDecision('approuve')}
-            disabled={loading}
-            className="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm cursor-pointer"
-          >
-            {loading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <CheckCircle2 className="w-4 h-4" />
-            )}
-            <span>Valider la Substitution</span>
-          </button>
-        </div>
+        <button
+          onClick={() => handleDecision('approuve')}
+          disabled={loading}
+          className="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-sm cursor-pointer"
+        >
+          {loading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4" />
+          )}
+          <span>Valider la Substitution</span>
+        </button>
+      </div>
       </div>
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { ensurePatientExists } from '../patients/actions'
 import { revalidatePath } from 'next/cache'
 
 export async function getSoins() {
@@ -66,6 +67,7 @@ export async function enregistrerSoin(formData: FormData) {
   const dateSoin = date_soin_input ? new Date(date_soin_input).toISOString() : new Date().toISOString()
 
   try {
+    await ensurePatientExists(patient_id, structureId)
     const { error: insertError } = await supabase.from('soins_infirmiers').insert({
       structure_id: structureId,
       patient_id,

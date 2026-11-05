@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { ensurePatientExists } from '../patients/actions'
 import { revalidatePath } from 'next/cache'
 
 export async function getFactures(filtreStatut?: string) {
@@ -61,6 +62,7 @@ export async function creerFacture(formData: FormData) {
   const numero_facture = `FAC-${dateCode}-${randNum}`
 
   try {
+    await ensurePatientExists(patient_id, structureId)
     const { data: fac, error } = await supabase
       .from('factures_sante')
       .insert({

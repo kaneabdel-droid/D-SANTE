@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { ensurePatientExists } from '../patients/actions'
 import { revalidatePath } from 'next/cache'
 
 export async function getDernieresConstantes() {
@@ -89,6 +90,7 @@ export async function enregistrerConstantes(formData: FormData) {
   const structureId = tenant?.structureId || '00000000-0000-0000-0000-000000000001'
 
   try {
+    await ensurePatientExists(patient_id, structureId)
     const { error } = await supabase.from('constantes_vitales').insert({
       structure_id: structureId,
       patient_id,
