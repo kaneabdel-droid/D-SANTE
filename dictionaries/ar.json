@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "D-SANTÉ",
+    "subtitle": "نظام المعلومات الاستشفائية والعيادات الطبية SaaS",
+    "tagline": "الملف الطبي • الفرز والإنعاش • الاستشارات • الاستشفاء • الصيدلية • المحاسبة"
+  },
+  "nav": {
+    "dashboard": "لوحة القيادة",
+    "patients": "ملفات المرضى (IPP)",
+    "triage": "الفرز والعلامات الحيوية",
+    "consultations": "الاستشارات الطبية",
+    "hospitalisation": "الإقامة والأسرة",
+    "soins": "التمريض والعناية",
+    "pharmacie": "الصيدلية والمخزون",
+    "facturation": "الصندوق والتأمين الصحي",
+    "interop": "الربط الصيدلي والتأميني",
+    "comptabilite": "المحاسبة الطبية SYSCOHADA",
+    "materiel": "المعدات الطبية الحيوية",
+    "personnel": "الطاقم الطبي والمناوبات",
+    "abonnement": "باقة الاشتراك"
+  },
+  "badges": {
+    "urgent": "عاجل",
+    "network": "شبكة",
+    "in_service": "على رأس العمل"
+  },
+  "common": {
+    "search": "بحث...",
+    "system_online": "النظام متصل",
+    "home": "الرئيسية",
+    "logout": "تسجيل الخروج",
+    "color_theme": "لون الواجهة",
+    "loading": "جارٍ التحميل...",
+    "no_data": "لا توجد بيانات مسجلة",
+    "all": "الكل",
+    "today": "اليوم",
+    "total": "المجموع",
+    "details": "التفاصيل",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "download": "تحميل",
+    "print": "طباعة"
+  },
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "confirm": "تأكيد",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "new_patient": "+ مريض جديد",
+    "new_triage": "فرز جديد",
+    "new_consultation": "استشارة جديدة",
+    "admit_patient": "تنويم المريض",
+    "dispense_drugs": "صرف الأدوية",
+    "create_invoice": "إصدار فاتورة",
+    "record_payment": "تحصيل الدفعة"
+  },
+  "dashboard": {
+    "title": "لوحة القيادة الاستشفائية",
+    "subtitle": "متابعة حركة المرضى والحالات المستعجلة والأسرة الشاغرة لحظياً",
+    "kpi_patients_today": "مرضى اليوم",
+    "kpi_triage_queue": "قائمة انتظار الفرز",
+    "kpi_occupied_beds": "الأسرة المشغولة",
+    "kpi_daily_revenue": "المقبوضات اليومية",
+    "recent_triage": "أحدث حالات الفرز",
+    "bed_occupancy": "نسبة إشغال الأسرة",
+    "pending_consultations": "استشارات بانتظار الطبيب"
+  },
+  "triage": {
+    "title": "الفرز والعلامات الحيوية",
+    "subtitle": "التقييم السريري السريع وتصنيف أولوية الحالات الطبية المستعجلة",
+    "vitals": {
+      "bp": "ضغط الدم (mmHg)",
+      "pulse": "النبض / معدل ضربات القلب (bpm)",
+      "temp": "درجة الحرارة (°C)",
+      "spo2": "نسبة الأكسجين SpO2 (%)",
+      "glycemia": "نسبة السكر في الدم (g/L)",
+      "weight": "الوزن (kg)",
+      "pain": "مقياس الألم (0-10)"
+    },
+    "urgency_levels": {
+      "level1": "المستوى 1 - إنعاش فوري (دقيقة صفر)",
+      "level2": "المستوى 2 - حرج جداً (< 15 دقيقة)",
+      "level3": "المستوى 3 - مستعجل (< 30 دقيقة)",
+      "level4": "المستوى 4 - أقل استعجالاً (< 60 دقيقة)",
+      "level5": "المستوى 5 - غير عاجل (عيادة خارجية)"
+    },
+    "reason_admission": "سبب المراجعة",
+    "orientation": "التوجيه الطبي",
+    "allergies": "الحساسية الدوائية"
+  },
+  "patients": {
+    "title": "سجل المرضى والملفات الطبية (IPP)",
+    "ipp": "الرقم الطبي الدائم (IPP)",
+    "first_name": "الاسم الشخصي",
+    "last_name": "الاسم العائلي",
+    "birth_date": "تاريخ الميلاد",
+    "gender": "الجنس",
+    "male": "ذكر",
+    "female": "أنثى",
+    "blood_group": "فصيلة الدم",
+    "phone": "رقم الهاتف",
+    "address": "العنوان",
+    "emergency_contact": "جهة الاتصال في الطوارئ",
+    "insurance_carrier": "شركة التأمين الصحي / الصندوق",
+    "policy_number": "رقم بطاقة التأمين"
+  },
+  "consultations": {
+    "title": "الاستشارات والفحوصات الطبية",
+    "history": "السوابق والسيرة المرضية",
+    "clinical_exam": "الفحص السريري",
+    "primary_diagnosis": "التشخيص الرئيسي (CIM-10)",
+    "prescription": "الوصفة الطبية والعلاج",
+    "dosage": "الجرعة والمدة",
+    "sick_leave": "الإجازة المرضية",
+    "medical_certificate": "شهادة طبية"
+  },
+  "hospitalisation": {
+    "title": "قسم الإقامة وإدارة الأسرة",
+    "ward": "الجناح الاستشفائي",
+    "room": "غرفة رقم",
+    "bed": "سرير رقم",
+    "admission_date": "تاريخ الدخول",
+    "discharge_date": "تاريخ الخروج",
+    "treating_doctor": "الطبيب المعالج",
+    "daily_rate": "سعر الليلة"
+  },
+  "soins": {
+    "title": "العناية التمريضية والملاحظات",
+    "nursing_act": "الإجراء التمريضي",
+    "injection": "حقنة",
+    "infusion": "محلول وريدي",
+    "dressing": "تضميد الجروح",
+    "administer_med": "إعطاء الدواء",
+    "scheduled_time": "الوقت المحدد",
+    "nurse_notes": "ملاحظات الممرض"
+  },
+  "pharmacie": {
+    "title": "صيدلية المستشفى وإدارة المخزون",
+    "drug_name": "اسم الدواء / الاسم العلمي",
+    "dosage_form": "الشكل الصيدلاني",
+    "lot_number": "رقم التشغيلة",
+    "expiry_date": "تاريخ انتهاء الصلاحية",
+    "stock_qty": "الكمية بالمخزن",
+    "safety_threshold": "حد الأمان",
+    "dispense": "صرف الوصفة الطبية"
+  },
+  "facturation": {
+    "title": "فواتير العلاج والتأمين الصحي",
+    "invoice_number": "فاتورة رقم",
+    "total_gross": "المبلغ الإجمالي",
+    "insurance_share": "تغطية التأمين الصحي",
+    "patient_share": "حصة المريض (المساهمة)",
+    "status_paid": "تم السداد",
+    "status_pending": "بانتظار التحصيل",
+    "payment_method": "طريقة الدفع"
+  },
+  "interop": {
+    "title": "الربط الإلكتروني مع شركات التأمين والصيدليات",
+    "connection_status": "حالة الاتصال بشبكة التأمين",
+    "sync": "مزامنة أهلية المؤمّن عليهم",
+    "claim_submission": "إرسال المطالبات الإلكترونية"
+  },
+  "comptabilite": {
+    "title": "المحاسبة الاستشفائية SYSCOHADA",
+    "general_ledger": "دفتر الأستاذ العام",
+    "journals": "اليوميات المحاسبية",
+    "journal_sales": "المبيعات وإيرادات العلاج",
+    "journal_purchases": "مشتريات الصيدلية والموردين",
+    "journal_cash": "الصندوق المركزي",
+    "journal_bank": "الحساب البنكي والتحويلات",
+    "journal_od": "العمليات المتنوعة"
+  },
+  "materiel": {
+    "title": "سجل وصيانة المعدات الطبية الحيوية",
+    "equipment_name": "اسم الجهاز الطبي",
+    "serial_number": "الرقم التسلسلي",
+    "maintenance_date": "تاريخ الصيانة الوقائية",
+    "functional": "يعمل بكفاءة",
+    "in_repair": "قيد الصيانة"
+  },
+  "personnel": {
+    "title": "الطاقم الطبي وجداول المناوبات",
+    "physicians": "الأطباء والجراحون",
+    "nurses": "الممرضون والقابلات",
+    "on_call_schedule": "جدول الحراسة والمناوبة الليلية"
+  },
+  "abonnement": {
+    "title": "اشتراك وترخيص D-SANTÉ",
+    "current_plan": "الباقة الحالية",
+    "expiry": "تاريخ انتهاء الترخيص",
+    "upgrade": "ترقية الترخيص"
+  }
+}

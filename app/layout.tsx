@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { PwaRegister } from "@/components/PwaRegister";
+import { getLocale } from "@/dictionaries";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,13 +31,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html lang="fr" suppressHydrationWarning className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
+    <html lang={locale} dir={dir} suppressHydrationWarning className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <PwaRegister />
         {children}

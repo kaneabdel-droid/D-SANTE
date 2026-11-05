@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "D-SANTÉ",
+    "subtitle": "Hospital Information System, Clinical & Healthcare SaaS",
+    "tagline": "Patient Records • Triage • Consultations • Inpatients • Pharmacy • SYSCOHADA"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "patients": "Patients (MRN)",
+    "triage": "Triage & Vitals",
+    "consultations": "Doctor Consultations",
+    "hospitalisation": "Inpatients & Beds",
+    "soins": "Nursing Care",
+    "pharmacie": "Pharmacy & Drugs",
+    "facturation": "Cashier & Insurance",
+    "interop": "Pharma & HMO Network",
+    "comptabilite": "SYSCOHADA Accounting",
+    "materiel": "Biomedical Equipment",
+    "personnel": "Staff & Duty Shifts",
+    "abonnement": "Subscription"
+  },
+  "badges": {
+    "urgent": "Urgent",
+    "network": "Network",
+    "in_service": "On duty"
+  },
+  "common": {
+    "search": "Search...",
+    "system_online": "System online",
+    "home": "Home",
+    "logout": "Log out",
+    "color_theme": "Color theme",
+    "loading": "Loading...",
+    "no_data": "No recorded data",
+    "all": "All",
+    "today": "Today",
+    "total": "Total",
+    "details": "Details",
+    "close": "Close",
+    "back": "Back",
+    "download": "Download",
+    "print": "Print"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "filter": "Filter",
+    "export": "Export",
+    "new_patient": "+ Patient",
+    "new_triage": "New Triage",
+    "new_consultation": "New Consultation",
+    "admit_patient": "Admit Patient",
+    "dispense_drugs": "Dispense Drugs",
+    "create_invoice": "Generate Invoice",
+    "record_payment": "Receive Payment"
+  },
+  "dashboard": {
+    "title": "Hospital Dashboard",
+    "subtitle": "Patient flow, emergencies, bed availability and real-time clinical activity",
+    "kpi_patients_today": "Today's Patients",
+    "kpi_triage_queue": "Triage Queue",
+    "kpi_occupied_beds": "Occupied Beds",
+    "kpi_daily_revenue": "Daily Revenue",
+    "recent_triage": "Recent Triage Admissions",
+    "bed_occupancy": "Bed Occupancy",
+    "pending_consultations": "Pending Consultations"
+  },
+  "triage": {
+    "title": "Triage & Vital Signs",
+    "subtitle": "Rapid clinical evaluation and priority emergency triage",
+    "vitals": {
+      "bp": "Blood Pressure (mmHg)",
+      "pulse": "Heart Rate / Pulse (bpm)",
+      "temp": "Body Temperature (°C)",
+      "spo2": "Oxygen Saturation SpO2 (%)",
+      "glycemia": "Capillary Blood Glucose (g/L)",
+      "weight": "Weight (kg)",
+      "pain": "Pain Score (0-10)"
+    },
+    "urgency_levels": {
+      "level1": "Level 1 - Immediate Resuscitation",
+      "level2": "Level 2 - Very Urgent (< 15 min)",
+      "level3": "Level 3 - Urgent (< 30 min)",
+      "level4": "Level 4 - Less Urgent (< 60 min)",
+      "level5": "Level 5 - Non-Urgent (Outpatient)"
+    },
+    "reason_admission": "Chief Complaint / Reason",
+    "orientation": "Referral Unit",
+    "allergies": "Known Drug Allergies"
+  },
+  "patients": {
+    "title": "Patient Directory & Medical Records (MRN)",
+    "ipp": "MRN (Medical Record Number)",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "birth_date": "Date of Birth",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "blood_group": "Blood Type",
+    "phone": "Phone Number",
+    "address": "Residential Address",
+    "emergency_contact": "Emergency Contact",
+    "insurance_carrier": "Third-Party Payer / HMO",
+    "policy_number": "Policy / Member Number"
+  },
+  "consultations": {
+    "title": "Clinical Consultations & Observations",
+    "history": "Medical History & Anamnesis",
+    "clinical_exam": "Clinical Examination",
+    "primary_diagnosis": "Primary Diagnosis (ICD-10)",
+    "prescription": "Prescription & Medication",
+    "dosage": "Dosage & Duration",
+    "sick_leave": "Medical Sick Leave",
+    "medical_certificate": "Medical Certificate"
+  },
+  "hospitalisation": {
+    "title": "Inpatient Department & Bed Management",
+    "ward": "Hospital Ward / Service",
+    "room": "Room #",
+    "bed": "Bed #",
+    "admission_date": "Admission Date",
+    "discharge_date": "Discharge Date",
+    "treating_doctor": "Attending Physician",
+    "daily_rate": "Nightly Rate"
+  },
+  "soins": {
+    "title": "Nursing Care & Clinical Notes",
+    "nursing_act": "Nursing Procedure",
+    "injection": "Injection",
+    "infusion": "IV Infusion",
+    "dressing": "Wound Dressing",
+    "administer_med": "Medication Delivery",
+    "scheduled_time": "Scheduled Time",
+    "nurse_notes": "Nurse Observations"
+  },
+  "pharmacie": {
+    "title": "Hospital Pharmacy & Medication Inventory",
+    "drug_name": "Drug Brand / Generic (INN)",
+    "dosage_form": "Dosage Form",
+    "lot_number": "Batch / Lot #",
+    "expiry_date": "Expiry Date",
+    "stock_qty": "Current Stock Qty",
+    "safety_threshold": "Reorder Threshold",
+    "dispense": "Prescription Dispense"
+  },
+  "facturation": {
+    "title": "Patient Billing & Insurance Co-Pay",
+    "invoice_number": "Invoice #",
+    "total_gross": "Total Gross Amount",
+    "insurance_share": "Insurance / HMO Share",
+    "patient_share": "Patient Co-Pay",
+    "status_paid": "Settled / Paid",
+    "status_pending": "Pending Payment",
+    "payment_method": "Payment Method"
+  },
+  "interop": {
+    "title": "Pharmacy & Insurance Network EDI",
+    "connection_status": "HMO Network Connection Status",
+    "sync": "Synchronize Insured Member Eligibility",
+    "claim_submission": "Electronic Claims Transmission"
+  },
+  "comptabilite": {
+    "title": "SYSCOHADA Healthcare Accounting",
+    "general_ledger": "General Ledger",
+    "journals": "Accounting Journals",
+    "journal_sales": "Sales & Healthcare Revenue",
+    "journal_purchases": "Pharmacy & Medical Supplies",
+    "journal_cash": "Central Cash Register",
+    "journal_bank": "Bank & Wire Transfers",
+    "journal_od": "Miscellaneous Entries"
+  },
+  "materiel": {
+    "title": "Biomedical Equipment Asset Fleet",
+    "equipment_name": "Equipment Name",
+    "serial_number": "Serial Number",
+    "maintenance_date": "Last Preventive Maintenance",
+    "functional": "Operational",
+    "in_repair": "Under Repair"
+  },
+  "personnel": {
+    "title": "Medical Staff & Duty Rotas",
+    "physicians": "Physicians & Surgeons",
+    "nurses": "Nurses & Midwives",
+    "on_call_schedule": "On-Call & Night Duty Shifts"
+  },
+  "abonnement": {
+    "title": "D-SANTÉ Subscription & License",
+    "current_plan": "Active Plan",
+    "expiry": "License Renewal Date",
+    "upgrade": "Upgrade License"
+  }
+}

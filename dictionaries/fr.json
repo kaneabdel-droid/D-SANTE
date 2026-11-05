@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "D-SANTÉ",
+    "subtitle": "Système d'Information Hospitalier, Clinique & Soins SaaS",
+    "tagline": "Dossier Patient • Triage • Consultations • Hospitalisation • Pharmacie • SYSCOHADA"
+  },
+  "nav": {
+    "dashboard": "Tableau de Bord",
+    "patients": "Patients (IPP)",
+    "triage": "Triage & Constantes",
+    "consultations": "Consultations Médicales",
+    "hospitalisation": "Hospitalisation & Lits",
+    "soins": "Soins Infirmiers",
+    "pharmacie": "Pharmacie & Stocks",
+    "facturation": "Caisse & Tiers-Payant",
+    "interop": "Liaison Pharma & IPM",
+    "comptabilite": "Comptabilité SYSCOHADA",
+    "materiel": "Matériel Biomédical",
+    "personnel": "Personnel & Gardes",
+    "abonnement": "Abonnement"
+  },
+  "badges": {
+    "urgent": "Urgent",
+    "network": "Réseau",
+    "in_service": "En service"
+  },
+  "common": {
+    "search": "Rechercher...",
+    "system_online": "Système connecté",
+    "home": "Accueil",
+    "logout": "Déconnexion",
+    "color_theme": "Thème couleur",
+    "loading": "Chargement...",
+    "no_data": "Aucune donnée enregistrée",
+    "all": "Tous",
+    "today": "Aujourd'hui",
+    "total": "Total",
+    "details": "Détails",
+    "close": "Fermer",
+    "back": "Retour",
+    "download": "Télécharger",
+    "print": "Imprimer"
+  },
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "confirm": "Confirmer",
+    "filter": "Filtrer",
+    "export": "Exporter",
+    "new_patient": "+ Patient",
+    "new_triage": "Nouveau Triage",
+    "new_consultation": "Nouvelle Consultation",
+    "admit_patient": "Hospitaliser le Patient",
+    "dispense_drugs": "Délivrer Médicaments",
+    "create_invoice": "Émettre Facture",
+    "record_payment": "Encaisser Règlement"
+  },
+  "dashboard": {
+    "title": "Tableau de Bord Hospitalier",
+    "subtitle": "Flux des patients, urgences, disponibilité des lits et activité médicale en temps réel",
+    "kpi_patients_today": "Patients du Jour",
+    "kpi_triage_queue": "File d'Attente Triage",
+    "kpi_occupied_beds": "Lits Occupés",
+    "kpi_daily_revenue": "Recettes Journalières",
+    "recent_triage": "Derniers Triages Enregistrés",
+    "bed_occupancy": "Occupation des Lits",
+    "pending_consultations": "Consultations en Attente"
+  },
+  "triage": {
+    "title": "Triage & Constantes Vitales",
+    "subtitle": "Évaluation clinique rapide et orientation prioritaire des urgences",
+    "vitals": {
+      "bp": "Tension Artérielle (mmHg)",
+      "pulse": "Pouls / Fréquence Cardiaque (bpm)",
+      "temp": "Température (°C)",
+      "spo2": "Saturation SpO2 (%)",
+      "glycemia": "Glycémie Capillaire (g/L)",
+      "weight": "Poids (kg)",
+      "pain": "Échelle Douleur (0-10)"
+    },
+    "urgency_levels": {
+      "level1": "Niveau 1 - Déchocage Immédiat",
+      "level2": "Niveau 2 - Très Urgent (< 15 min)",
+      "level3": "Niveau 3 - Urgent (< 30 min)",
+      "level4": "Niveau 4 - Moins Urgent (< 60 min)",
+      "level5": "Niveau 5 - Non Urgent (Ambulatoire)"
+    },
+    "reason_admission": "Motif d'Admission",
+    "orientation": "Orientation Médicale",
+    "allergies": "Allergies Médicamenteuses"
+  },
+  "patients": {
+    "title": "Gestion des Patients & Dossiers IPP",
+    "ipp": "IPP (Identifiant Patient)",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "birth_date": "Date de Naissance",
+    "gender": "Sexe",
+    "male": "Masculin",
+    "female": "Féminin",
+    "blood_group": "Groupe Sanguin",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "emergency_contact": "Personne à Prévenir",
+    "insurance_carrier": "Organisme Tiers-Payant / IPM",
+    "policy_number": "Numéro d'Assuré / Matricule"
+  },
+  "consultations": {
+    "title": "Consultations & Observations Médicales",
+    "history": "Anamnèse & Antécédents",
+    "clinical_exam": "Examen Clinique",
+    "primary_diagnosis": "Diagnostic Principal (CIM-10)",
+    "prescription": "Ordonnance Médicamenteuse",
+    "dosage": "Posologie & Durée",
+    "sick_leave": "Arrêt de Travail",
+    "medical_certificate": "Certificat Médical"
+  },
+  "hospitalisation": {
+    "title": "Hospitalisation & Gestion des Lits",
+    "ward": "Service d'Hospitalisation",
+    "room": "Chambre N°",
+    "bed": "Lit N°",
+    "admission_date": "Date d'Entrée",
+    "discharge_date": "Date de Sortie",
+    "treating_doctor": "Médecin Traitant",
+    "daily_rate": "Prix par Nuitée"
+  },
+  "soins": {
+    "title": "Soins Infirmiers & Transmissions",
+    "nursing_act": "Acte de Soin",
+    "injection": "Injection",
+    "infusion": "Perfusion",
+    "dressing": "Pansement",
+    "administer_med": "Administration Médicament",
+    "scheduled_time": "Heure Prévue",
+    "nurse_notes": "Observations Infirmières"
+  },
+  "pharmacie": {
+    "title": "Pharmacie Hospitalière & Gestion des Stocks",
+    "drug_name": "Désignation Médicament / DCI",
+    "dosage_form": "Forme Pharmaceutique",
+    "lot_number": "Numéro de Lot",
+    "expiry_date": "Date de Péremption",
+    "stock_qty": "Quantité en Stock",
+    "safety_threshold": "Seuil d'Alerte",
+    "dispense": "Délivrance Ordonnance"
+  },
+  "facturation": {
+    "title": "Facturation des Soins & Tiers-Payant",
+    "invoice_number": "Facture N°",
+    "total_gross": "Montant Total Brut",
+    "insurance_share": "Part Tiers-Payant (IPM / Assurance)",
+    "patient_share": "Ticket Modérateur (Part Patient)",
+    "status_paid": "Soldée",
+    "status_pending": "En Attente de Règlement",
+    "payment_method": "Mode d'Encaissement"
+  },
+  "interop": {
+    "title": "Liaison Télétransmission & Réseau IPM",
+    "connection_status": "Statut de la Liaison IPM / Assurance",
+    "sync": "Synchroniser les Droits des Assurés",
+    "claim_submission": "Télétransmission des Feuilles de Soins"
+  },
+  "comptabilite": {
+    "title": "Comptabilité Hospitalière SYSCOHADA",
+    "general_ledger": "Grand-Livre Général",
+    "journals": "Journaux Comptables",
+    "journal_sales": "Ventes & Recettes de Soins",
+    "journal_purchases": "Achats Pharmacie & Fournisseurs",
+    "journal_cash": "Caisse Centrale",
+    "journal_bank": "Banque & Virements",
+    "journal_od": "Opérations Diverses"
+  },
+  "materiel": {
+    "title": "Parc Matériel Biomédical",
+    "equipment_name": "Nom de l'Équipement",
+    "serial_number": "Numéro de Série",
+    "maintenance_date": "Dernière Maintenance Préventive",
+    "functional": "Opérationnel",
+    "in_repair": "En Réparation"
+  },
+  "personnel": {
+    "title": "Personnel Médical & Planning des Gardes",
+    "physicians": "Médecins & Chirurgiens",
+    "nurses": "Infirmiers & Sages-Femmes",
+    "on_call_schedule": "Planning d'Astreinte & Gardes"
+  },
+  "abonnement": {
+    "title": "Abonnement & Licence D-SANTÉ",
+    "current_plan": "Formule Active",
+    "expiry": "Échéance de la Licence",
+    "upgrade": "Faire Évoluer la Licence"
+  }
+}

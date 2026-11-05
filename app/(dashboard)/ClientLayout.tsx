@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { OfflineStatusIndicator } from '@/components/OfflineStatusIndicator'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { useTranslation } from '@/lib/i18n'
 import { warmAppOfflineCache } from '@/lib/offline/warmer'
 import {
   HeartPulse, LayoutDashboard, Users, Activity, Stethoscope,
@@ -13,10 +15,12 @@ import {
 } from 'lucide-react'
 
 type NavItem = {
+  key: string
   name: string
   href: string
   icon: any
-  badge?: string
+  badgeKey?: string
+  fallbackBadge?: string
 }
 
 export default function ClientLayout({
@@ -34,6 +38,7 @@ export default function ClientLayout({
   subscriptionTier: string
   devise: string
 }) {
+  const { t, isRTL } = useTranslation()
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [currentTheme, setCurrentTheme] = useState('theme-sante')
@@ -71,19 +76,19 @@ export default function ClientLayout({
   }
 
   const navItems: NavItem[] = [
-    { name: 'Tableau de Bord', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Patients (IPP)', href: '/patients', icon: Users },
-    { name: 'Triage & Constantes', href: '/triage', icon: Activity, badge: 'Urgent' },
-    { name: 'Consultations', href: '/consultations', icon: Stethoscope },
-    { name: 'Hospitalisation & Lits', href: '/hospitalisation', icon: BedDouble },
-    { name: 'Soins Infirmiers', href: '/soins', icon: Syringe },
-    { name: 'Pharmacie & Stocks', href: '/pharmacie', icon: Pill },
-    { name: 'Caisse & Tiers-Payant', href: '/facturation', icon: Receipt },
-    { name: 'Liaison Pharma & IPM', href: '/interop', icon: Network, badge: 'Réseau' },
-    { name: 'Comptabilité SYSCOHADA', href: '/comptabilite', icon: BookOpen },
-    { name: 'Matériel Biomédical', href: '/materiel', icon: Wrench },
-    { name: 'Personnel & Gardes', href: '/personnel', icon: UserCog },
-    { name: 'Abonnement', href: '/abonnement', icon: CreditCard },
+    { key: 'nav.dashboard', name: 'Tableau de Bord', href: '/dashboard', icon: LayoutDashboard },
+    { key: 'nav.patients', name: 'Patients (IPP)', href: '/patients', icon: Users },
+    { key: 'nav.triage', name: 'Triage & Constantes', href: '/triage', icon: Activity, badgeKey: 'badges.urgent', fallbackBadge: 'Urgent' },
+    { key: 'nav.consultations', name: 'Consultations', href: '/consultations', icon: Stethoscope },
+    { key: 'nav.hospitalisation', name: 'Hospitalisation & Lits', href: '/hospitalisation', icon: BedDouble },
+    { key: 'nav.soins', name: 'Soins Infirmiers', href: '/soins', icon: Syringe },
+    { key: 'nav.pharmacie', name: 'Pharmacie & Stocks', href: '/pharmacie', icon: Pill },
+    { key: 'nav.facturation', name: 'Caisse & Tiers-Payant', href: '/facturation', icon: Receipt },
+    { key: 'nav.interop', name: 'Liaison Pharma & IPM', href: '/interop', icon: Network, badgeKey: 'badges.network', fallbackBadge: 'Réseau' },
+    { key: 'nav.comptabilite', name: 'Comptabilité SYSCOHADA', href: '/comptabilite', icon: BookOpen },
+    { key: 'nav.materiel', name: 'Matériel Biomédical', href: '/materiel', icon: Wrench },
+    { key: 'nav.personnel', name: 'Personnel & Gardes', href: '/personnel', icon: UserCog },
+    { key: 'nav.abonnement', name: 'Abonnement', href: '/abonnement', icon: CreditCard },
   ]
 
   const themes = [
@@ -104,8 +109,9 @@ export default function ClientLayout({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-sidebar border-r border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-0 -translate-x-full'
-          }`}
+        className={`fixed inset-y-0 start-0 z-50 w-72 bg-sidebar border-e border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : isRTL ? 'translate-x-full' : '-translate-x-full'
+        }`}
       >
         {/* Brand header */}
         <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between">
@@ -146,27 +152,31 @@ export default function ClientLayout({
           {navItems.map((item) => {
             const Icon = item.icon
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            const label = t(item.key, item.name)
+            const badgeLabel = item.badgeKey ? t(item.badgeKey, item.fallbackBadge || '') : ''
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${active
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                  active
                     ? 'bg-primary text-white shadow-sm'
                     : 'text-foreground-muted hover:text-foreground hover:bg-black/5'
-                  }`}
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-primary'}`} />
-                  <span>{item.name}</span>
+                  <span>{label}</span>
                 </div>
-                {item.badge && (
+                {badgeLabel && (
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
-                      }`}
+                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
+                      active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
+                    }`}
                   >
-                    {item.badge}
+                    {badgeLabel}
                   </span>
                 )}
               </Link>
@@ -177,15 +187,16 @@ export default function ClientLayout({
         {/* Theme Switcher & Footer */}
         <div className="p-4 border-t border-surface-border bg-surface/40 space-y-3">
           <div className="flex items-center justify-between text-[11px] text-foreground-muted font-medium">
-            <span>Thème couleur</span>
+            <span>{t('common.color_theme', 'Thème couleur')}</span>
             <div className="flex items-center gap-1.5">
               {themes.map((th) => (
                 <button
                   key={th.id}
                   onClick={() => changeTheme(th.id)}
                   title={th.label}
-                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
-                    }`}
+                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${
+                    currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
+                  }`}
                 />
               ))}
             </div>
@@ -198,12 +209,12 @@ export default function ClientLayout({
               </div>
               <div className="text-[11px] leading-tight">
                 <span className="font-bold text-foreground capitalize block">{role}</span>
-                <span className="text-[10px] text-foreground-muted">En service</span>
+                <span className="text-[10px] text-foreground-muted">{t('badges.in_service', 'En service')}</span>
               </div>
             </div>
             <Link
               href="/login"
-              title="Déconnexion"
+              title={t('common.logout', 'Déconnexion')}
               className="p-1.5 rounded-lg text-foreground-muted hover:text-danger hover:bg-danger/10 transition-colors"
             >
               <LogOut className="w-4 h-4" />
@@ -213,7 +224,7 @@ export default function ClientLayout({
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-72">
+      <div className="flex-1 flex flex-col min-w-0 lg:ps-72">
         {/* Top Navbar */}
         <header className="sticky top-0 z-30 h-16 bg-surface/80 backdrop-blur-md border-b border-surface-border px-4 sm:px-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -228,18 +239,21 @@ export default function ClientLayout({
                 {structureName}
               </h1>
               <p className="text-[10px] text-foreground-muted">
-                D-SANTÉ • Système Hospitalier Intégré
+                D-SANTÉ • {t('app.subtitle', 'Système Hospitalier Intégré')}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Sélecteur de langue FR / EN / العربية */}
+            <LanguageSwitcher />
+
             <Link
               href="/triage"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-danger/10 text-danger text-xs font-bold hover:bg-danger/20 transition-colors"
             >
               <Activity className="w-3.5 h-3.5 animate-pulse" />
-              <span>Nouveau Triage</span>
+              <span>{t('actions.new_triage', 'Nouveau Triage')}</span>
             </Link>
 
             <Link
@@ -247,7 +261,7 @@ export default function ClientLayout({
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-hover shadow-sm transition-colors"
             >
               <Users className="w-3.5 h-3.5" />
-              <span>+ Patient</span>
+              <span>{t('actions.new_patient', '+ Patient')}</span>
             </Link>
           </div>
         </header>
