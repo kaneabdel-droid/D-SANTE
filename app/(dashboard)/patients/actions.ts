@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { revalidatePath } from 'next/cache'
 
-export const DEFAULT_PATIENTS = [
+const DEFAULT_PATIENTS = [
   {
     id: '11111111-1111-1111-1111-111111110001',
     ipp: 'PAT-2610-001',

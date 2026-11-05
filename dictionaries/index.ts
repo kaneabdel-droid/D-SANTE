@@ -26,3 +26,4 @@ export const getLocale = async () => {
   const cookieLocale = cookieStore.get("lang")?.value as Locale;
   return locales.includes(cookieLocale) ? cookieLocale : defaultLocale;
 };
+
