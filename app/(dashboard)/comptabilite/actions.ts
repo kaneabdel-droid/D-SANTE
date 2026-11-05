@@ -107,3 +107,68 @@ export async function getEcrituresComptables(journal?: string) {
     return { ecritures: [], error: err.message }
   }
 }
+
+export async function creerEcritureComptable(formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const journal = (formData.get('journal') as string) || 'od'
+  const date_ecriture = (formData.get('date_ecriture') as string) || new Date().toISOString().split('T')[0]
+  const numero_piece = (formData.get('numero_piece') as string)?.trim() || null
+  const libelle = (formData.get('libelle') as string)?.trim()
+  const compte_debit = (formData.get('compte_debit') as string)?.trim()
+  const compte_credit = (formData.get('compte_credit') as string)?.trim()
+  const montant = Number(formData.get('montant') || 0)
+
+  if (!libelle) return { error: 'Veuillez renseigner le libellé de l’écriture.' }
+  if (!compte_debit || !compte_credit) return { error: 'Veuillez renseigner les comptes de débit et de crédit.' }
+  if (montant <= 0) return { error: 'Le montant doit être supérieur à zéro.' }
+
+  const structureId = tenant?.structureId || tenant?.gieId || null
+
+  try {
+    const { data: ecriture, error: errEc } = await supabase
+      .from('ecritures_comptables')
+      .insert({
+        journal,
+        date_ecriture,
+        numero_piece,
+        libelle,
+        validee: true,
+        ...(structureId ? { structure_id: structureId } : {}),
+      })
+      .select('id')
+      .single()
+
+    if (errEc || !ecriture) {
+      return { error: errEc?.message || 'Erreur lors de la création de l’écriture.' }
+    }
+
+    const lignes = [
+      {
+        ecriture_id: ecriture.id,
+        compte: compte_debit,
+        libelle: `${libelle} (Débit)`,
+        debit: montant,
+        credit: 0,
+        ...(structureId ? { structure_id: structureId } : {}),
+      },
+      {
+        ecriture_id: ecriture.id,
+        compte: compte_credit,
+        libelle: `${libelle} (Crédit)`,
+        debit: 0,
+        credit: montant,
+        ...(structureId ? { structure_id: structureId } : {}),
+      },
+    ]
+
+    const { error: errLignes } = await supabase.from('lignes_ecritures_comptables').insert(lignes)
+    if (errLignes) return { error: errLignes.message }
+
+    revalidatePath('/comptabilite')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la création de l’écriture' }
+  }
+}

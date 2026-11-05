@@ -2,9 +2,19 @@ import {
   Syringe, CheckCircle2, Clock, AlertCircle, Plus,
   User, Calendar, Activity, Pill
 } from 'lucide-react'
+import { getSoins } from './actions'
+import { getPatients } from '../patients/actions'
+import NouveauSoinModal from './NouveauSoinModal'
+import SoinStatutToggle from './SoinStatutToggle'
 
 export default async function SoinsPage() {
-  const soins = [
+  const [{ soins }, { patients }] = await Promise.all([
+    getSoins(),
+    getPatients(),
+  ])
+
+  // Données de démonstration si aucun soin n'a encore été enregistré en base
+  const mockSoins = [
     {
       id: 'soin-1',
       patientNom: 'Diallo Oumar',
@@ -40,12 +50,50 @@ export default async function SoinsPage() {
     },
   ]
 
+  // Normalisation des soins (base de données Supabase vs données de secours)
+  const listeSoins = soins && soins.length > 0 ? soins.map((s: any) => {
+    // Extraction des métadonnées stockées dans observations si présentes
+    let lit = 'Ambulatoire'
+    let soignant = 'Équipe Soins'
+    let cleanObs = s.observations || ''
+
+    if (cleanObs.includes('Emplacement:')) {
+      const match = cleanObs.match(/Emplacement:\s*([^|]+)/)
+      if (match) lit = match[1].trim()
+    }
+    if (cleanObs.includes('Soignant:')) {
+      const match = cleanObs.match(/Soignant:\s*([^|]+)/)
+      if (match) soignant = match[1].trim()
+    }
+
+    const dateObj = s.date_soin ? new Date(s.date_soin) : new Date()
+    const heure = dateObj.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+
+    const patientNom = s.patients
+      ? `${s.patients.prenom || ''} ${s.patients.nom || ''}`.trim()
+      : 'Patient'
+
+    return {
+      id: s.id,
+      patientNom,
+      ipp: s.patients?.ipp || 'PAT-N/A',
+      typeSoin: s.type_soin || 'soin',
+      description: s.description || 'Soin infirmier',
+      soignant,
+      heure,
+      statut: s.statut || 'effectue',
+      lit,
+    }
+  }) : mockSoins
+
   const typeBadges: Record<string, string> = {
     perfusion: 'bg-sky-500/10 text-sky-600',
     injection: 'bg-indigo-500/10 text-indigo-600',
     pansement: 'bg-amber-500/10 text-amber-600',
     nebulisation: 'bg-purple-500/10 text-purple-600',
+    sondage: 'bg-teal-500/10 text-teal-600',
     prelevement: 'bg-rose-500/10 text-rose-600',
+    autre: 'bg-gray-500/10 text-gray-600',
   }
 
   return (
@@ -60,10 +108,8 @@ export default async function SoinsPage() {
           </p>
         </div>
 
-        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-primary-hover transition-colors">
-          <Plus className="w-4 h-4" />
-          <span>+ Enregistrer un Soin</span>
-        </button>
+        {/* Modal d'enregistrement d'un nouveau soin */}
+        <NouveauSoinModal patients={patients || []} />
       </div>
 
       <div className="bg-surface rounded-3xl border border-surface-border overflow-hidden shadow-xs">
@@ -79,7 +125,7 @@ export default async function SoinsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border/60">
-              {soins.map((s) => (
+              {listeSoins.map((s) => (
                 <tr key={s.id} className="hover:bg-background/40 transition-colors">
                   <td className="py-3.5 px-4">
                     <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${typeBadges[s.typeSoin] || 'bg-gray-100 text-gray-700'}`}>
@@ -98,19 +144,7 @@ export default async function SoinsPage() {
                     <span className="text-[11px] text-foreground-muted font-mono">{s.heure}</span>
                   </td>
                   <td className="py-3.5 px-4 text-right">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                      s.statut === 'effectue' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
-                    }`}>
-                      {s.statut === 'effectue' ? (
-                        <>
-                          <CheckCircle2 className="w-3 h-3" /> Fait
-                        </>
-                      ) : (
-                        <>
-                          <Clock className="w-3 h-3" /> À Faire
-                        </>
-                      )}
-                    </span>
+                    <SoinStatutToggle soinId={s.id} initialStatut={s.statut} />
                   </td>
                 </tr>
               ))}

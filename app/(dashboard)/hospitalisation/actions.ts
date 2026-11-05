@@ -86,12 +86,26 @@ export async function admettrePatient(formData: FormData) {
   }
 }
 
-export async function libererLit(hospitalisationId: string, litId: string, modeSortie: string = 'guerison', resumeSortie?: string) {
+export async function libererLit(
+  hospitalisationId: string,
+  litId?: string | null,
+  modeSortie: string = 'guerison',
+  resumeSortie?: string,
+  statutLit: string = 'nettoyage'
+) {
   const supabase = await createClient()
+
+  // Si c'est un identifiant de démo (non-UUID)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(hospitalisationId)
+  if (!isUuid) {
+    return {
+      error: "Ce dossier est un exemple de démonstration. Pour tester une clôture réelle, admettez d'abord un patient via 'Nouvelle Admission'.",
+    }
+  }
 
   try {
     // Clôture du séjour
-    await supabase
+    const { error: errHosp } = await supabase
       .from('hospitalisations')
       .update({
         statut: 'cloturee',
@@ -101,9 +115,11 @@ export async function libererLit(hospitalisationId: string, litId: string, modeS
       })
       .eq('id', hospitalisationId)
 
-    // Remettre le lit en statut nettoyage/libre
-    if (litId) {
-      await supabase.from('lits').update({ statut: 'nettoyage' }).eq('id', litId)
+    if (errHosp) return { error: errHosp.message }
+
+    // Remettre le lit en statut nettoyage ou libre
+    if (litId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(litId)) {
+      await supabase.from('lits').update({ statut: statutLit }).eq('id', litId)
     }
 
     revalidatePath('/hospitalisation')

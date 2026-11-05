@@ -90,29 +90,53 @@ export async function creerFacture(formData: FormData) {
   }
 }
 
-export async function encaisserFacture(factureId: string, moyenPaiement: string) {
+export async function encaisserFacture(
+  factureId: string,
+  moyenPaiement: string = 'especes',
+  montantEncaisse?: number
+) {
   const supabase = await createClient()
 
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(factureId)
+  if (!isUuid) {
+    return {
+      error: "Cette facture est un exemple de démonstration. Pour tester un encaissement réel, émettez d'abord une facture via '+ Nouvelle Facture'.",
+    }
+  }
+
   try {
-    const { data: fac } = await supabase
+    const { data: fac, error: fetchErr } = await supabase
       .from('factures_sante')
-      .select('part_patient')
+      .select('part_patient, montant_regle_patient')
       .eq('id', factureId)
       .single()
 
-    if (fac) {
-      await supabase
-        .from('factures_sante')
-        .update({
-          montant_regle_patient: fac.part_patient,
-          statut_paiement_patient: 'paye',
-          moyen_paiement: moyenPaiement,
-        })
-        .eq('id', factureId)
+    if (fetchErr || !fac) {
+      return { error: 'Facture introuvable.' }
+    }
+
+    const partPatient = Number(fac.part_patient || 0)
+    const dejaRegle = Number(fac.montant_regle_patient || 0)
+    const aRegler = montantEncaisse !== undefined ? montantEncaisse : (partPatient - dejaRegle)
+    const nouveauTotalRegle = dejaRegle + aRegler
+    const statutPaiement = nouveauTotalRegle >= partPatient ? 'paye' : 'partiel'
+
+    const { error: updateErr } = await supabase
+      .from('factures_sante')
+      .update({
+        montant_regle_patient: nouveauTotalRegle,
+        statut_paiement_patient: statutPaiement,
+        moyen_paiement: moyenPaiement,
+      })
+      .eq('id', factureId)
+
+    if (updateErr) {
+      return { error: updateErr.message }
     }
 
     revalidatePath('/facturation')
     revalidatePath('/dashboard')
+    revalidatePath('/caisse')
     return { success: true }
   } catch (err: any) {
     return { error: err.message || 'Erreur lors de l’encaissement' }

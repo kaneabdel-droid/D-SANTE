@@ -1,10 +1,14 @@
 import {
   UserCog, ShieldCheck, Stethoscope, Syringe,
-  Pill, Clock, Plus, Phone, Mail, Award
+  Pill, Clock, Plus, Phone, Mail, Award, HeartPulse, Microscope, Activity
 } from 'lucide-react'
+import { getPersonnel } from './actions'
+import AjouterCollaborateurModal from './AjouterCollaborateurModal'
 
 export default async function PersonnelPage() {
-  const staff = [
+  const { personnel } = await getPersonnel()
+
+  const defaultStaff = [
     {
       id: 'staff-1',
       nom: 'Dr. Cheikh Anta Diop',
@@ -57,11 +61,27 @@ export default async function PersonnelPage() {
     },
   ]
 
+  // Normalisation du personnel
+  const staff = personnel && personnel.length > 0 ? personnel.map((p: any) => ({
+    id: p.id,
+    nom: p.nom,
+    role: p.role || 'medecin',
+    specialite: p.specialite || 'Santé Générale',
+    telephone: p.telephone || 'Non renseigné',
+    email: p.email || 'Non renseigné',
+    statutGarde: p.statut_garde || 'En Service',
+    enGardeAujourdhui: !!p.en_garde_aujourdhui,
+  })) : defaultStaff
+
   const roleBadges: Record<string, { label: string; icon: any; color: string }> = {
     medecin: { label: 'Médecin Praticien', icon: Stethoscope, color: 'bg-primary/10 text-primary' },
     infirmier: { label: 'Infirmier Diplômé', icon: Syringe, color: 'bg-indigo-500/10 text-indigo-600' },
+    sage_femme: { label: 'Sage-Femme d’État', icon: HeartPulse, color: 'bg-rose-500/10 text-rose-600' },
     pharmacien: { label: 'Pharmacien', icon: Pill, color: 'bg-emerald-500/10 text-emerald-600' },
     caissier: { label: 'Agent de Caisse', icon: Award, color: 'bg-amber-500/10 text-amber-600' },
+    laborantin: { label: 'Biologiste / Labo', icon: Microscope, color: 'bg-purple-500/10 text-purple-600' },
+    aide_soignant: { label: 'Aide-Soignant(e)', icon: Activity, color: 'bg-sky-500/10 text-sky-600' },
+    administrateur: { label: 'Cadre Administratif', icon: UserCog, color: 'bg-gray-500/10 text-gray-700' },
   }
 
   return (
@@ -76,10 +96,8 @@ export default async function PersonnelPage() {
           </p>
         </div>
 
-        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-primary-hover transition-colors">
-          <Plus className="w-4 h-4" />
-          <span>+ Ajouter un Collaborateur</span>
-        </button>
+        {/* Modal d'ajout de collaborateur */}
+        <AjouterCollaborateurModal />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

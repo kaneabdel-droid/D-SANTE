@@ -1,5 +1,6 @@
-import { getStocksMedicaments, delivrerMedicament } from './actions'
+import { getStocksMedicaments } from './actions'
 import NouveauMedicamentModal from './NouveauMedicamentModal'
+import DelivrerButton from './DelivrerButton'
 import {
   Pill, Search, AlertTriangle, ShieldCheck, CheckCircle2,
   Calendar, Layers, ArrowDownRight, Package
@@ -216,20 +217,11 @@ export default async function PharmaciePage(props: {
 
                     {/* Dispensation rapide */}
                     <td className="py-3.5 px-4 text-right">
-                      <form
-                        action={async () => {
-                          'use server'
-                          await delivrerMedicament(m.id, 1)
-                        }}
-                      >
-                        <button
-                          type="submit"
-                          disabled={m.quantite_en_stock <= 0}
-                          className="px-3 py-1.5 rounded-xl bg-primary text-white hover:bg-primary-hover text-xs font-bold transition-colors disabled:opacity-30"
-                        >
-                          Délivrer -1
-                        </button>
-                      </form>
+                      <DelivrerButton
+                        medicamentId={m.id}
+                        stockActuel={m.quantite_en_stock}
+                        nomCommercial={m.nom_commercial}
+                      />
                     </td>
                   </tr>
                 )

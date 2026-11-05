@@ -1,6 +1,7 @@
-import { getLitsEtHospitalisations, libererLit } from './actions'
+import { getLitsEtHospitalisations } from './actions'
 import { getPatients } from '../patients/actions'
 import AdmissionModal from './AdmissionModal'
+import CloturerSortieModal from './CloturerSortieModal'
 import {
   BedDouble, CheckCircle2, Clock, AlertTriangle,
   User, Calendar, LogOut, ArrowRight, Activity
@@ -29,6 +30,7 @@ export default async function HospitalisationPage() {
       date_entree: '2026-10-28T09:30:00Z',
       motif_admission: 'Pneumopathie infectieuse avec désaturation',
       statut: 'en_cours',
+      lit_id: 'lit-1',
       patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2610-001', groupe_sanguin: 'O+' },
       lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
     },
@@ -38,6 +40,7 @@ export default async function HospitalisationPage() {
       date_entree: '2026-10-29T14:15:00Z',
       motif_admission: 'Surveillance post-césarienne programmée',
       statut: 'en_cours',
+      lit_id: 'lit-4',
       patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-2610-003', groupe_sanguin: 'A-' },
       lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
     },
@@ -198,20 +201,7 @@ export default async function HospitalisationPage() {
 
                     {/* Action libération */}
                     <td className="py-3.5 px-4 text-right">
-                      <form
-                        action={async () => {
-                          'use server'
-                          await libererLit(h.id, h.lit_id)
-                        }}
-                      >
-                        <button
-                          type="submit"
-                          className="px-3 py-1.5 rounded-xl bg-danger/10 text-danger hover:bg-danger/20 text-xs font-bold transition-colors inline-flex items-center gap-1.5"
-                        >
-                          <LogOut className="w-3.5 h-3.5" />
-                          <span>Clôturer Sortie</span>
-                        </button>
-                      </form>
+                      <CloturerSortieModal hospitalisation={h} />
                     </td>
                   </tr>
                 )

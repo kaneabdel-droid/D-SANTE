@@ -1,10 +1,11 @@
 import { getEcrituresComptables } from './actions'
 import ImportJournauxModal from './ImportJournauxModal'
 import ArchiveComptableButton from './ArchiveComptableButton'
+import NouvelleEcritureModal from './NouvelleEcritureModal'
 import Link from 'next/link'
 import {
   FileText, ArrowDownRight, ArrowUpRight, CheckCircle2,
-  Filter, AlertCircle, BookOpen, ShieldCheck
+  Filter, AlertCircle, BookOpen, ShieldCheck, Plus
 } from 'lucide-react'
 
 export default async function ComptabilitePage(props: {
@@ -15,8 +16,9 @@ export default async function ComptabilitePage(props: {
 
   const { ecritures, error } = await getEcrituresComptables(selectedJournal)
 
-  // Données de démonstration SYSCOHADA Santé (consultations, pharmacie, tiers-payant)
-  const ecrituresAffichees = ecritures && ecritures.length > 0 ? ecritures : [
+  // Données de démonstration complètes pour TOUS les journaux SYSCOHADA Santé
+  const mockEcritures = [
+    // 1. Journal des Ventes & Recettes (ventes)
     {
       id: 'ec-1',
       date_ecriture: '2026-10-30',
@@ -42,18 +44,122 @@ export default async function ComptabilitePage(props: {
     },
     {
       id: 'ec-3',
+      date_ecriture: '2026-10-28',
+      journal: 'ventes',
+      numero_piece: 'FAC-2610-0089',
+      libelle: 'Séjour hospitalisation & surveillance VIP',
+      lignes_ecritures_comptables: [
+        { id: 'l6', compte: '411', libelle: 'Créances clients hospitalisations', debit: 65000, credit: 0 },
+        { id: 'l7', compte: '706', libelle: 'Prestations de séjour & hébergement médicalisé', debit: 0, credit: 65000 },
+      ],
+    },
+
+    // 2. Journal des Achats & Fournisseurs (achats)
+    {
+      id: 'ec-4',
       date_ecriture: '2026-10-29',
       journal: 'achats',
       numero_piece: 'FAC-FOURN-881',
       libelle: 'Approvisionnement réactifs et solutés laboratoire',
       lignes_ecritures_comptables: [
-        { id: 'l6', compte: '601', libelle: 'Achats fournitures médicales & consommables', debit: 85000, credit: 0 },
-        { id: 'l7', compte: '401', libelle: 'Fournisseur Répartiteurs Médicaux', debit: 0, credit: 85000 },
+        { id: 'l8', compte: '601', libelle: 'Achats fournitures médicales & consommables', debit: 85000, credit: 0 },
+        { id: 'l9', compte: '401', libelle: 'Fournisseur Répartiteurs Médicaux', debit: 0, credit: 85000 },
+      ],
+    },
+    {
+      id: 'ec-5',
+      date_ecriture: '2026-10-27',
+      journal: 'achats',
+      numero_piece: 'FAC-FOURN-879',
+      libelle: 'Réapprovisionnement grossiste pharmacie (antibiotiques, antalgiques)',
+      lignes_ecritures_comptables: [
+        { id: 'l10', compte: '601', libelle: 'Achats de médicaments pour le dépôt', debit: 220000, credit: 0 },
+        { id: 'l11', compte: '401', libelle: 'Fournisseur Laborex Sénégal', debit: 0, credit: 220000 },
+      ],
+    },
+
+    // 3. Journal de Caisse (caisse)
+    {
+      id: 'ec-6',
+      date_ecriture: '2026-10-30',
+      journal: 'caisse',
+      numero_piece: 'CAISSE-2610-01',
+      libelle: 'Règlement ticket modérateur consultations matinée en espèces',
+      lignes_ecritures_comptables: [
+        { id: 'l12', compte: '571', libelle: 'Encaissements espèces guichet caisse', debit: 45000, credit: 0 },
+        { id: 'l13', compte: '706', libelle: 'Prestations consultations de médecine générale', debit: 0, credit: 45000 },
+      ],
+    },
+    {
+      id: 'ec-7',
+      date_ecriture: '2026-10-29',
+      journal: 'caisse',
+      numero_piece: 'CAISSE-DEP-14',
+      libelle: 'Menue dépense caisse : Produits de désinfection et nettoyage pavillon',
+      lignes_ecritures_comptables: [
+        { id: 'l14', compte: '605', libelle: 'Fournitures d’entretien et désinfection', debit: 12500, credit: 0 },
+        { id: 'l15', compte: '571', libelle: 'Sortie espèces de caisse', debit: 0, credit: 12500 },
+      ],
+    },
+
+    // 4. Journal de Banque (banque)
+    {
+      id: 'ec-8',
+      date_ecriture: '2026-10-30',
+      journal: 'banque',
+      numero_piece: 'VIR-IPM-9912',
+      libelle: 'Virement bancaire reçu IPM Sonatel (Règlement Bordereau n° 2610)',
+      lignes_ecritures_comptables: [
+        { id: 'l16', compte: '521', libelle: 'Compte Bancaire CBAO Sénégal', debit: 180000, credit: 0 },
+        { id: 'l17', compte: '411', libelle: 'Règlement créances tiers-payant IPM Sonatel', debit: 0, credit: 180000 },
+      ],
+    },
+    {
+      id: 'ec-9',
+      date_ecriture: '2026-10-28',
+      journal: 'banque',
+      numero_piece: 'CHQ-BANC-5501',
+      libelle: 'Règlement facture fournisseur Répartiteurs Médicaux par chèque bancaire',
+      lignes_ecritures_comptables: [
+        { id: 'l18', compte: '401', libelle: 'Fournisseur Répartiteurs Médicaux', debit: 85000, credit: 0 },
+        { id: 'l19', compte: '521', libelle: 'Compte Bancaire CBAO Sénégal', debit: 0, credit: 85000 },
+      ],
+    },
+
+    // 5. Journal des Opérations Diverses (od)
+    {
+      id: 'ec-10',
+      date_ecriture: '2026-10-31',
+      journal: 'od',
+      numero_piece: 'OD-AMORT-2610',
+      libelle: 'Dotation mensuelle aux amortissements des équipements biomédicaux',
+      lignes_ecritures_comptables: [
+        { id: 'l20', compte: '681', libelle: 'Dotations aux amortissements du matériel médical', debit: 95000, credit: 0 },
+        { id: 'l21', compte: '281', libelle: 'Amortissement matériel biomédical & lits', debit: 0, credit: 95000 },
+      ],
+    },
+    {
+      id: 'ec-11',
+      date_ecriture: '2026-10-31',
+      journal: 'od',
+      numero_piece: 'OD-STOCK-2610',
+      libelle: 'Régularisation inventaire et variation stocks pharmacie fin de mois',
+      lignes_ecritures_comptables: [
+        { id: 'l22', compte: '603', libelle: 'Variation des stocks de produits pharmaceutiques', debit: 35000, credit: 0 },
+        { id: 'l23', compte: '311', libelle: 'Stock pharmacie et réactifs', debit: 0, credit: 35000 },
       ],
     },
   ]
 
-  // Totaux Débit / Crédit
+  // Normalisation des écritures : base réelle ou démo complète
+  const sourceEcritures = ecritures && ecritures.length > 0 ? ecritures : mockEcritures
+
+  // Filtrage effectif selon le journal sélectionné
+  const ecrituresAffichees = selectedJournal === 'tous'
+    ? sourceEcritures
+    : sourceEcritures.filter((ec) => ec.journal === selectedJournal)
+
+  // Totaux Débit / Crédit calculés sur les écritures affichées
   const totalDebits = ecrituresAffichees.reduce((acc, ec) => {
     return acc + (ec.lignes_ecritures_comptables || []).reduce((s: number, l: any) => s + Number(l.debit || 0), 0)
   }, 0)
@@ -66,8 +172,9 @@ export default async function ComptabilitePage(props: {
     new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(val) + ' FCFA'
 
   const journalLabels: Record<string, string> = {
-    ventes: 'Ventes / Recettes',
-    achats: 'Achats / Fournisseurs',
+    tous: 'Tous les journaux',
+    ventes: 'Ventes & Recettes',
+    achats: 'Achats & Fournisseurs',
     caisse: 'Caisse',
     banque: 'Banque',
     od: 'Opérations Diverses',
@@ -89,6 +196,7 @@ export default async function ComptabilitePage(props: {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <NouvelleEcritureModal defaultJournal={selectedJournal} />
           <ArchiveComptableButton
             nomStructure="Centre Hospitalier / Clinique D-Santé"
             ecritures={ecrituresAffichees}
@@ -106,7 +214,9 @@ export default async function ComptabilitePage(props: {
       {/* Cartes KPI Totaux */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
-          <span className="text-xs font-semibold text-foreground-muted">Nombre d&apos;Écritures</span>
+          <span className="text-xs font-semibold text-foreground-muted">
+            Nombre d&apos;Écritures ({journalLabels[selectedJournal] || selectedJournal})
+          </span>
           <p className="text-3xl font-black font-heading text-foreground mt-2">
             {ecrituresAffichees.length}
           </p>
@@ -152,7 +262,7 @@ export default async function ComptabilitePage(props: {
               href={`/comptabilite?journal=${j.id}`}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-primary text-white shadow-xs'
+                  ? 'bg-primary text-white shadow-xs font-bold'
                   : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
               }`}
             >
@@ -162,7 +272,7 @@ export default async function ComptabilitePage(props: {
         })}
       </div>
 
-      {/* Tableau du Journal (Zéro superposition) */}
+      {/* Tableau du Journal */}
       <div className="bg-surface border border-surface-border rounded-3xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
@@ -178,86 +288,77 @@ export default async function ComptabilitePage(props: {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border">
-              {ecrituresAffichees.map((ec: any) => {
-                const lignes = ec.lignes_ecritures_comptables || []
+              {ecrituresAffichees.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 text-center text-foreground-muted">
+                    <BookOpen className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                    <p className="font-bold text-foreground">
+                      Aucune écriture enregistrée dans le journal {journalLabels[selectedJournal] || selectedJournal}
+                    </p>
+                    <p className="text-xs mt-1">
+                      Utilisez le bouton &quot;+ Nouvelle Écriture&quot; pour enregistrer la première opération.
+                    </p>
+                  </td>
+                </tr>
+              ) : (
+                ecrituresAffichees.map((ec) => {
+                  const lignes = ec.lignes_ecritures_comptables || []
+                  return lignes.map((ligne: any, idx: number) => {
+                    const isFirstLine = idx === 0
+                    const isDebit = Number(ligne.debit || 0) > 0
 
-                // Tri conforme SYSCOHADA : Débits d'abord, puis Crédits
-                const lignesTriees = [...lignes].sort((a: any, b: any) => {
-                  const debitA = Number(a.debit) || 0
-                  const debitB = Number(b.debit) || 0
-                  if (debitA > 0 && debitB === 0) return -1
-                  if (debitA === 0 && debitB > 0) return 1
-                  return 0
-                })
+                    return (
+                      <tr
+                        key={`${ec.id}-${ligne.id || idx}`}
+                        className={`hover:bg-surface-border/20 transition-colors ${
+                          isFirstLine ? 'border-t-2 border-surface-border' : ''
+                        }`}
+                      >
+                        {/* Date (uniquement 1ère ligne) */}
+                        <td className="py-2.5 px-4 font-mono text-xs text-foreground whitespace-nowrap align-top">
+                          {isFirstLine ? ec.date_ecriture : ''}
+                        </td>
 
-                return lignesTriees.map((l: any, idx: number) => {
-                  const isFirst = idx === 0
-
-                  return (
-                    <tr
-                      key={l.id || `${ec.id}-${idx}`}
-                      className={`hover:bg-surface-border/20 transition-colors ${
-                        isFirst ? 'border-t-2 border-surface-border bg-surface' : 'bg-surface/40'
-                      }`}
-                    >
-                      {/* Spanning des métadonnées de la pièce */}
-                      {isFirst && (
-                        <>
-                          <td
-                            rowSpan={lignesTriees.length}
-                            className="py-3.5 px-4 font-mono text-xs text-foreground font-medium align-top whitespace-nowrap border-r border-surface-border/50 bg-background/30"
-                          >
-                            {ec.date_ecriture}
-                          </td>
-                          <td
-                            rowSpan={lignesTriees.length}
-                            className="py-3.5 px-4 align-top whitespace-nowrap border-r border-surface-border/50 bg-background/30"
-                          >
-                            <span className="inline-block px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase bg-primary/10 text-primary">
+                        {/* Journal (uniquement 1ère ligne) */}
+                        <td className="py-2.5 px-4 whitespace-nowrap align-top">
+                          {isFirstLine && (
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-surface-border/80 text-foreground">
                               {journalLabels[ec.journal] || ec.journal}
                             </span>
-                          </td>
-                          <td
-                            rowSpan={lignesTriees.length}
-                            className="py-3.5 px-4 font-mono text-xs align-top border-r border-surface-border/50 bg-background/30"
-                          >
-                            <span className="font-bold text-foreground block">{ec.numero_piece || '—'}</span>
-                            {ec.libelle && (
-                              <span className="block text-[11px] text-foreground-muted mt-1 leading-snug break-words max-w-[170px]" title={ec.libelle}>
-                                {ec.libelle}
-                              </span>
-                            )}
-                          </td>
-                        </>
-                      )}
+                          )}
+                        </td>
 
-                      {/* Compte individuel */}
-                      <td className="py-3 px-4 font-mono text-xs align-top whitespace-nowrap">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-border/60 text-foreground font-bold font-mono text-[11px]">
-                          {l.compte}
-                        </span>
-                      </td>
+                        {/* Réf / Pièce (uniquement 1ère ligne) */}
+                        <td className="py-2.5 px-4 font-mono text-xs font-bold text-foreground-muted whitespace-nowrap align-top">
+                          {isFirstLine ? ec.numero_piece || '—' : ''}
+                        </td>
 
-                      {/* Libellé du mouvement */}
-                      <td className="py-3 px-4 text-xs align-top">
-                        <span className="text-foreground font-medium block">
-                          {l.libelle || ec.libelle}
-                        </span>
-                      </td>
+                        {/* Numéro Compte SYSCOHADA */}
+                        <td className="py-2.5 px-4 font-mono text-xs font-bold text-primary whitespace-nowrap">
+                          {ligne.compte}
+                        </td>
 
-                      {/* Montant Débit */}
-                      <td className="py-3 px-4 text-right font-mono text-xs font-bold text-primary align-top whitespace-nowrap">
-                        {Number(l.debit) > 0 ? formatCFA(Number(l.debit)) : '—'}
-                      </td>
+                        {/* Libellé */}
+                        <td className="py-2.5 px-4 text-xs text-foreground font-medium">
+                          <span className={isDebit ? 'pl-0' : 'pl-4 text-foreground-muted'}>
+                            {ligne.libelle || ec.libelle}
+                          </span>
+                        </td>
 
-                      {/* Montant Crédit */}
-                      <td className="py-3 px-4 text-right font-mono text-xs font-bold text-secondary align-top whitespace-nowrap">
-                        {Number(l.credit) > 0 ? formatCFA(Number(l.credit)) : '—'}
-                      </td>
-                    </tr>
-                  )
+                        {/* Débit */}
+                        <td className="py-2.5 px-4 font-mono text-xs text-right font-bold text-primary whitespace-nowrap">
+                          {Number(ligne.debit || 0) > 0 ? formatCFA(Number(ligne.debit)) : '—'}
+                        </td>
+
+                        {/* Crédit */}
+                        <td className="py-2.5 px-4 font-mono text-xs text-right font-bold text-secondary whitespace-nowrap">
+                          {Number(ligne.credit || 0) > 0 ? formatCFA(Number(ligne.credit)) : '—'}
+                        </td>
+                      </tr>
+                    )
+                  })
                 })
-              })}
+              )}
             </tbody>
           </table>
         </div>

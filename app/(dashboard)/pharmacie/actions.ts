@@ -84,27 +84,44 @@ export async function ajouterMedicament(formData: FormData) {
   }
 }
 
-export async function delivrerMedicament(medicamentId: string, quantiteSortie: number) {
+export async function delivrerMedicament(medicamentId: string, quantiteSortie: number = 1) {
   const supabase = await createClient()
 
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(medicamentId)
+  if (!isUuid) {
+    return {
+      error: "Ce produit est un exemple de démonstration. Pour tester la délivrance réelle, ajoutez un médicament via '+ Nouveau Médicament'.",
+    }
+  }
+
   try {
-    const { data: med } = await supabase
+    const { data: med, error: fetchErr } = await supabase
       .from('pharmacie_stocks')
-      .select('quantite_en_stock')
+      .select('quantite_en_stock, nom_commercial, dci')
       .eq('id', medicamentId)
       .single()
 
-    if (med) {
-      const nouvelleQte = Math.max(0, med.quantite_en_stock - quantiteSortie)
-      await supabase
-        .from('pharmacie_stocks')
-        .update({ quantite_en_stock: nouvelleQte })
-        .eq('id', medicamentId)
+    if (fetchErr || !med) {
+      return { error: 'Médicament introuvable en stock.' }
+    }
+
+    if (med.quantite_en_stock < quantiteSortie) {
+      return { error: `Stock insuffisant (${med.quantite_en_stock} disponible(s)).` }
+    }
+
+    const nouvelleQte = Math.max(0, med.quantite_en_stock - quantiteSortie)
+    const { error: updateErr } = await supabase
+      .from('pharmacie_stocks')
+      .update({ quantite_en_stock: nouvelleQte })
+      .eq('id', medicamentId)
+
+    if (updateErr) {
+      return { error: updateErr.message }
     }
 
     revalidatePath('/pharmacie')
     revalidatePath('/dashboard')
-    return { success: true }
+    return { success: true, nouvelleQte }
   } catch (err: any) {
     return { error: err.message || 'Erreur lors de la délivrance' }
   }

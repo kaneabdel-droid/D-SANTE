@@ -1,6 +1,7 @@
-import { getFactures, encaisserFacture } from './actions'
+import { getFactures } from './actions'
 import { getPatients, getOrganismesAssurances } from '../patients/actions'
 import NouvelleFactureModal from './NouvelleFactureModal'
+import EncaisserModal from './EncaisserModal'
 import { DownloadFactureButton } from '@/components/DownloadFactureButton'
 import {
   Receipt, ShieldCheck, CheckCircle2, Clock,
@@ -250,19 +251,7 @@ export default async function FacturationPage(props: {
                           }}
                         />
                         {!estPaye && (
-                          <form
-                            action={async () => {
-                              'use server'
-                              await encaisserFacture(fac.id, 'especes')
-                            }}
-                          >
-                            <button
-                              type="submit"
-                              className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-bold transition-colors cursor-pointer"
-                            >
-                              Encaisser
-                            </button>
-                          </form>
+                          <EncaisserModal facture={fac} />
                         )}
                       </div>
                     </td>
