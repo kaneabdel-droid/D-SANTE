@@ -1,176 +1,62 @@
 import { getTenantContext } from '@/utils/supabase/tenant'
 import {
-  CreditCard, CheckCircle2, ShieldCheck, Zap,
-  Building2, Sparkles, AlertCircle, Phone
+  CreditCard,
+  CheckCircle2,
+  ShieldCheck,
+  Stethoscope,
+  Phone,
 } from 'lucide-react'
+import PlanSelectorSante from './PlanSelectorSante'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AbonnementPage() {
   const tenant = await getTenantContext()
   const currentTier = tenant?.subscriptionTier || 'clinique'
 
-  const plans = [
-    {
-      id: 'poste_sante',
-      nom: 'Poste de Santé & Dispensaire',
-      prix: '10 000',
-      periode: 'FCFA / mois',
-      prixAnnuel: '108 000 FCFA / an (-10%)',
-      desc: 'Idéal pour les postes de santé ruraux, dispensaires et cabinets infirmiers.',
-      fonctionnalites: [
-        'Fichier Patients & IPP illimités',
-        'Triage & Constantes vitales',
-        'Consultations de base & CPN',
-        'Dépôt de médicaments d’urgence',
-        'Caisse recettes guichet simple',
-        'Mode PWA 100% Hors-Ligne',
-      ],
-      populaire: false,
-    },
-    {
-      id: 'centre_medical',
-      nom: 'Centre Médical & Clinique',
-      prix: '15 000',
-      periode: 'FCFA / mois',
-      prixAnnuel: '162 000 FCFA / an (-10%)',
-      desc: 'Conçu pour les cliniques privées, maternités et centres de santé urbains.',
-      fonctionnalites: [
-        'Toutes les fonctions Poste de Santé',
-        'Jusqu’à 15 praticiens soignants',
-        'Dossier Médical Partagé complet',
-        'Ordonnances sécurisées avec QR code & PDF',
-        'Hospitalisation (jusqu’à 30 lits)',
-        'Facturation Tiers-Payant (IPM & CMU)',
-        'Pharmacie interne avec suivi des péremptions',
-      ],
-      populaire: true,
-    },
-    {
-      id: 'hopital',
-      nom: 'Hôpital & Polyclinique',
-      prix: '20 000',
-      periode: 'FCFA / mois',
-      prixAnnuel: '204 000 FCFA / an (-15%)',
-      desc: 'Pour les centres hospitaliers régionaux, polycliniques et cliniques chirurgicales.',
-      fonctionnalites: [
-        'Utilisateurs & Praticiens illimités',
-        'Multi-pavillons & Multi-services',
-        'Capacité de lits illimitée',
-        'Gestion des blocs opératoires',
-        'Comptabilité SYSCOHADA complète',
-        'Télétransmission dématérialisée IPM / CMU',
-        'Portail Espace Patient dédié',
-        'Inventaire biomédical & Maintenance',
-        'Support technique dédié 24/7',
-      ],
-      populaire: false,
-    },
-  ]
-
   return (
-    <div className="space-y-8">
-      {/* Entête */}
-      <div className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Gestion des Abonnements D-SANTÉ</span>
+    <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
+      {/* En-tête */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--surface-border)] pb-6">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+              <Stethoscope className="w-5 h-5" />
+            </span>
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">
+              Gestion de l&apos;Abonnement D-SANTÉ
+            </h1>
+          </div>
+          <p className="text-sm text-[var(--foreground-muted)]">
+            Activez votre licence médicale en ligne via Mobile Money (Wave, Orange Money) ou Carte Bancaire, ou réglez directement par virement ou en caisse.
+          </p>
         </div>
-        <h2 className="text-2xl sm:text-4xl font-black font-heading text-foreground">
-          Un abonnement transparent et adapté à votre structure
-        </h2>
-        <p className="text-xs sm:text-sm text-foreground-muted">
-          Paiement sécurisé par Mobile Money (Wave, Orange Money) ou Carte Bancaire via nos passerelles certifiées Maketou & Chariow.
-        </p>
-      </div>
 
-      {/* Grille des Forfaits */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {plans.map((p) => {
-          const estActuel = currentTier === p.id
-
-          return (
-            <div
-              key={p.id}
-              className={`bg-surface rounded-3xl p-6 sm:p-8 border transition-all flex flex-col justify-between relative ${
-                p.populaire
-                  ? 'border-primary ring-2 ring-primary/20 shadow-lg'
-                  : 'border-surface-border shadow-xs'
-              }`}
-            >
-              {p.populaire && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-white text-[10px] font-black uppercase tracking-wider">
-                  Recommandé
-                </span>
-              )}
-
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-black font-heading text-foreground">{p.nom}</h3>
-                  <p className="text-xs text-foreground-muted mt-1 leading-relaxed">{p.desc}</p>
-                </div>
-
-                <div className="pt-2">
-                  <div className="flex items-baseline">
-                    <span className="text-3xl sm:text-4xl font-black font-mono text-foreground">
-                      {p.prix}
-                    </span>
-                    <span className="text-xs font-bold text-foreground-muted ml-1.5">
-                      {p.periode}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-emerald-600 font-semibold mt-0.5">
-                    Ou {p.prixAnnuel}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-surface-border/60 space-y-2.5">
-                  {p.fonctionnalites.map((f, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <span className="text-foreground-muted font-medium">{f}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-8">
-                {estActuel ? (
-                  <button
-                    disabled
-                    className="w-full py-3 rounded-2xl bg-primary/10 text-primary font-bold text-xs cursor-default"
-                  >
-                    ✓ Votre Forfait Actif
-                  </button>
-                ) : (
-                  <button
-                    className="w-full py-3 rounded-2xl bg-primary hover:bg-primary-hover text-white font-bold text-xs shadow-md shadow-primary/20 transition-all flex items-center justify-center gap-2"
-                  >
-                    <CreditCard className="w-4 h-4" />
-                    <span>Souscrire via Wave / Orange Money</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Garantie & Sécurité */}
-      <div className="bg-surface rounded-3xl p-6 border border-surface-border flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
-            <ShieldCheck className="w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="text-sm font-bold text-foreground">Paiements 100% Sécurisés en Afrique de l&apos;Ouest</h4>
-            <p className="text-xs text-foreground-muted">
-              Passerelle principale Maketou avec bascule automatique sur Chariow en cas d&apos;indisponibilité réseau.
-            </p>
-          </div>
+          <a
+            href="https://wa.me/221770000000?text=Bonjour,%20je%20souhaite%20renouveler%20mon%20abonnement%20D-SANTE."
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            <span>Assistance Facturation Clinique</span>
+          </a>
         </div>
+      </div>
 
-        <span className="text-xs font-mono font-bold text-foreground-muted">
-          Support DEMBA Solution
-        </span>
+      {/* Sélecteur et Passerelle de Paiement */}
+      <PlanSelectorSante planActuel={currentTier} />
+
+      {/* Rassurance & Passerelles de Paiement */}
+      <div className="p-6 rounded-2xl bg-[var(--surface)] border border-[var(--surface-border)] space-y-3">
+        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
+          <ShieldCheck className="w-4 h-4" />
+          <span>Passerelle Sécurisée Maketou avec secours Chariow</span>
+        </div>
+        <p className="text-xs text-[var(--foreground-muted)] leading-relaxed">
+          Les paiements en ligne par Mobile Money (Wave Sénégal, Orange Money) et Carte Bancaire (Visa, Mastercard) sont instantanément validés sans webhook externe requis. En cas de règlement en caisse ou par virement bancaire, l&apos;activation est effectuée directement par l&apos;administrateur depuis le SuperAdmin dès réception des fonds.
+        </p>
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import {
   Building2,
   Plus,
@@ -15,11 +15,14 @@ import {
   Phone,
   Mail,
   MapPin,
+  Loader2,
 } from 'lucide-react'
+import { toggleVerrouillerStructure } from '@/app/admin/(protected)/actions'
 
 export default function StructuresPage() {
   const [search, setSearch] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loadingActionId, setLoadingActionId] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
   const [structuresList, setStructuresList] = useState([
@@ -112,14 +115,31 @@ export default function StructuresPage() {
     setTimeout(() => setSuccessMsg(null), 5000)
   }
 
-  function toggleLock(id: string) {
-    setStructuresList((prev) =>
-      prev.map((s) =>
-        s.id === id
-          ? { ...s, status: s.status === 'actif' ? 'suspendu' : 'actif' }
-          : s
+  async function toggleLock(id: string, currentlyActive: boolean) {
+    const bloquer = currentlyActive
+    setLoadingActionId(id)
+
+    const res = await toggleVerrouillerStructure(id, bloquer)
+    setLoadingActionId(null)
+
+    if (res?.success) {
+      setStructuresList((prev) =>
+        prev.map((s) =>
+          s.id === id
+            ? { ...s, status: bloquer ? 'suspendu' : 'actif' }
+            : s
+        )
       )
-    )
+      setSuccessMsg(
+        bloquer
+          ? 'Structure médicale verrouillée (accès bloqué).'
+          : 'Structure médicale activée et déverrouillée avec succès.'
+      )
+      setTimeout(() => setSuccessMsg(null), 4000)
+    } else {
+      setSuccessMsg(`Erreur : ${res?.error || 'Action impossible'}`)
+      setTimeout(() => setSuccessMsg(null), 4000)
+    }
   }
 
   const filtered = structuresList.filter(
@@ -254,21 +274,25 @@ export default function StructuresPage() {
               </span>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => toggleLock(s.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${s.status === 'actif'
-                    ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20'
-                    : 'bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20'
+                  type="button"
+                  onClick={() => toggleLock(s.id, s.status === 'actif')}
+                  disabled={loadingActionId === s.id}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors disabled:opacity-50 ${s.status === 'actif'
+                    ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 border border-rose-500/20'
+                    : 'bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 border border-emerald-500/20'
                     }`}
                 >
-                  {s.status === 'actif' ? (
+                  {loadingActionId === s.id ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : s.status === 'actif' ? (
                     <>
                       <Lock className="w-3.5 h-3.5" />
-                      Suspendre
+                      <span>Verrouiller</span>
                     </>
                   ) : (
                     <>
                       <Unlock className="w-3.5 h-3.5" />
-                      Réactiver
+                      <span>Activer</span>
                     </>
                   )}
                 </button>

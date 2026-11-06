@@ -118,11 +118,11 @@ export function ParametragePasserelles() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-lg font-bold text-white">Passerelle Maketou Médicale</h3>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                    Wave & Orange Money
+                    Wave & Orange Money • Autonome (Sans webhook)
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Règlements des abonnements hospitaliers et encaissements patients instantanés.
+                  Règlements des abonnements hospitaliers et encaissements patients instantanés avec vérification directe de l&apos;état du panier (aucun webhook requis).
                 </p>
               </div>
             </div>
