@@ -152,22 +152,20 @@ export function AbonnementsSanteClient({
           <button
             type="button"
             onClick={() => setFilterStatut('tous')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-              filterStatut === 'tous'
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filterStatut === 'tous'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+              }`}
           >
             Tous ({paiements.length})
           </button>
           <button
             type="button"
             onClick={() => setFilterStatut('pending')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              filterStatut === 'pending'
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${filterStatut === 'pending'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+              }`}
           >
             <Clock className="w-3 h-3" />
             <span>En attente ({enAttenteCount})</span>
@@ -175,11 +173,10 @@ export function AbonnementsSanteClient({
           <button
             type="button"
             onClick={() => setFilterStatut('completed')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-              filterStatut === 'completed'
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${filterStatut === 'completed'
                 ? 'bg-emerald-600 text-white shadow'
                 : 'bg-slate-800 text-slate-400 hover:text-white'
-            }`}
+              }`}
           >
             <CheckCircle2 className="w-3 h-3" />
             <span>Complétés</span>
@@ -334,3 +331,4 @@ export function AbonnementsSanteClient({
     </div>
   )
 }
+

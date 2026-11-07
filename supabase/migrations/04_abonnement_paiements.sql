@@ -24,3 +24,4 @@ create table if not exists public.abonnement_paiements (
 
 create index if not exists idx_sante_abonnement_structure on public.abonnement_paiements (structure_id);
 create index if not exists idx_sante_abonnement_statut on public.abonnement_paiements (statut);
+

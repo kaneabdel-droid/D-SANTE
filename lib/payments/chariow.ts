@@ -101,3 +101,4 @@ export function mapChariowStatus(raw: string): 'completed' | 'failed' | 'pending
   if (s === 'failed' || s === 'cancelled' || s === 'expired') return 'failed'
   return 'pending'
 }
+

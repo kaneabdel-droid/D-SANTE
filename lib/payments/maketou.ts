@@ -101,3 +101,4 @@ export function mapMaketouStatus(raw: string): 'completed' | 'failed' | 'pending
   if (s === 'failed' || s === 'cancelled' || s === 'canceled' || s === 'expired' || s === 'abandoned') return 'failed'
   return 'pending'
 }
+

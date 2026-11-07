@@ -29,7 +29,7 @@ export function ParametragePasserelles() {
   const [maketouApiKey, setMaketouApiKey] = useState('mkt_live_sante_7a819b02efc349102847a')
   const [maketouShopId, setMaketouShopId] = useState('SHOP-DSANTE-SN-01')
   const [maketouSecret, setMaketouSecret] = useState('whsec_mkt_sante_19283749182739182')
-  
+
   // Produits Maketou D-Santé
   const [mktPosteMensuel, setMktPosteMensuel] = useState('PRD-MKT-POSTE-10K')
   const [mktPosteAnnuel, setMktPosteAnnuel] = useState('PRD-MKT-POSTE-108K')
@@ -87,11 +87,10 @@ export function ParametragePasserelles() {
 
       {testResult && (
         <div
-          className={`p-4 rounded-xl border text-xs flex items-center justify-between gap-3 ${
-            testResult.ok
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between gap-3 ${testResult.ok
               ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
               : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-          }`}
+            }`}
         >
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />

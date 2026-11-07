@@ -30,6 +30,7 @@ export default function ClientLayout({
   role,
   subscriptionTier,
   devise,
+  isDemo = false,
 }: {
   children: React.ReactNode
   structureName: string
@@ -37,6 +38,7 @@ export default function ClientLayout({
   role: string
   subscriptionTier: string
   devise: string
+  isDemo?: boolean
 }) {
   const { t, isRTL } = useTranslation()
   const pathname = usePathname()
@@ -142,8 +144,12 @@ export default function ClientLayout({
             <Building2 className="w-3.5 h-3.5 text-primary" />
             {structureType.replace('_', ' ')}
           </span>
-          <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold uppercase text-[9px]">
-            {subscriptionTier}
+          <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[9px] ${
+            isDemo
+              ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+              : 'bg-primary/10 text-primary'
+          }`}>
+            {isDemo ? 'Démo Intégrale' : subscriptionTier}
           </span>
         </div>
 
@@ -235,9 +241,16 @@ export default function ClientLayout({
               <Menu className="w-5 h-5" />
             </button>
             <div className="hidden sm:block">
-              <h1 className="text-sm font-bold text-foreground">
-                {structureName}
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-bold text-foreground">
+                  {structureName}
+                </h1>
+                {isDemo && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
+                    Démo Hôpital Intégrale
+                  </span>
+                )}
+              </div>
               <p className="text-[10px] text-foreground-muted">
                 D-SANTÉ • {t('app.subtitle', 'Système Hospitalier Intégré')}
               </p>

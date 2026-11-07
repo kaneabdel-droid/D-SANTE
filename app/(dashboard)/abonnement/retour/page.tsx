@@ -140,15 +140,15 @@ export default async function AbonnementSanteRetourPage({
                 {isCaisse
                   ? 'Demande de Règlement en Caisse Enregistrée'
                   : isVirement
-                  ? 'Virement Bancaire en Attente de Réception'
-                  : 'Vérification du Paiement en Cours...'}
+                    ? 'Virement Bancaire en Attente de Réception'
+                    : 'Vérification du Paiement en Cours...'}
               </h1>
               <p className="text-xs text-slate-300">
                 {isCaisse
                   ? 'Votre demande est en attente. Votre administrateur peut la valider directement en un clic sur le SuperAdmin dès réception des espèces.'
                   : isVirement
-                  ? 'Dès réception des fonds sur notre compte, l’administrateur validera immédiatement l’accès à votre formule.'
-                  : 'Nous attendons la confirmation automatique de la passerelle. Cette page s’actualise automatiquement.'}
+                    ? 'Dès réception des fonds sur notre compte, l’administrateur validera immédiatement l’accès à votre formule.'
+                    : 'Nous attendons la confirmation automatique de la passerelle. Cette page s’actualise automatiquement.'}
               </p>
               {payment?.id && (
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-400">
@@ -200,3 +200,4 @@ export default async function AbonnementSanteRetourPage({
     </div>
   )
 }
+

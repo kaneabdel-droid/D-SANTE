@@ -29,6 +29,8 @@ export default async function DashboardLayout({
     essaiExpire: false,
   }
 
+  const isDemo = Boolean(currentStructure.isDemo || !tenant)
+
   return (
     <I18nProvider dict={dict} locale={locale}>
       <ClientLayout
@@ -37,6 +39,7 @@ export default async function DashboardLayout({
         role={currentStructure.role}
         subscriptionTier={currentStructure.subscriptionTier}
         devise={currentStructure.devise}
+        isDemo={isDemo}
       >
         {children}
       </ClientLayout>

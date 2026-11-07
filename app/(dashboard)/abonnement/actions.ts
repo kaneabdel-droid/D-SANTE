@@ -84,8 +84,8 @@ export async function initierPaiementAbonnementSante(
     moyenPaiement === 'caisse'
       ? 'caisse'
       : moyenPaiement === 'virement'
-      ? 'virement'
-      : 'maketou'
+        ? 'virement'
+        : 'maketou'
 
   // 3. Enregistrement dans abonnement_paiements
   const { data: payment, error: insertErr } = await admin
@@ -142,8 +142,8 @@ export async function initierPaiementAbonnementSante(
       (planId === 'hopital'
         ? 'PRD-MKT-SANTE-HOPITAL'
         : planId === 'poste_sante'
-        ? 'PRD-MKT-SANTE-POSTE'
-        : 'PRD-MKT-SANTE-CLINIQUE')
+          ? 'PRD-MKT-SANTE-POSTE'
+          : 'PRD-MKT-SANTE-CLINIQUE')
 
     const maketouRes = await initiateMaketouPayment({
       productId: maketouProductId,
@@ -214,3 +214,4 @@ export async function initierPaiementAbonnementSante(
     error: 'La passerelle de paiement en ligne est momentanément indisponible. Vous pouvez choisir "Paiement en Caisse" ou "Virement Bancaire" pour activer votre formule sans délai.',
   }
 }
+
