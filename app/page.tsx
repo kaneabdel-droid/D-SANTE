@@ -302,11 +302,10 @@ export default async function HomePage() {
             {plansPreview.map((p) => (
               <div
                 key={p.id}
-                className={`bg-surface rounded-3xl p-7 border-2 transition-all flex flex-col justify-between relative ${
-                  p.popular
+                className={`bg-surface rounded-3xl p-7 border-2 transition-all flex flex-col justify-between relative ${p.popular
                     ? 'border-primary shadow-xl ring-1 ring-primary/20'
                     : 'border-surface-border shadow-sm'
-                }`}
+                  }`}
               >
                 {p.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
@@ -351,11 +350,10 @@ export default async function HomePage() {
                 <div className="pt-6 border-t border-surface-border mt-6">
                   <Link
                     href={`/signup?plan=${p.id}`}
-                    className={`w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                      p.popular
+                    className={`w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${p.popular
                         ? 'bg-primary hover:bg-primary-hover text-white shadow-md shadow-primary/20'
                         : 'bg-surface-hover hover:bg-surface-border text-foreground border border-surface-border'
-                    }`}
+                      }`}
                   >
                     <span>{t.btn_choose_plan}</span>
                     <ArrowRight className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />

@@ -218,13 +218,20 @@ export default function ClientLayout({
                 <span className="text-[10px] text-foreground-muted">{t('badges.in_service', 'En service')}</span>
               </div>
             </div>
-            <Link
-              href="/login"
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  localStorage.removeItem('dsante_demo_role')
+                  localStorage.removeItem('d-sante-theme')
+                } catch {}
+                window.location.href = '/auth/logout'
+              }}
               title={t('common.logout', 'Déconnexion')}
-              className="p-1.5 rounded-lg text-foreground-muted hover:text-danger hover:bg-danger/10 transition-colors"
+              className="p-1.5 rounded-lg text-foreground-muted hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

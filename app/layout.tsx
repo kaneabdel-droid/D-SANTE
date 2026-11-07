@@ -1,3 +1,4 @@
+import { ClientSecurityShield } from "@/components/ClientSecurityShield";
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { PwaRegister } from "@/components/PwaRegister";
@@ -44,6 +45,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir} suppressHydrationWarning className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <ClientSecurityShield />
         <I18nProvider dict={dict} locale={locale}>
           <PwaRegister />
           {children}

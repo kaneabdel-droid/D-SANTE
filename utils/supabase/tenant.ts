@@ -51,24 +51,23 @@ export const getTenantContext = cache(async (): Promise<TenantContext | null> =>
   const struct = (Array.isArray(data.structures_sante) ? data.structures_sante[0] : data.structures_sante) as any
   const structureId = data.structure_id || data.gie_id || ''
 
-  // Détection du mode démo
+  // Détection du mode démo et rôle démo
   let isDemoCookie = false
+  let demoRoleCookie = ''
   try {
     const { cookies } = await import('next/headers')
     const cookieStore = await cookies()
     isDemoCookie = cookieStore.get('dsante_demo_session')?.value === '1'
+    demoRoleCookie = cookieStore.get('dsante_demo_role')?.value || ''
   } catch {
     // Contexte sans cookies
   }
 
-  const demoEmail = process.env.DEMO_SANTE_EMAIL || 'kaneabdou@yahoo.fr'
   const isDemo =
     isDemoCookie ||
-    user.email === demoEmail ||
-    user.email?.toLowerCase().includes('demo') ||
-    struct?.nom?.toLowerCase().includes('demba santé') ||
-    struct?.nom?.toLowerCase().includes('démonstration') ||
-    struct?.nom?.toLowerCase().includes('demonstration')
+    (process.env.DEMO_SANTE_EMAIL && user.email === process.env.DEMO_SANTE_EMAIL) ||
+    user.email?.toLowerCase().includes('demo-sante') ||
+    user.email?.toLowerCase().startsWith('demo@')
 
   const essaiExpireLe = struct?.essai_expire_le ? new Date(struct.essai_expire_le) : null
   const maintenant = new Date()
@@ -77,11 +76,13 @@ export const getTenantContext = cache(async (): Promise<TenantContext | null> =>
   // En mode démo, la version est intégralement débloquée au niveau Hôpital (maximum)
   const subscriptionTier = isDemo ? 'hopital' : (struct?.subscription_tier || 'clinique')
 
+  const effectiveRole = isDemo && demoRoleCookie ? demoRoleCookie : (data.role || 'medecin')
+
   return {
     userId: user.id,
     structureId,
     gieId: structureId,
-    role: data.role || 'medecin',
+    role: effectiveRole,
     permissions: (data.permissions as PermissionMap) || null,
     structureName: struct?.nom || (isDemo ? 'Polyclinique Demba Santé' : 'Structure Médicale'),
     gieName: struct?.nom || (isDemo ? 'Polyclinique Demba Santé' : 'Structure Médicale'),

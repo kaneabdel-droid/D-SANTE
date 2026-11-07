@@ -2,6 +2,7 @@ import {
   Wrench, CheckCircle2, AlertTriangle, Clock, Plus,
   ShieldCheck, Activity, Cpu, Calendar
 } from 'lucide-react'
+import { AjouterAppareilModal } from './AjouterAppareilModal'
 
 export default async function MaterielPage() {
   const equipements = [
@@ -68,10 +69,7 @@ export default async function MaterielPage() {
           </p>
         </div>
 
-        <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-primary-hover transition-colors">
-          <Plus className="w-4 h-4" />
-          <span>+ Ajouter un Appareil</span>
-        </button>
+        <AjouterAppareilModal />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

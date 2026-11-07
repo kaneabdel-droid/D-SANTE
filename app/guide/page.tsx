@@ -1,5 +1,6 @@
 'use client'
 
+import { GuideAntiScreenshotShield } from "@/components/GuideAntiScreenshotShield";
 import { useState } from 'react'
 import Link from 'next/link'
 import {
@@ -72,6 +73,7 @@ export default function GuideDSantePage() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-200">
+      <GuideAntiScreenshotShield />
       {/* Top Header */}
       <header className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">

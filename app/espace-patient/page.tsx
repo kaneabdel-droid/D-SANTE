@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { DownloadOrdonnanceButton } from '@/components/DownloadOrdonnanceButton'
+import { PrendreRdvModal } from './PrendreRdvModal'
 import {
   HeartPulse, Search, Pill, Calendar, Clock,
   ShieldCheck, FileText, ArrowRight, Download, Stethoscope
@@ -181,9 +182,7 @@ export default async function EspacePatientPage(props: {
             </p>
           </div>
 
-          <button className="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition-all shrink-0">
-            Prendre Rendez-vous
-          </button>
+          <PrendreRdvModal />
         </div>
       </main>
 
