@@ -66,7 +66,20 @@
     "kpi_daily_revenue": "Recettes Journalières",
     "recent_triage": "Derniers Triages Enregistrés",
     "bed_occupancy": "Occupation des Lits",
-    "pending_consultations": "Consultations en Attente"
+    "pending_consultations": "Consultations en Attente",
+    "active_cockpit": "Cockpit Médical Actif",
+    "quick_access": "Accès Rapides Soignants",
+    "gravity": "Gravité",
+    "patient": "Patient (IPP)",
+    "vitals": "Constantes",
+    "reason": "Motif",
+    "waiting": "Attente",
+    "view_all": "Voir tout",
+    "capacity_occupied": "des capacités occupées",
+    "medical_confidentiality": "Secret Médical & Données Sécurisées",
+    "medical_confidentiality_desc": "Toutes les données de santé sont cloisonnées par établissement. Traçabilité complète de l'ouverture des dossiers patients.",
+    "triage_queue_desc": "Patients en attente d'orientation ou de consultation médicale.",
+    "hmo_pending": "IPM / Mutuelles en attente :"
   },
   "triage": {
     "title": "Triage & Constantes Vitales",
@@ -188,10 +201,152 @@
     "on_call_schedule": "Planning d'Astreinte & Gardes"
   },
   "abonnement": {
-    "title": "Abonnement & Licence D-SANTÉ",
-    "current_plan": "Formule Active",
-    "expiry": "Échéance de la Licence",
-    "upgrade": "Faire Évoluer la Licence"
+    "title": "Gestion de l'Abonnement D-SANTÉ",
+    "subtitle": "Activez votre licence médicale en ligne via Mobile Money (Wave, Orange Money) ou Carte Bancaire, ou réglez directement par virement ou en caisse.",
+    "assistance_btn": "Assistance Facturation Clinique",
+    "demo_banner_title": "Espace de Démonstration Clinique & Hospitalière • Licence Hôpital Intégrale Active",
+    "demo_banner_desc": "Tous les modules sont intégralement débloqués pour vos tests : Dossier Patient Informatisé (DPI), Triage & Constantes, Consultations spécialisées, Hospitalisation & Lits, Pharmacie hospitalière, Facturation Tiers-Payant IPM/Assurances, et Comptabilité SYSCOHADA.",
+    "step1_title": "1. Choisissez votre Formule D-SANTÉ",
+    "step2_title": "2. Durée de la licence médicale",
+    "step3_title": "3. Mode de règlement",
+    "recommended": "RECOMMANDÉ",
+    "per_month": "FCFA/mois",
+    "per_year": "F/an",
+    "without_commitment": "sans engagement",
+    "monthly_billing": "Facturation Mensuelle",
+    "annual_billing": "Facturation Annuelle",
+    "discount_10": "-10% REMISE",
+    "peace_of_mind": "1 an de sérénité clinique",
+    "mobile_money": "Wave / Orange Money",
+    "mobile_money_desc": "Maketou direct (Chariow secours)",
+    "card": "Carte Bancaire",
+    "card_desc": "Visa & Mastercard (Maketou)",
+    "cash": "Paiement Caisse",
+    "cash_desc": "Espèces • Validé par l'Admin",
+    "transfer": "Virement Bancaire",
+    "transfer_desc": "Compte BOA / UBA Sénégal",
+    "phone_label": "Numéro de téléphone Wave / Orange Money",
+    "phone_placeholder": "77 000 00 00 ou 78 000 00 00",
+    "total_due": "Total à régler :",
+    "for_period": "pour 1",
+    "month": "mois",
+    "year": "an",
+    "btn_submit": "Valider & Activer la formule",
+    "btn_cash": "Enregistrer le paiement en Caisse",
+    "btn_transfer": "Générer l’ordre de Virement",
+    "btn_processing": "Traitement en cours...",
+    "security_badge": "Passerelle Sécurisée Maketou avec secours Chariow",
+    "security_text": "Les paiements en ligne par Mobile Money (Wave Sénégal, Orange Money) et Carte Bancaire (Visa, Mastercard) sont instantanément validés sans webhook externe requis. En cas de règlement en caisse ou par virement bancaire, l'activation est effectuée directement par l'administrateur depuis le SuperAdmin dès réception des fonds.",
+    "plans": {
+      "poste_sante": {
+        "nom": "Poste & Dispensaire",
+        "desc": "Idéal pour postes de santé de quartier, dispensaires ruraux et infirmeries.",
+        "features": [
+          "Dossier Patient Informatisé (DPI de base)",
+          "Carnet de santé & constantes vitales",
+          "Registre des consultations infirmières",
+          "Gestion de la petite pharmacie de poste",
+          "Support technique 6j/7"
+        ]
+      },
+      "clinique": {
+        "nom": "Clinique & Centre Médical",
+        "desc": "Solution polyvalente pour cliniques privées, maternités et centres de santé.",
+        "features": [
+          "Tout le pack Poste & Dispensaire",
+          "Triage infirmier & alertes constantes vitales",
+          "Consultations spécialisées multi-praticiens",
+          "Ordonnances électroniques sécurisées QR Code",
+          "Gestion des lits d’hospitalisation & soins",
+          "Caisse clinique & Tiers-Payant IPM / Assurances"
+        ]
+      },
+      "hopital": {
+        "nom": "Hôpital & Polyclinique",
+        "desc": "Infrastructures médicales lourdes, polycliniques et centres hospitaliers de référence.",
+        "features": [
+          "Tout le pack Clinique & Centre Médical",
+          "Capacité praticiens et lits illimitée",
+          "Gestion complète du Tiers-Payant CMU / IPM",
+          "Pharmacie hospitalière & délivrance sécurisée",
+          "Exports comptables SYSCOHADA certifiés",
+          "Support prioritaire 24/7 & sauvegardes redondantes"
+        ]
+      }
+    },
+    "retour_activated_title": "Abonnement D-SANTÉ Activé !",
+    "retour_transaction_confirmed": "Votre transaction a été confirmée avec succès.",
+    "retour_plan_active": "Formule opérationnelle",
+    "retour_go_dashboard": "Accéder à mon tableau de bord",
+    "retour_pending_cash_title": "Demande de Règlement en Caisse Enregistrée",
+    "retour_pending_transfer_title": "Virement Bancaire en Attente de Réception",
+    "retour_pending_online_title": "Vérification du Paiement en Cours...",
+    "retour_pending_cash_desc": "Votre demande est en attente. Votre administrateur peut la valider directement dès réception des espèces.",
+    "retour_pending_transfer_desc": "Dès réception des fonds sur notre compte, l’administrateur validera immédiatement l’accès à votre formule.",
+    "retour_pending_online_desc": "Nous attendons la confirmation automatique de la passerelle. Cette page s’actualise automatiquement.",
+    "retour_ref": "Réf. Dossier :",
+    "retour_refresh": "Actualiser le statut",
+    "retour_back_home": "Retour à l'accueil",
+    "retour_failed_title": "Paiement non abouti",
+    "retour_failed_desc": "La transaction n'a pas pu être validée par la passerelle de paiement.",
+    "retour_retry": "Réessayer le paiement"
+  },
+  "landing": {
+    "nav_modules": "Modules Cliniques",
+    "nav_demo": "Démo Interactive",
+    "nav_guide": "Guide d'utilisation",
+    "nav_pricing": "Tarifs & Abonnements",
+    "nav_patient_portal": "Portail Patient",
+    "nav_login": "Connexion",
+    "nav_signup": "Créer un compte",
+    "hero_badge": "Système d'Information Hospitalier & Clinique Nouvelle Génération",
+    "hero_title": "Digitalisez le parcours de soins et sécurisez vos recettes de santé",
+    "hero_subtitle": "Du grand centre hospitalier au poste de santé : suivi médical 360°, triage des urgences, ordonnances PDF sécurisées, gestion des lits, pharmacie et facturation Tiers-Payant (IPM / Assurances).",
+    "hero_btn_trial": "Démarrer l'essai gratuit (7 jours)",
+    "hero_btn_demo": "Tester la Démo en Direct",
+    "hero_btn_guide": "Consulter le Guide Pas-à-Pas",
+    "reassurance_1": "Sans carte bancaire requise",
+    "reassurance_2": "Conforme normes médicales",
+    "reassurance_3": "Hébergement sécurisé & chiffré",
+    "modules_title": "Une Couverture Fonctionnelle Complète pour les Professionnels de Santé",
+    "modules_subtitle": "Chaque module a été rigoureusement développé en collaboration avec des médecins praticiens, soignants et directeurs administratifs.",
+    "modules_items": {
+      "triage": {
+        "title": "Triage & Constantes Vitales",
+        "desc": "Saisie ultra-rapide des constantes (TA, T°, Pouls, SpO2, Glycémie, Poids, IMC auto) avec classification de gravité internationale (Rouge / Jaune / Vert)."
+      },
+      "consultations": {
+        "title": "Consultations & Dossier Patient 360°",
+        "desc": "Dossier Médical Partagé à vie (IPP), anamnèse clinique, diagnostics codifiés CIM-10, bandeau d’alertes allergies et antécédents chroniques."
+      },
+      "ordonnances": {
+        "title": "Ordonnances Médicales PDF Sécurisées",
+        "desc": "Moteur de prescription multi-lignes, génération instantanée d’ordonnances médicales officielles A5 prêtes pour impression ou expédition WhatsApp."
+      },
+      "hospitalisation": {
+        "title": "Hospitalisation & Gestion des Lits",
+        "desc": "Grille d’occupation visuelle des lits par pavillon (Médecine, Chirurgie, Maternité, Soins Intensifs), suivi des séjours et relève soignante."
+      },
+      "pharmacie": {
+        "title": "Pharmacie Hospitalière & DCI",
+        "desc": "Traçabilité stricte des lots, dates de péremption, alertes de rupture et liaison directe avec les officines D-Pharma pour accords de substitution."
+      },
+      "facturation": {
+        "title": "Facturation Tiers-Payant (IPM & CMU)",
+        "desc": "Ventilation automatique Ticket modérateur patient (espèces/Wave/OM) vs Créance Organisme avec télétransmission de bordereaux."
+      },
+      "comptabilite": {
+        "title": "Comptabilité Hospitalière SYSCOHADA",
+        "desc": "Livre-Journal à partie double sans superposition d’écritures, Grand Livre, Balance des comptes et pilotage budgétaire conforme OHADA."
+      },
+      "resilience": {
+        "title": "Résilience PWA 100% Hors-Ligne",
+        "desc": "Conçu pour les postes de santé et dispensaires : continuez de trier et de consulter sans internet. Synchronisation automatique dès retour du réseau."
+      }
+    },
+    "plans_title": "Des formules adaptées à chaque échelle de soins",
+    "plans_subtitle": "Déploiement immédiat en Cloud sécurisé ou sur serveur local pour les centres à connectivité intermittente.",
+    "btn_choose_plan": "Choisir cette formule",
+    "btn_custom_quote": "Demander un devis personnalisé"
   }
 }
-

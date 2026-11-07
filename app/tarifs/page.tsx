@@ -14,29 +14,25 @@ import {
   HeartPulse,
   UserPlus
 } from 'lucide-react'
+import { useTranslation } from '@/lib/i18n'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export default function TarifsDSantePage() {
+  const { t, isRTL, dict } = useTranslation()
+  const ab = dict.abonnement
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly')
   const [contactSubmitted, setContactSubmitted] = useState(false)
 
   const plans = [
     {
       id: 'poste',
-      name: 'Poste de Santé & Dispensaire',
-      tagline: 'Pour postes de santé ruraux, dispensaires confessionnels et infirmeries',
+      name: ab.plans.poste_sante.nom,
+      tagline: ab.plans.poste_sante.desc,
       monthlyPrice: 10000,
       annualDiscountPercent: 10,
-      capacity: 'Praticiens & 5 lits d’observation',
+      capacity: 'Praticiens & lits d’observation',
       popular: false,
-      features: [
-        'Dossier Médical Informatisé & IPP permanent',
-        'Fiche patient complète & carnet de vaccination',
-        'Triage & Relevé des constantes vitales (TA, T°, SpO2, Poids)',
-        'Gestion de la petite pharmacie & dépôts d’urgence',
-        'Caisse recettes journalières espèces & Mobile Money (Wave, OM)',
-        'Mode PWA 100% Hors-Ligne (Sync automatique au retour du réseau)',
-        'Support technique par WhatsApp & Email (6j/7)',
-      ],
+      features: ab.plans.poste_sante.features,
       notIncluded: [
         'Ordonnances électroniques certifiées avec QR Code',
         'Module Hospitalisation & plan de lits complet',
@@ -46,23 +42,13 @@ export default function TarifsDSantePage() {
     },
     {
       id: 'clinique',
-      name: 'Centre de Santé & Clinique',
-      tagline: 'La formule de référence pour cliniques privées, maternités et centres médico-sociaux',
+      name: ab.plans.clinique.nom,
+      tagline: ab.plans.clinique.desc,
       monthlyPrice: 15000,
       annualDiscountPercent: 10,
-      capacity: 'Jusqu’à 15 praticiens & 30 lits d’hospitalisation',
+      capacity: 'Praticiens & lits d’hospitalisation',
       popular: true,
-      features: [
-        'Tout ce qui est inclus dans Poste de Santé',
-        'Triage infirmier & alertes constantes critiques en temps réel',
-        'Consultations spécialisées (Pédiatrie, Gynéco, Médecine générale)',
-        'Ordonnances sécurisées infalsifiables avec QR Code & PDF A5',
-        'Hospitalisation : suivi des lits, relève de garde & soins infirmiers',
-        'Caisse clinique & prise en charge IPM / Assurances privées',
-        'Liaison directe D-Pharma (accords de substitution en officine)',
-        'Bordereaux de télétransmission mensuels par assureur',
-        'Support prioritaire WhatsApp & Téléphone',
-      ],
+      features: ab.plans.clinique.features,
       notIncluded: [
         'Multi-pavillons & blocs opératoires lourds',
         'Comptabilité analytique avancée & Grand Livre SYSCOHADA',
@@ -70,30 +56,19 @@ export default function TarifsDSantePage() {
     },
     {
       id: 'hopital',
-      name: 'Hôpital & Polyclinique',
-      tagline: 'Pour centres hospitaliers régionaux, polycliniques et réseaux médicaux',
+      name: ab.plans.hopital.nom,
+      tagline: ab.plans.hopital.desc,
       monthlyPrice: 20000,
       annualDiscountPercent: 15,
       capacity: 'Praticiens, services & lits illimités',
       popular: false,
-      features: [
-        'Tout ce qui est inclus dans Clinique',
-        'Capacité médicale, blocs et lits illimitée',
-        'Multi-services (Urgences, Réanimation, Maternité, Bloc, Chirurgie)',
-        'Pharmacie hospitalière complète avec traçabilité des lots et DCI',
-        'Comptabilité SYSCOHADA intégrée (Journal, Grand Livre, Balance)',
-        'Télétransmission dématérialisée IPM / CMU avec suivi d’audit',
-        'Portail Espace Patient dédié avec téléchargement d’ordonnances',
-        'Gestion biomédicale & maintenance des équipements',
-        'Serveur HDS dédié & sauvegardes chiffrées en continu',
-        'Account Manager dédié & Assistance clinique 24/7',
-      ],
+      features: ab.plans.hopital.features,
       notIncluded: [],
     },
   ]
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className={`min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-200 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <header className="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -112,6 +87,7 @@ export default function TarifsDSantePage() {
           </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitcher />
             <Link
               href="/decouvrir-dsante"
               className="text-xs font-medium text-slate-300 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors hidden sm:block"
@@ -145,13 +121,13 @@ export default function TarifsDSantePage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-12 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-4">
           <Sparkles className="w-3.5 h-3.5" />
-          Tarifs SaaS Santé équitables, en Francs CFA et adaptés aux réalités locales
+          {ab.step1_title}
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
-          Un abonnement clair pour chaque structure sanitaire
+          {ab.title}
         </h1>
         <p className="text-slate-400 max-w-2xl mx-auto text-base">
-          Sans investissement lourd en serveurs locaux. Vos dossiers patients sont protégés, sauvegardés et accessibles en ligne comme hors-ligne.
+          {ab.subtitle}
         </p>
 
         {/* Toggle billing cycle */}
@@ -162,7 +138,7 @@ export default function TarifsDSantePage() {
             }`}
             onClick={() => setBillingCycle('monthly')}
           >
-            Facturation Mensuelle
+            {ab.monthly_billing}
           </span>
           <button
             onClick={() =>
@@ -173,7 +149,7 @@ export default function TarifsDSantePage() {
           >
             <div
               className={`w-5 h-5 rounded-full bg-emerald-500 transition-transform ${
-                billingCycle === 'yearly' ? 'translate-x-7' : 'translate-x-0'
+                billingCycle === 'yearly' ? (isRTL ? '-translate-x-7' : 'translate-x-7') : 'translate-x-0'
               }`}
             />
           </button>
@@ -183,9 +159,9 @@ export default function TarifsDSantePage() {
             }`}
             onClick={() => setBillingCycle('yearly')}
           >
-            Paiement Annuel
+            {ab.annual_billing}
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30">
-              Jusqu&apos;à -15% de remise
+              {ab.discount_10}
             </span>
           </span>
         </div>
@@ -211,7 +187,7 @@ export default function TarifsDSantePage() {
               >
                 {plan.popular && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg">
-                    Recommandé
+                    {ab.recommended}
                   </div>
                 )}
 
@@ -235,41 +211,38 @@ export default function TarifsDSantePage() {
                   <div className="mb-6 p-4 rounded-2xl bg-slate-950/70 border border-slate-800">
                     <div className="flex items-baseline gap-1">
                       <span className="text-3xl font-extrabold text-emerald-400">
-                        {effectiveMonthlyPrice.toLocaleString('fr-FR')}
+                        {effectiveMonthlyPrice.toLocaleString(isRTL ? 'ar-EG' : 'fr-FR')}
                       </span>
                       <span className="text-xs text-slate-400 font-semibold">
-                        FCFA / mois
+                        {ab.per_month}
                       </span>
                     </div>
                     <div className="text-[11px] text-slate-400 mt-1 font-medium">
                       {isYearly ? (
                         <>
                           <span className="text-emerald-300 font-bold">
-                            {totalAnnualPrice.toLocaleString('fr-FR')} FCFA / an
+                            {totalAnnualPrice.toLocaleString(isRTL ? 'ar-EG' : 'fr-FR')} {ab.per_year}
                           </span>{' '}
-                          (remise de {plan.annualDiscountPercent}% incluse)
+                          (-{plan.annualDiscountPercent}%)
                         </>
                       ) : (
-                        'Facturation mensuelle sans engagement'
+                        ab.without_commitment
                       )}
-                    </div>
-                    <div className="text-[10px] text-slate-500 mt-1">
-                      {plan.capacity}
                     </div>
                   </div>
 
                   <div className="space-y-3 mb-8">
                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                      Inclus dans cette formule :
+                      Fonctionnalités :
                     </span>
                     <ul className="space-y-2.5 text-xs text-slate-300">
-                      {plan.features.map((f, i) => (
+                      {plan.features.map((f: string, i: number) => (
                         <li key={i} className="flex items-start gap-2.5">
                           <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                           <span>{f}</span>
                         </li>
                       ))}
-                      {plan.notIncluded.map((nf, i) => (
+                      {plan.notIncluded.map((nf: string, i: number) => (
                         <li
                           key={i}
                           className="flex items-start gap-2.5 text-slate-500/70 line-through"
@@ -291,8 +264,8 @@ export default function TarifsDSantePage() {
                         : 'bg-slate-800 hover:bg-slate-700 text-white'
                     }`}
                   >
-                    <span>Démarrer l&apos;essai gratuit (7 jours)</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>{plan.name}</span>
+                    <ArrowRight className={`w-4 h-4 ${isRTL ? 'rotate-180' : ''}`} />
                   </Link>
                   {plan.id === 'hopital' && (
                     <Link
@@ -300,7 +273,7 @@ export default function TarifsDSantePage() {
                       className="w-full flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-emerald-400 hover:underline"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>Tester la démo complète en direct →</span>
+                      <span>Tester la démo en direct →</span>
                     </Link>
                   )}
                 </div>
@@ -338,7 +311,7 @@ export default function TarifsDSantePage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800/80 py-10 bg-slate-950 text-center text-xs text-slate-500">
-        <p>© {new Date().getFullYear()} D-SANTÉ • Suite DEMBA Solution. Tous droits réservés.</p>
+        <p>© {new Date().getFullYear()} D-SANTÉ • DEMBA Healthcare Suite.</p>
       </footer>
     </div>
   )

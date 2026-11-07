@@ -104,7 +104,7 @@ export default function DecouvrirDSantePage() {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
             Digitalisez vos soins avec le logiciel médical{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
-              le plus intuitif d&apos;Afrique
+              le plus intuitif et complet
             </span>
           </h1>
 

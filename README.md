@@ -1,7 +1,7 @@
 # D-SANTÉ 🏥
 
 > **Système d'Information Hospitalier, Clinique & Soins Médicaux SaaS**  
-> Solution intégrée pour hôpitaux, polycliniques, centres de santé et postes médicaux isolés en Afrique de l'Ouest (Sénégal).
+> Solution intégrée pour hôpitaux, polycliniques, centres de santé et postes médicaux isolés pour cliniques, polycliniques et hôpitaux.
 
 ---
 

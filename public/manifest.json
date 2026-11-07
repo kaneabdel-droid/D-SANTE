@@ -1,7 +1,7 @@
 {
   "name": "D-Santé - Système Intégré Hospitalier & Médical",
   "short_name": "D-Santé",
-  "description": "Plateforme hospitalière complète, parcours patient, triage, urgences, consultations, pharmacie et facturation IPM/CMU pour le Sénégal et l'Afrique de l'Ouest",
+  "description": "Plateforme hospitalière complète, parcours patient, triage, urgences, consultations, pharmacie et facturation IPM/CMU pour tous les établissements de santé",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#090d16",

@@ -5,62 +5,70 @@ import {
   Clock, Sparkles, Building2, Phone, Mail, Award, BookOpen,
   Network, Users, Smartphone, WifiOff, FileText, QrCode
 } from 'lucide-react'
+import { getDictionary, getLocale } from '@/dictionaries'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const isRtl = locale === 'ar'
+  const t = dict.landing
+  const ab = dict.abonnement
+
   const modules = [
     {
       icon: Activity,
-      title: 'Triage & Constantes Vitales',
-      desc: 'Saisie ultra-rapide des constantes (TA, T°, Pouls, SpO2, Glycémie, Poids, IMC auto) avec classification de gravité internationale (Rouge / Jaune / Vert).',
+      title: t.modules_items.triage.title,
+      desc: t.modules_items.triage.desc,
       color: 'text-teal-600 dark:text-teal-400',
       bg: 'bg-teal-500/10',
     },
     {
       icon: Stethoscope,
-      title: 'Consultations & Dossier Patient 360°',
-      desc: 'Dossier Médical Partagé à vie (IPP), anamnèse clinique, diagnostics codifiés CIM-10, bandeau d’alertes allergies et antécédents chroniques.',
+      title: t.modules_items.consultations.title,
+      desc: t.modules_items.consultations.desc,
       color: 'text-sky-600 dark:text-sky-400',
       bg: 'bg-sky-500/10',
     },
     {
       icon: FileText,
-      title: 'Ordonnances Médicales PDF Sécurisées',
-      desc: 'Moteur de prescription multi-lignes, génération instantanée d’ordonnances médicales officielles A5 prêtes pour impression ou expédition WhatsApp.',
+      title: t.modules_items.ordonnances.title,
+      desc: t.modules_items.ordonnances.desc,
       color: 'text-emerald-600 dark:text-emerald-400',
       bg: 'bg-emerald-500/10',
     },
     {
       icon: BedDouble,
-      title: 'Hospitalisation & Gestion des Lits',
-      desc: 'Grille d’occupation visuelle des lits par pavillon (Médecine, Chirurgie, Maternité, Soins Intensifs), suivi des séjours et relève soignante.',
+      title: t.modules_items.hospitalisation.title,
+      desc: t.modules_items.hospitalisation.desc,
       color: 'text-indigo-600 dark:text-indigo-400',
       bg: 'bg-indigo-500/10',
     },
     {
       icon: Pill,
-      title: 'Pharmacie Hospitalière & DCI',
-      desc: 'Traçabilité stricte des lots, dates de péremption, alertes de rupture et liaison directe avec les officines D-Pharma pour accords de substitution.',
+      title: t.modules_items.pharmacie.title,
+      desc: t.modules_items.pharmacie.desc,
       color: 'text-amber-600 dark:text-amber-400',
       bg: 'bg-amber-500/10',
     },
     {
       icon: Receipt,
-      title: 'Facturation Tiers-Payant (IPM & CMU)',
-      desc: 'Ventilation automatique Ticket modérateur patient (encaissé en espèces/Wave/OM) vs Créance Organisme avec télétransmission de bordereaux.',
+      title: t.modules_items.facturation.title,
+      desc: t.modules_items.facturation.desc,
       color: 'text-rose-600 dark:text-rose-400',
       bg: 'bg-rose-500/10',
     },
     {
       icon: ShieldCheck,
-      title: 'Comptabilité Hospitalière SYSCOHADA',
-      desc: 'Livre-Journal à partie double sans superposition d’écritures, Grand Livre, Balance des comptes et pilotage budgétaire conforme OHADA.',
+      title: t.modules_items.comptabilite.title,
+      desc: t.modules_items.comptabilite.desc,
       color: 'text-purple-600 dark:text-purple-400',
       bg: 'bg-purple-500/10',
     },
     {
       icon: WifiOff,
-      title: 'Résilience PWA 100% Hors-Ligne',
-      desc: 'Conçu pour les postes de santé ruraux et dispensaires isolés : continuez de trier et de consulter sans internet. Synchronisation automatique dès retour du réseau.',
+      title: t.modules_items.resilience.title,
+      desc: t.modules_items.resilience.desc,
       color: 'text-teal-600 dark:text-teal-400',
       bg: 'bg-teal-500/10',
     },
@@ -69,39 +77,39 @@ export default function HomePage() {
   const plansPreview = [
     {
       id: 'poste',
-      name: 'Poste de Santé & Dispensaire',
+      name: ab.plans.poste_sante.nom,
       mensuel: '10 000',
       annuel: '108 000',
       remise: '-10%',
-      desc: 'Postes de santé ruraux, dispensaires confessionnels et infirmeries.',
-      features: ['Dossier Patient & IPP', 'Triage & Constantes', 'Petite pharmacie', 'Mode PWA Hors-Ligne'],
+      desc: ab.plans.poste_sante.desc,
+      features: ab.plans.poste_sante.features,
       badge: 'Poste rural',
     },
     {
       id: 'clinique',
-      name: 'Centre de Santé & Clinique',
+      name: ab.plans.clinique.nom,
       mensuel: '15 000',
       annuel: '162 000',
       remise: '-10%',
-      desc: 'Cliniques de jour, centres médico-sociaux et maternités urbaines.',
-      features: ['Dossier 360° complet', 'Ordonnances PDF A5', 'Lits jusqu’à 30 lits', 'Facturation IPM / CMU', 'Liaison D-Pharma'],
-      badge: 'Le plus populaire',
+      desc: ab.plans.clinique.desc,
+      features: ab.plans.clinique.features,
+      badge: ab.recommended,
       popular: true,
     },
     {
       id: 'hopital',
-      name: 'Hôpital & Polyclinique',
+      name: ab.plans.hopital.nom,
       mensuel: '20 000',
       annuel: '204 000',
       remise: '-15%',
-      desc: 'Centres hospitaliers régionaux, polycliniques et cliniques chirurgicales.',
-      features: ['Capacité lits illimitée', 'Blocs opératoires', 'Comptabilité SYSCOHADA', 'Télétransmission IPM', 'Portail Espace Patient'],
+      desc: ab.plans.hopital.desc,
+      features: ab.plans.hopital.features,
       badge: 'Multi-services',
     },
   ]
 
   return (
-    <div className="bg-background min-h-screen font-sans text-foreground">
+    <div className={`bg-background min-h-screen font-sans text-foreground ${isRtl ? 'rtl' : 'ltr'}`}>
       {/* Navbar Supérieure */}
       <header className="sticky top-0 z-50 w-full border-b border-surface-border bg-surface/85 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,37 +125,38 @@ export default function HomePage() {
 
             <nav className="hidden md:flex items-center gap-7 text-xs font-semibold text-foreground-muted">
               <a href="#modules" className="hover:text-primary transition-colors">
-                Modules Cliniques
+                {t.nav_modules}
               </a>
               <Link href="/decouvrir-dsante" className="hover:text-primary transition-colors flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 text-primary" />
-                <span>Démo Interactive</span>
+                <span>{t.nav_demo}</span>
               </Link>
               <Link href="/guide" className="hover:text-primary transition-colors flex items-center gap-1">
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>Guide d&apos;utilisation</span>
+                <span>{t.nav_guide}</span>
               </Link>
               <Link href="/tarifs" className="hover:text-primary transition-colors">
-                Tarifs & Abonnements
+                {t.nav_pricing}
               </Link>
               <Link href="/espace-patient" className="hover:text-primary transition-colors">
-                Portail Patient
+                {t.nav_patient_portal}
               </Link>
             </nav>
 
             <div className="flex items-center gap-2.5">
+              <LanguageSwitcher />
               <Link
                 href="/login"
                 className="text-xs font-semibold px-3 py-2 rounded-xl text-foreground hover:bg-surface-hover transition-colors"
               >
-                Connexion
+                {t.nav_login}
               </Link>
               <Link
                 href="/signup"
                 className="text-xs font-bold px-4 py-2 rounded-xl bg-primary text-white hover:bg-primary-hover shadow-sm transition-all flex items-center gap-1.5"
               >
                 <UserPlus className="w-3.5 h-3.5" />
-                <span>Créer un compte</span>
+                <span>{t.nav_signup}</span>
               </Link>
             </div>
           </div>
@@ -159,15 +168,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
-            Système d&apos;Information Hospitalier & Clinique Nouvelle Génération
+            {t.hero_badge}
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-foreground max-w-4xl mx-auto leading-tight">
-            Digitalisez le parcours de soins et sécurisez vos recettes de santé
+            {t.hero_title}
           </h1>
 
           <p className="text-base sm:text-lg text-foreground-muted max-w-2xl mx-auto leading-relaxed">
-            Du grand centre hospitalier au poste de santé rural : suivi médical 360°, triage des urgences, ordonnances PDF sécurisées, gestion des lits, pharmacie et facturation Tiers-Payant (IPM / CMU).
+            {t.hero_subtitle}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
@@ -175,8 +184,8 @@ export default function HomePage() {
               href="/signup"
               className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-sm shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2"
             >
-              <span>Démarrer l&apos;essai gratuit (7 jours)</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>{t.hero_btn_trial}</span>
+              <ArrowRight className={`w-4 h-4 ${isRtl ? 'rotate-180' : ''}`} />
             </Link>
 
             <Link
@@ -184,29 +193,29 @@ export default function HomePage() {
               className="w-full sm:w-auto px-6 py-3.5 rounded-xl border border-surface-border bg-surface hover:bg-surface-hover text-foreground font-bold text-sm transition-all flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-primary" />
-              <span>Tester la Démo en Direct</span>
+              <span>{t.hero_btn_demo}</span>
             </Link>
 
             <Link
               href="/guide"
               className="w-full sm:w-auto px-5 py-3.5 rounded-xl text-foreground-muted hover:text-foreground text-xs font-bold transition-colors"
             >
-              Consulter le Guide Pas-à-Pas
+              {t.hero_btn_guide}
             </Link>
           </div>
 
           <div className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-foreground-muted font-medium">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              100% Conforme Secret Médical & Données Santé
+              {t.reassurance_1}
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Fonctionne en ligne & hors-ligne (PWA)
+              {t.reassurance_2}
             </span>
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              Paiement Wave, Orange Money, Cartes & Virement
+              {t.reassurance_3}
             </span>
           </div>
         </div>
@@ -216,13 +225,13 @@ export default function HomePage() {
       <section id="modules" className="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            Architecture Complète
+            D-SANTÉ
           </span>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground font-heading">
-            Toutes les dimensions de votre structure de santé réunies
+            {t.modules_title}
           </h2>
           <p className="text-sm text-foreground-muted">
-            Un écosystème interconnecté conçu avec les soignants, pharmaciens et administrateurs d&apos;hôpitaux d&apos;Afrique de l&apos;Ouest.
+            {t.modules_subtitle}
           </p>
         </div>
 
@@ -268,7 +277,7 @@ export default function HomePage() {
               className="px-6 py-3.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider shrink-0 flex items-center gap-2 shadow-md shadow-primary/20 transition-all"
             >
               <Sparkles className="w-4 h-4" />
-              <span>Lancer la Démo Interactive</span>
+              <span>{t.nav_demo}</span>
             </Link>
           </div>
         </div>
@@ -279,13 +288,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-primary">
-              Tarification Transparente
+              {t.nav_pricing}
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground font-heading">
-              Des forfaits adaptés à chaque échelle sanitaire
+              {t.plans_title}
             </h2>
             <p className="text-sm text-foreground-muted">
-              Paiement mensuel sans engagement ou remise annuelle immédiate (-10% à -15%).
+              {t.plans_subtitle}
             </p>
           </div>
 
@@ -321,11 +330,11 @@ export default function HomePage() {
                         {p.mensuel}
                       </span>
                       <span className="text-xs font-bold text-foreground-muted">
-                        FCFA / mois
+                        FCFA / {ab.month}
                       </span>
                     </div>
                     <div className="text-[11px] text-emerald-600 font-semibold">
-                      Ou {p.annuel} FCFA / an ({p.remise} si annuel)
+                      Ou {p.annuel} FCFA / {ab.year} ({p.remise})
                     </div>
                   </div>
 
@@ -348,8 +357,8 @@ export default function HomePage() {
                         : 'bg-surface-hover hover:bg-surface-border text-foreground border border-surface-border'
                     }`}
                   >
-                    <span>Choisir {p.name.split(' ')[0]}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>{t.btn_choose_plan}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
                   </Link>
                 </div>
               </div>
@@ -361,102 +370,10 @@ export default function HomePage() {
               href="/tarifs"
               className="text-xs font-bold text-primary hover:underline inline-flex items-center gap-1"
             >
-              <span>Voir le comparatif détaillé des fonctionnalités</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{t.nav_pricing}</span>
+              <ArrowRight className={`w-3.5 h-3.5 ${isRtl ? 'rotate-180' : ''}`} />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* Création Établissement de Santé Express Section */}
-      <section id="creation-etablissement" className="py-20 bg-gradient-to-b from-surface/80 via-background to-surface/80 border-t border-surface-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-emerald-500/10 via-surface to-teal-500/10 border-2 border-primary/20 relative overflow-hidden shadow-sm">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">
-                Enrôlement Rapide en 3 Étapes
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground font-heading tracking-tight">
-                Créez votre établissement de santé sur D-SANTÉ
-              </h2>
-              <p className="text-foreground-muted text-xs sm:text-sm mt-3 leading-relaxed">
-                Rejoignez le réseau national de digitalisation médicale. Démarrez un essai de 7 jours sans carte bancaire, avec assistance et formation des équipes soignantes.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
-                  1
-                </div>
-                <h4 className="font-bold text-foreground text-sm mb-1">Renseignez votre structure</h4>
-                <p className="text-foreground-muted text-xs">
-                  Nom de l&apos;hôpital, clinique ou poste, type d&apos;établissement et téléphone WhatsApp officiel.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
-                  2
-                </div>
-                <h4 className="font-bold text-foreground text-sm mb-1">Choisissez votre niveau</h4>
-                <p className="text-foreground-muted text-xs">
-                  Poste (10k), Centre/Clinique (15k) ou Hôpital (20k), mensuel ou annuel (-10% à -15%).
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-surface border border-surface-border text-center shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary font-black text-sm flex items-center justify-center mx-auto mb-3">
-                  3
-                </div>
-                <h4 className="font-bold text-foreground text-sm mb-1">Accès clinique immédiat</h4>
-                <p className="text-foreground-muted text-xs">
-                  Vos praticiens soignants peuvent immédiatement débuter le triage et les consultations.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/signup"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-primary/20 transition-all"
-              >
-                <span>Créer mon établissement de santé</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/guide"
-                className="w-full sm:w-auto px-6 py-4 rounded-xl bg-surface-hover hover:bg-surface-border text-foreground font-bold text-xs uppercase tracking-wider border border-surface-border transition-all flex items-center justify-center gap-2"
-              >
-                <BookOpen className="w-4 h-4 text-foreground-muted" />
-                <span>Consulter le guide pratique</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Guide d'Utilisation Callout Section */}
-      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl p-8 sm:p-12 bg-surface border border-surface-border flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
-          <div>
-            <span className="text-xs font-bold text-primary uppercase tracking-widest block mb-2">
-              Documentation & Protocoles
-            </span>
-            <h3 className="text-2xl font-extrabold text-foreground font-heading">
-              Guide complet d&apos;utilisation clinique
-            </h3>
-            <p className="text-xs sm:text-sm text-foreground-muted mt-2 max-w-xl">
-              Fiches pratiques pour chaque corps de métier : triage d&apos;accueil, consultations d&apos;urgence, prescription d&apos;ordonnances A5, relève soignante et facturation Tiers-Payant IPM / CMU.
-            </p>
-          </div>
-          <Link
-            href="/guide"
-            className="px-6 py-3.5 rounded-xl bg-surface-hover hover:bg-surface-border text-foreground font-bold text-xs uppercase tracking-wider shrink-0 flex items-center gap-2 border border-surface-border transition-all"
-          >
-            <BookOpen className="w-4 h-4 text-primary" />
-            <span>Lire le guide soignant</span>
-          </Link>
         </div>
       </section>
 
@@ -468,18 +385,18 @@ export default function HomePage() {
               <HeartPulse className="w-4 h-4" />
             </span>
             <span className="font-bold text-foreground">D-SANTÉ</span>
-            <span>• Suite DEMBA Solution</span>
+            <span>• DEMBA Healthcare Suite</span>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link href="/guide" className="hover:text-foreground">Guide d&apos;utilisation</Link>
-            <Link href="/tarifs" className="hover:text-foreground">Tarifs</Link>
-            <Link href="/decouvrir-dsante" className="hover:text-foreground">Démo</Link>
-            <Link href="/espace-patient" className="hover:text-foreground">Portail Patient</Link>
-            <Link href="/login" className="hover:text-foreground">Connexion</Link>
+            <Link href="/guide" className="hover:text-foreground">{t.nav_guide}</Link>
+            <Link href="/tarifs" className="hover:text-foreground">{t.nav_pricing}</Link>
+            <Link href="/decouvrir-dsante" className="hover:text-foreground">{t.nav_demo}</Link>
+            <Link href="/espace-patient" className="hover:text-foreground">{t.nav_patient_portal}</Link>
+            <Link href="/login" className="hover:text-foreground">{t.nav_login}</Link>
           </div>
 
-          <p>© {new Date().getFullYear()} Demba Solution. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Demba Solution.</p>
         </div>
       </footer>
     </div>

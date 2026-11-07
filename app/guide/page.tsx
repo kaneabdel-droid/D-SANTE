@@ -458,7 +458,7 @@ export default function GuideDSantePage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-10 px-4 text-center text-xs text-slate-500">
-        <p>© {new Date().getFullYear()} DEMBA Solution — D-SANTÉ. Conçu pour le système de santé ouest-africain.</p>
+        <p>© {new Date().getFullYear()} DEMBA Solution — D-SANTÉ. Conçu pour les établissements de santé et cliniques modernes.</p>
       </footer>
     </div>
   )

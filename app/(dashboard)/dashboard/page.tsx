@@ -4,8 +4,14 @@ import {
   HeartPulse, AlertTriangle, ArrowUpRight, Clock, Plus,
   ShieldCheck, CheckCircle2, ChevronRight, Pill
 } from 'lucide-react'
+import { getDictionary } from '@/dictionaries'
 
 export default async function DashboardPage() {
+  const dict = await getDictionary()
+  const d = dict?.dashboard || {}
+  const actions = dict?.actions || {}
+  const nav = dict?.nav || {}
+
   // Données synthétiques du cockpit de santé
   const stats = {
     patientsDuJour: 38,
@@ -71,13 +77,13 @@ export default async function DashboardPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
             <HeartPulse className="w-3.5 h-3.5 animate-pulse" />
-            <span>Cockpit Médical Actif</span>
+            <span>{d.active_cockpit || 'Cockpit Médical Actif'}</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black font-heading text-foreground">
-            Tableau de Bord Hospitalier & Soins
+            {d.title || 'Tableau de Bord Hospitalier & Soins'}
           </h2>
           <p className="text-xs text-foreground-muted">
-            Vue d&apos;ensemble en temps réel des flux de patients, constantes, lits et caisse.
+            {d.subtitle || 'Vue d\'ensemble en temps réel des flux de patients, constantes, lits et caisse.'}
           </p>
         </div>
 
@@ -87,7 +93,7 @@ export default async function DashboardPage() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-danger text-white text-xs font-bold hover:bg-danger/90 shadow-sm transition-all"
           >
             <Activity className="w-4 h-4" />
-            <span>Triage Constantes</span>
+            <span>{actions.new_triage || 'Nouveau Triage'}</span>
           </Link>
 
           <Link
@@ -95,7 +101,7 @@ export default async function DashboardPage() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-hover shadow-sm transition-all"
           >
             <Plus className="w-4 h-4" />
-            <span>Admission Patient</span>
+            <span>{actions.new_patient || '+ Patient'}</span>
           </Link>
         </div>
       </div>
@@ -105,7 +111,9 @@ export default async function DashboardPage() {
         {/* KPI 1 : Patients */}
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground-muted">Patients du Jour</span>
+            <span className="text-xs font-semibold text-foreground-muted">
+              {d.kpi_patients_today || 'Patients du Jour'}
+            </span>
             <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
@@ -114,14 +122,16 @@ export default async function DashboardPage() {
             {stats.patientsDuJour}
           </p>
           <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-1">
-            <ArrowUpRight className="w-3.5 h-3.5" /> +12% par rapport à hier
+            <ArrowUpRight className="w-3.5 h-3.5" /> +12%
           </span>
         </div>
 
         {/* KPI 2 : Triage Urgences */}
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground-muted">Triage en Attente</span>
+            <span className="text-xs font-semibold text-foreground-muted">
+              {d.kpi_triage_queue || 'Triage en Attente'}
+            </span>
             <div className="w-9 h-9 rounded-xl bg-danger/10 text-danger flex items-center justify-center">
               <Activity className="w-5 h-5 animate-pulse" />
             </div>
@@ -130,14 +140,16 @@ export default async function DashboardPage() {
             {stats.urgencesTriage}
           </p>
           <span className="text-[11px] text-danger font-medium mt-1 block">
-            1 cas rouge prioritaire immédiat
+            {fileAttenteUrgences.filter((f) => f.gravite === 'rouge').length} prioritaire(s)
           </span>
         </div>
 
         {/* KPI 3 : Lits & Hospitalisation */}
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground-muted">Occupation Lits</span>
+            <span className="text-xs font-semibold text-foreground-muted">
+              {d.bed_occupancy || 'Occupation des Lits'}
+            </span>
             <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center">
               <BedDouble className="w-5 h-5" />
             </div>
@@ -152,14 +164,16 @@ export default async function DashboardPage() {
             />
           </div>
           <span className="text-[10px] text-foreground-muted mt-1 block font-medium">
-            {tauxOccupation}% des capacités occupées
+            {tauxOccupation}% {d.capacity_occupied || 'des capacités occupées'}
           </span>
         </div>
 
         {/* KPI 4 : Finances & Tiers-Payant */}
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-foreground-muted">Recettes & Tiers-Payant</span>
+            <span className="text-xs font-semibold text-foreground-muted">
+              {d.kpi_daily_revenue || 'Recettes Journalières'}
+            </span>
             <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
               <Receipt className="w-5 h-5" />
             </div>
@@ -168,7 +182,7 @@ export default async function DashboardPage() {
             {formatCFA(stats.recetteJour)}
           </p>
           <span className="text-[11px] text-amber-600 font-semibold block mt-1">
-            IPM / Mutuelles : {formatCFA(stats.tiersPayantEnAttente)}
+            {d.hmo_pending || 'IPM / Mutuelles :'} {formatCFA(stats.tiersPayantEnAttente)}
           </span>
         </div>
       </div>
@@ -180,17 +194,17 @@ export default async function DashboardPage() {
             <div>
               <h3 className="text-base font-bold font-heading text-foreground flex items-center gap-2">
                 <Activity className="w-4 h-4 text-danger animate-pulse" />
-                File d&apos;Attente & Triage des Constantes
+                {d.recent_triage || 'Derniers Triages Enregistrés'}
               </h3>
               <p className="text-xs text-foreground-muted">
-                Patients en attente d&apos;orientation ou de consultation médicale.
+                {d.triage_queue_desc || 'Patients en attente d\'orientation ou de consultation médicale.'}
               </p>
             </div>
             <Link
               href="/triage"
               className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
             >
-              Voir tout <ChevronRight className="w-3.5 h-3.5" />
+              {d.view_all || 'Voir tout'} <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -198,11 +212,11 @@ export default async function DashboardPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-background text-foreground-muted uppercase tracking-wider text-[10px] font-bold border-b border-surface-border">
                 <tr>
-                  <th className="py-2.5 px-3">Gravité</th>
-                  <th className="py-2.5 px-3">Patient (IPP)</th>
-                  <th className="py-2.5 px-3">Constantes</th>
-                  <th className="py-2.5 px-3">Motif</th>
-                  <th className="py-2.5 px-3 text-right">Attente</th>
+                  <th className="py-2.5 px-3">{d.gravity || 'Gravité'}</th>
+                  <th className="py-2.5 px-3">{d.patient || 'Patient (IPP)'}</th>
+                  <th className="py-2.5 px-3">{d.vitals || 'Constantes'}</th>
+                  <th className="py-2.5 px-3">{d.reason || 'Motif'}</th>
+                  <th className="py-2.5 px-3 text-right">{d.waiting || 'Attente'}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border/60">
@@ -251,7 +265,7 @@ export default async function DashboardPage() {
           <div className="bg-surface rounded-3xl p-6 border border-surface-border shadow-xs">
             <h3 className="text-base font-bold font-heading text-foreground mb-3 flex items-center gap-2">
               <Stethoscope className="w-4 h-4 text-primary" />
-              Accès Rapides Soignants
+              {d.quick_access || 'Accès Rapides Soignants'}
             </h3>
 
             <div className="space-y-2">
@@ -261,7 +275,7 @@ export default async function DashboardPage() {
               >
                 <span className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-primary" />
-                  Dossier Médical Partagé
+                  {nav.patients || 'Patients (IPP)'}
                 </span>
                 <ChevronRight className="w-4 h-4 text-foreground-muted" />
               </Link>
@@ -272,7 +286,7 @@ export default async function DashboardPage() {
               >
                 <span className="flex items-center gap-2">
                   <BedDouble className="w-4 h-4 text-indigo-600" />
-                  Plan des Lits & Pavillons
+                  {nav.hospitalisation || 'Hospitalisation & Lits'}
                 </span>
                 <ChevronRight className="w-4 h-4 text-foreground-muted" />
               </Link>
@@ -283,7 +297,7 @@ export default async function DashboardPage() {
               >
                 <span className="flex items-center gap-2">
                   <Pill className="w-4 h-4 text-emerald-600" />
-                  Pharmacie & Dépôt Urgences
+                  {nav.pharmacie || 'Pharmacie & Stocks'}
                 </span>
                 <ChevronRight className="w-4 h-4 text-foreground-muted" />
               </Link>
@@ -294,7 +308,7 @@ export default async function DashboardPage() {
               >
                 <span className="flex items-center gap-2">
                   <Receipt className="w-4 h-4 text-amber-600" />
-                  Caisse & Tiers-Payant (IPM)
+                  {nav.facturation || 'Caisse & Tiers-Payant'}
                 </span>
                 <ChevronRight className="w-4 h-4 text-foreground-muted" />
               </Link>
@@ -303,10 +317,10 @@ export default async function DashboardPage() {
 
           <div className="bg-primary/5 rounded-3xl p-5 border border-primary/20 text-xs space-y-2">
             <span className="font-bold text-primary flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4" /> Secret Médical & Données Sécurisées
+              <ShieldCheck className="w-4 h-4" /> {d.medical_confidentiality || 'Secret Médical & Données Sécurisées'}
             </span>
             <p className="text-foreground-muted text-[11px] leading-relaxed">
-              Toutes les données de santé sont cloisonnées par établissement. Traçabilité complète de l&apos;ouverture des dossiers patients.
+              {d.medical_confidentiality_desc || 'Toutes les données de santé sont cloisonnées par établissement. Traçabilité complète de l\'ouverture des dossiers patients.'}
             </p>
           </div>
         </div>

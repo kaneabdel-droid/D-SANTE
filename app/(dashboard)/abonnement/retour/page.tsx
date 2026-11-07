@@ -4,6 +4,7 @@ import { CheckCircle2, Clock, XCircle, ArrowRight, RefreshCw, Stethoscope } from
 import { fetchMaketouCart, mapMaketouStatus } from '@/lib/payments/maketou'
 import { fetchChariowSale, mapChariowStatus } from '@/lib/payments/chariow'
 import { fulfillSubscriptionPayment } from '@/lib/payments/fulfill'
+import { getDictionary, getLocale } from '@/dictionaries'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,6 +14,10 @@ export default async function AbonnementSanteRetourPage({
   searchParams: Promise<{ ref?: string }>
 }) {
   const { ref } = await searchParams
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const isRtl = locale === 'ar'
+  const ab = dict.abonnement
   const admin = createAdminClient()
 
   let payment: any = null
@@ -85,13 +90,13 @@ export default async function AbonnementSanteRetourPage({
   const isVirement = payment?.provider === 'virement'
 
   const getNomForfait = (niveau: string) => {
-    if (niveau === 'hopital') return 'Hôpital & Polyclinique'
-    if (niveau === 'poste_sante') return 'Poste & Dispensaire'
-    return 'Clinique & Centre Médical'
+    if (niveau === 'hopital') return ab.plans.hopital.nom
+    if (niveau === 'poste_sante') return ab.plans.poste_sante.nom
+    return ab.plans.clinique.nom
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
+    <div className={`min-h-[80vh] flex items-center justify-center p-4 ${isRtl ? 'rtl' : 'ltr'}`}>
       {statut === 'pending' && !isCaisse && !isVirement && (
         <meta httpEquiv="refresh" content="5" />
       )}
@@ -104,17 +109,18 @@ export default async function AbonnementSanteRetourPage({
             </div>
             <div className="space-y-2">
               <h1 className="text-2xl font-extrabold text-white">
-                Abonnement D-SANTÉ Activé !
+                {ab.retour_activated_title}
               </h1>
               <p className="text-xs text-slate-300">
-                Votre transaction de{' '}
-                <strong className="text-white font-mono">
-                  {payment?.montant?.toLocaleString('fr-FR')} FCFA
-                </strong>{' '}
-                a été confirmée avec succès.
+                {ab.retour_transaction_confirmed}{' '}
+                {payment?.montant && (
+                  <strong className="text-white font-mono">
+                    {payment.montant.toLocaleString(locale === 'ar' ? 'ar-EG' : 'fr-FR')} FCFA
+                  </strong>
+                )}
               </p>
               <div className="inline-block mt-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-                Formule {getNomForfait(payment?.niveau)} opérationnelle
+                {getNomForfait(payment?.niveau)} • {ab.retour_plan_active}
               </div>
             </div>
 
@@ -123,8 +129,8 @@ export default async function AbonnementSanteRetourPage({
                 href="/dashboard"
                 className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20"
               >
-                <span>Accéder à mon espace médical</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>{ab.retour_go_dashboard}</span>
+                <ArrowRight className={`w-4 h-4 ${isRtl ? 'rotate-180' : ''}`} />
               </Link>
             </div>
           </>
@@ -138,21 +144,21 @@ export default async function AbonnementSanteRetourPage({
             <div className="space-y-2">
               <h1 className="text-xl font-bold text-white">
                 {isCaisse
-                  ? 'Demande de Règlement en Caisse Enregistrée'
+                  ? ab.retour_pending_cash_title
                   : isVirement
-                    ? 'Virement Bancaire en Attente de Réception'
-                    : 'Vérification du Paiement en Cours...'}
+                    ? ab.retour_pending_transfer_title
+                    : ab.retour_pending_online_title}
               </h1>
               <p className="text-xs text-slate-300">
                 {isCaisse
-                  ? 'Votre demande est en attente. Votre administrateur peut la valider directement en un clic sur le SuperAdmin dès réception des espèces.'
+                  ? ab.retour_pending_cash_desc
                   : isVirement
-                    ? 'Dès réception des fonds sur notre compte, l’administrateur validera immédiatement l’accès à votre formule.'
-                    : 'Nous attendons la confirmation automatique de la passerelle. Cette page s’actualise automatiquement.'}
+                    ? ab.retour_pending_transfer_desc
+                    : ab.retour_pending_online_desc}
               </p>
               {payment?.id && (
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-400">
-                  Réf. Dossier : <span className="text-white">#{payment.id.slice(0, 8)}</span>
+                  {ab.retour_ref} <span className="text-white">#{payment.id.slice(0, 8)}</span>
                 </div>
               )}
             </div>
@@ -163,13 +169,13 @@ export default async function AbonnementSanteRetourPage({
                 className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
-                <span>Actualiser le statut</span>
+                <span>{ab.retour_refresh}</span>
               </Link>
               <Link
                 href="/dashboard"
                 className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold"
               >
-                Retour au tableau de bord
+                {ab.retour_back_home}
               </Link>
             </div>
           </>
@@ -181,9 +187,9 @@ export default async function AbonnementSanteRetourPage({
               <XCircle className="w-10 h-10" />
             </div>
             <div className="space-y-2">
-              <h1 className="text-xl font-bold text-white">Paiement non abouti</h1>
+              <h1 className="text-xl font-bold text-white">{ab.retour_failed_title}</h1>
               <p className="text-xs text-slate-300">
-                La transaction n&apos;a pas pu être validée par la passerelle de paiement.
+                {ab.retour_failed_desc}
               </p>
             </div>
             <div className="pt-4 border-t border-slate-800 flex items-center justify-center gap-3">
@@ -191,7 +197,7 @@ export default async function AbonnementSanteRetourPage({
                 href="/abonnement"
                 className="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider"
               >
-                Réessayer le paiement
+                {ab.retour_retry}
               </Link>
             </div>
           </>

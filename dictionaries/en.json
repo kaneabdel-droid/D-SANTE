@@ -66,7 +66,20 @@
     "kpi_daily_revenue": "Daily Revenue",
     "recent_triage": "Recent Triage Admissions",
     "bed_occupancy": "Bed Occupancy",
-    "pending_consultations": "Pending Consultations"
+    "pending_consultations": "Pending Consultations",
+    "active_cockpit": "Active Clinical Cockpit",
+    "quick_access": "Quick Clinical Access",
+    "gravity": "Severity",
+    "patient": "Patient (MRN)",
+    "vitals": "Vitals",
+    "reason": "Chief Complaint",
+    "waiting": "Wait Time",
+    "view_all": "View all",
+    "capacity_occupied": "capacity occupied",
+    "medical_confidentiality": "Medical Confidentiality & Secure Data",
+    "medical_confidentiality_desc": "All health data is strictly segregated per facility. Full traceability of patient record access.",
+    "triage_queue_desc": "Patients waiting for medical consultation or referral.",
+    "hmo_pending": "Pending HMO / Insurance claims:"
   },
   "triage": {
     "title": "Triage & Vital Signs",
@@ -188,10 +201,152 @@
     "on_call_schedule": "On-Call & Night Duty Shifts"
   },
   "abonnement": {
-    "title": "D-SANTÉ Subscription & License",
-    "current_plan": "Active Plan",
-    "expiry": "License Renewal Date",
-    "upgrade": "Upgrade License"
+    "title": "D-SANTÉ Subscription Management",
+    "subtitle": "Activate your medical license online via Mobile Money (Wave, Orange Money) or Credit Card, or pay directly by bank transfer or at the cashier.",
+    "assistance_btn": "Clinic Billing Support",
+    "demo_banner_title": "Clinical & Hospital Demo Workspace • Full Hospital License Active",
+    "demo_banner_desc": "All medical modules are fully unlocked for testing: Electronic Health Records (EHR), Triage & Vitals, Specialized Consultations, Inpatients & Beds, Hospital Pharmacy, HMO Billing & Health Insurance, and SYSCOHADA Accounting.",
+    "step1_title": "1. Choose your D-SANTÉ Plan",
+    "step2_title": "2. Medical License Duration",
+    "step3_title": "3. Payment Method",
+    "recommended": "RECOMMENDED",
+    "per_month": "FCFA/mo",
+    "per_year": "F/yr",
+    "without_commitment": "no commitment",
+    "monthly_billing": "Monthly Billing",
+    "annual_billing": "Annual Billing",
+    "discount_10": "10% OFF",
+    "peace_of_mind": "1 year of clinical peace of mind",
+    "mobile_money": "Wave / Orange Money",
+    "mobile_money_desc": "Direct Maketou (Chariow backup)",
+    "card": "Credit / Debit Card",
+    "card_desc": "Visa & Mastercard (Maketou)",
+    "cash": "Cashier / Cash",
+    "cash_desc": "Cash • Verified by Admin",
+    "transfer": "Bank Wire Transfer",
+    "transfer_desc": "BOA / UBA Senegal Account",
+    "phone_label": "Wave / Orange Money Phone Number",
+    "phone_placeholder": "77 000 00 00 or 78 000 00 00",
+    "total_due": "Total Amount:",
+    "for_period": "for 1",
+    "month": "month",
+    "year": "year",
+    "btn_submit": "Confirm & Activate Plan",
+    "btn_cash": "Register Cashier Payment",
+    "btn_transfer": "Generate Bank Wire Order",
+    "btn_processing": "Processing...",
+    "security_badge": "Secure Maketou Gateway with Chariow Backup",
+    "security_text": "Online payments via Mobile Money (Wave Senegal, Orange Money) and Credit Card (Visa, Mastercard) are instantly validated with no webhook delays. For cashier cash or wire transfers, activation is validated directly by the administrator via the SuperAdmin.",
+    "plans": {
+      "poste_sante": {
+        "nom": "Health Post & Dispensary",
+        "desc": "Ideal for local health posts, rural clinics and infirmaries.",
+        "features": [
+          "Electronic Health Record (Basic EHR)",
+          "Health booklet & vital signs tracking",
+          "Nurse consultations registry",
+          "On-site dispensary medicine management",
+          "Technical support 6 days/week"
+        ]
+      },
+      "clinique": {
+        "nom": "Clinic & Medical Center",
+        "desc": "Versatile healthcare system for private clinics, maternities and health centers.",
+        "features": [
+          "Everything in Health Post & Dispensary",
+          "Nurse triage & vital sign alerts",
+          "Multi-practitioner specialized consultations",
+          "QR Code secure electronic prescriptions",
+          "Inpatient bed management & care sheets",
+          "Clinic cashier & HMO / Health insurance copay"
+        ]
+      },
+      "hopital": {
+        "nom": "Hospital & Polyclinic",
+        "desc": "For large medical facilities, polyclinics and referral hospital centers.",
+        "features": [
+          "Everything in Clinic & Medical Center",
+          "Unlimited practitioners and inpatient beds",
+          "Comprehensive CMU / HMO third-party billing",
+          "Hospital pharmacy & secure drug delivery",
+          "Certified SYSCOHADA financial exports",
+          "Priority 24/7 support & redundant backups"
+        ]
+      }
+    },
+    "retour_activated_title": "D-SANTÉ Subscription Activated!",
+    "retour_transaction_confirmed": "Your transaction has been successfully confirmed.",
+    "retour_plan_active": "Plan operational",
+    "retour_go_dashboard": "Go to my dashboard",
+    "retour_pending_cash_title": "Cash Payment Request Recorded",
+    "retour_pending_transfer_title": "Bank Transfer Awaiting Confirmation",
+    "retour_pending_online_title": "Payment Verification in Progress...",
+    "retour_pending_cash_desc": "Your request is pending. Your administrator can approve it as soon as cash is received.",
+    "retour_pending_transfer_desc": "Upon receipt of funds in our account, the administrator will instantly activate your plan.",
+    "retour_pending_online_desc": "Awaiting automatic gateway confirmation. This page refreshes automatically.",
+    "retour_ref": "File Ref:",
+    "retour_refresh": "Refresh status",
+    "retour_back_home": "Back to Home",
+    "retour_failed_title": "Payment Unsuccessful",
+    "retour_failed_desc": "The transaction could not be validated by the payment gateway.",
+    "retour_retry": "Retry payment"
+  },
+  "landing": {
+    "nav_modules": "Clinical Modules",
+    "nav_demo": "Interactive Demo",
+    "nav_guide": "User Guide",
+    "nav_pricing": "Pricing & Plans",
+    "nav_patient_portal": "Patient Portal",
+    "nav_login": "Login",
+    "nav_signup": "Create Account",
+    "hero_badge": "Next-Generation Hospital & Clinic Information System",
+    "hero_title": "Digitize clinical pathways and secure your healthcare revenues",
+    "hero_subtitle": "From large hospital centers to health posts: 360° medical tracking, emergency triage, secure PDF prescriptions, bed management, pharmacy and insurance third-party billing.",
+    "hero_btn_trial": "Start Free Trial (7 days)",
+    "hero_btn_demo": "Test Live Demo",
+    "hero_btn_guide": "Step-by-Step Guide",
+    "reassurance_1": "No credit card required",
+    "reassurance_2": "Medical standards compliant",
+    "reassurance_3": "Secure & encrypted cloud",
+    "modules_title": "Comprehensive Functional Suite for Healthcare Providers",
+    "modules_subtitle": "Every module has been rigorously designed alongside practicing physicians, nurses, and hospital managers.",
+    "modules_items": {
+      "triage": {
+        "title": "Triage & Vital Signs",
+        "desc": "Ultra-fast recording of vitals (BP, Temp, Pulse, SpO2, Blood Sugar, Weight, auto BMI) with international triage classification (Red / Yellow / Green)."
+      },
+      "consultations": {
+        "title": "Consultations & 360° Patient Record",
+        "desc": "Lifetime Electronic Medical Record (EMR/MPI), clinical history, ICD-10 codified diagnoses, allergy alert banner and chronic conditions."
+      },
+      "ordonnances": {
+        "title": "Secure Medical PDF Prescriptions",
+        "desc": "Multi-line prescription engine, instant generation of official A5 medical prescriptions ready for print or WhatsApp delivery."
+      },
+      "hospitalisation": {
+        "title": "Inpatient Care & Bed Management",
+        "desc": "Visual bed occupancy grid by ward (Internal Medicine, Surgery, Maternity, ICU), stay tracking and nurse shift handover."
+      },
+      "pharmacie": {
+        "title": "Hospital Pharmacy & INN",
+        "desc": "Strict batch traceability, expiration tracking, stockout alerts and direct link with D-Pharma community pharmacies for substitutions."
+      },
+      "facturation": {
+        "title": "Third-Party Billing & Insurance",
+        "desc": "Automatic split between patient copay (cash/Wave/OM) and insurance coverage with electronic claim schedule transmission."
+      },
+      "comptabilite": {
+        "title": "SYSCOHADA Healthcare Accounting",
+        "desc": "Double-entry general journal without overlap, General Ledger, Trial Balance and budget management compliant with OHADA standards."
+      },
+      "resilience": {
+        "title": "100% Offline PWA Resilience",
+        "desc": "Designed for clinics and remote health posts: keep triaging and recording without internet. Automatic sync as soon as connectivity returns."
+      }
+    },
+    "plans_title": "Plans tailored to every scale of care",
+    "plans_subtitle": "Instant deployment on secure cloud or local server for facilities with intermittent connectivity.",
+    "btn_choose_plan": "Choose this plan",
+    "btn_custom_quote": "Request custom quote"
   }
 }
-
