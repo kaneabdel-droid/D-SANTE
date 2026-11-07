@@ -125,9 +125,8 @@ export default async function MaterielPage() {
                     {eq.prochaineMaintenance}
                   </td>
                   <td className="py-3.5 px-4 text-right">
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                      eq.etat === 'operationnel' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
-                    }`}>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${eq.etat === 'operationnel' ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'
+                      }`}>
                       {eq.etat === 'operationnel' ? 'Opérationnel' : 'Maintenance'}
                     </span>
                   </td>
