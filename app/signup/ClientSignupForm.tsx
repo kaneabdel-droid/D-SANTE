@@ -1,28 +1,40 @@
 'use client'
 
 import { useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { signupAction } from './actions'
 import {
   HeartPulse, Building2, User, Mail, Phone, Lock,
   ArrowRight, Loader2, ShieldCheck, CheckCircle2
 } from 'lucide-react'
 
+function SubmitSignupButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-primary/20 transition-all cursor-pointer disabled:opacity-50"
+    >
+      {pending ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <ArrowRight className="w-4 h-4" />
+      )}
+      <span>{pending ? 'Création de la structure en cours...' : 'Créer la structure & Démarrer l\'essai gratuit'}</span>
+    </button>
+  )
+}
+
 export function ClientSignupForm({
   initialPlan,
 }: {
   initialPlan?: string
 }) {
-  const [loading, setLoading] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(initialPlan || 'clinique')
 
   return (
-    <form
-      action={async (formData) => {
-        setLoading(true)
-        await signupAction(formData)
-      }}
-      className="space-y-4 text-xs"
-    >
+    <form action={signupAction} className="space-y-4 text-xs">
       <input type="hidden" name="plan" value={selectedPlan} />
 
       {/* Choix du forfait */}
@@ -167,18 +179,7 @@ export function ClientSignupForm({
       </div>
 
       <div className="pt-2">
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-3 px-4 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-primary/20 transition-all cursor-pointer disabled:opacity-50"
-        >
-          {loading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <ArrowRight className="w-4 h-4" />
-          )}
-          <span>Créer la structure & Démarrer l&apos;essai gratuit</span>
-        </button>
+        <SubmitSignupButton />
       </div>
 
       <div className="text-[11px] text-center text-foreground-muted pt-2 flex items-center justify-center gap-1.5">

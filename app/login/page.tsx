@@ -60,15 +60,15 @@ export default async function LoginPage(props: {
         <form action={loginAction} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-foreground mb-1">
-              Adresse Email Professionnelle
+              Email Professionnel, Téléphone ou Identifiant
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted" />
               <input
-                type="email"
+                type="text"
                 name="email"
                 required
-                placeholder="medecin@hopital.com"
+                placeholder="medecin@hopital.com ou 77 123 45 67"
                 className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-surface-border bg-background text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
@@ -97,6 +97,19 @@ export default async function LoginPage(props: {
             <span>Se Connecter</span>
             <ArrowRight className="w-4 h-4" />
           </button>
+
+          <div className="pt-2 flex items-center justify-between text-[11px] text-foreground-muted border-t border-surface-border/60">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Accès Praticien Sécurisé</span>
+            </span>
+            <Link
+              href="/signup"
+              className="text-primary hover:underline font-bold"
+            >
+              Créer un compte établissement
+            </Link>
+          </div>
         </form>
 
         {/* Accès Démonstration Rapide par Rôles Métier */}

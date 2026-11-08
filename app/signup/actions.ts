@@ -42,6 +42,16 @@ export async function signupAction(formData: FormData) {
 
   const userId = authData.user?.id
 
+  // Auto-confirmation immédiate de l'email via le client admin
+  if (userId) {
+    try {
+      const admin = createAdminClient()
+      await admin.auth.admin.updateUserById(userId, { email_confirm: true })
+    } catch (err) {
+      console.warn('Auto-confirmation email santé non-bloquante:', err)
+    }
+  }
+
   // Enregistrement admin dans les tables multi-tenant si disponible
   try {
     const admin = createAdminClient()
@@ -80,11 +90,17 @@ export async function signupAction(formData: FormData) {
     console.warn('Erreur non-bloquante création tables structure:', err)
   }
 
-  // Si confirmation d'email non requise et session active, aller au dashboard
-  if (authData.session) {
-    redirect('/dashboard')
-  } else {
-    redirect('/login?message=Votre structure a été créée avec succès ! Connectez-vous pour démarrer votre essai.')
+  // Connexion automatique immédiate pour ouvrir la session sans étape manuelle
+  try {
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+  } catch (err) {
+    console.warn('Connexion automatique post-inscription:', err)
   }
+
+  // Redirection directe vers le tableau de bord
+  redirect('/dashboard')
 }
 

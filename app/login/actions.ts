@@ -1,25 +1,72 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 export async function loginAction(formData: FormData) {
-  const email = (formData.get('email') as string)?.trim()
-  const password = formData.get('password') as string
+  const rawIdentifier = ((formData.get('email') as string) || (formData.get('identifier') as string) || '')?.trim()
+  const password = (formData.get('password') as string) || ''
 
-  if (!email || !password) {
-    redirect('/login?error=Veuillez renseigner votre email et mot de passe.')
+  if (!rawIdentifier || !password) {
+    redirect('/login?error=Veuillez renseigner votre email ou identifiant et mot de passe.')
+  }
+
+  let resolvedEmail = rawIdentifier
+
+  // Si c'est un numéro de téléphone ou un identifiant sans @
+  if (!rawIdentifier.includes('@')) {
+    try {
+      const admin = createAdminClient()
+      const { data: userRow } = await admin
+        .from('utilisateurs')
+        .select('id, telephone')
+        .eq('telephone', rawIdentifier)
+        .maybeSingle()
+
+      if (userRow?.id) {
+        const { data: authUser } = await admin.auth.admin.getUserById(userRow.id)
+        if (authUser?.user?.email) {
+          resolvedEmail = authUser.user.email
+        }
+      }
+    } catch (e) {
+      console.warn('Résolution identifiant santé:', e)
+    }
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
+  let { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email: resolvedEmail,
     password,
   })
 
-  if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}`)
+  // Auto-confirmation de l'email si l'utilisateur vient de s'inscrire
+  if (authError && authError.message.toLowerCase().includes('email not confirmed')) {
+    try {
+      const admin = createAdminClient()
+      const { data: usersData } = await admin.auth.admin.listUsers()
+      const foundUser = usersData?.users.find((u) => u.email?.toLowerCase() === resolvedEmail.toLowerCase())
+      if (foundUser) {
+        await admin.auth.admin.updateUserById(foundUser.id, { email_confirm: true })
+        const retry = await supabase.auth.signInWithPassword({
+          email: resolvedEmail,
+          password,
+        })
+        authData = retry.data
+        authError = retry.error
+      }
+    } catch (e) {
+      console.warn('Auto-confirmation email lors du login santé:', e)
+    }
+  }
+
+  if (authError) {
+    if (authError.message.includes('Invalid login credentials')) {
+      redirect('/login?error=Identifiant ou mot de passe incorrect.')
+    }
+    redirect(`/login?error=${encodeURIComponent(authError.message)}`)
   }
 
   redirect('/dashboard')
