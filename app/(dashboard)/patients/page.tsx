@@ -1,9 +1,8 @@
 import { getPatients, getOrganismesAssurances } from './actions'
 import NouveauPatientModal from './NouveauPatientModal'
-import Link from 'next/link'
+import PatientRowActions from './PatientRowActions'
 import {
-  Users, Search, Activity, Stethoscope, ShieldCheck,
-  Phone, Calendar, AlertCircle, FileText, ChevronRight
+  Users, Search, ShieldCheck, AlertCircle, Sparkles
 } from 'lucide-react'
 
 export default async function PatientsPage(props: {
@@ -17,45 +16,49 @@ export default async function PatientsPage(props: {
     getOrganismesAssurances(),
   ])
 
-  // Données de secours de démonstration si la base est neuve
-  const patientsAffiches = patients && patients.length > 0 ? patients : [
-    {
-      id: 'demo-1',
-      ipp: 'PAT-2610-001',
-      nom: 'Diallo',
-      prenom: 'Aminata',
-      date_naissance: '1992-04-15',
-      sexe: 'F',
-      groupe_sanguin: 'O+',
-      telephone: '+221 77 452 10 99',
-      taux_couverture: 80,
-      organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
-    },
-    {
-      id: 'demo-2',
-      ipp: 'PAT-2610-002',
-      nom: 'Sow',
-      prenom: 'Moussa',
-      date_naissance: '1985-11-20',
-      sexe: 'M',
-      groupe_sanguin: 'B+',
-      telephone: '+221 70 882 14 30',
-      taux_couverture: 0,
-      organismes_assurances: null,
-    },
-    {
-      id: 'demo-3',
-      ipp: 'PAT-2610-003',
-      nom: 'Ba',
-      prenom: 'Aïssatou',
-      date_naissance: '2001-08-05',
-      sexe: 'F',
-      groupe_sanguin: 'A-',
-      telephone: '+221 78 312 90 44',
-      taux_couverture: 50,
-      organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
-    },
-  ]
+  const aDesPatientsReels = Boolean(patients && patients.length > 0)
+
+  // Données indicatives d'exemple en filigrane (sans impact) si l'établissement est neuf
+  const patientsAffiches = aDesPatientsReels
+    ? patients
+    : [
+        {
+          id: 'demo-1',
+          ipp: 'PAT-EX-001',
+          nom: 'Diallo',
+          prenom: 'Aminata',
+          date_naissance: '1992-04-15',
+          sexe: 'F',
+          groupe_sanguin: 'O+',
+          telephone: '+221 77 452 10 99',
+          taux_couverture: 80,
+          organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
+        },
+        {
+          id: 'demo-2',
+          ipp: 'PAT-EX-002',
+          nom: 'Sow',
+          prenom: 'Moussa',
+          date_naissance: '1985-11-20',
+          sexe: 'M',
+          groupe_sanguin: 'B+',
+          telephone: '+221 70 882 14 30',
+          taux_couverture: 0,
+          organismes_assurances: null,
+        },
+        {
+          id: 'demo-3',
+          ipp: 'PAT-EX-003',
+          nom: 'Ba',
+          prenom: 'Aïssatou',
+          date_naissance: '2001-08-05',
+          sexe: 'F',
+          groupe_sanguin: 'A-',
+          telephone: '+221 78 312 90 44',
+          taux_couverture: 50,
+          organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
+        },
+      ]
 
   const calculerAge = (dateStr?: string) => {
     if (!dateStr) return '—'
@@ -79,6 +82,18 @@ export default async function PatientsPage(props: {
 
         <NouveauPatientModal organismes={organismes} />
       </div>
+
+      {/* Bannière filigrane sans impact si base neuve */}
+      {!aDesPatientsReels && (
+        <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 rounded-2xl text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Exemples en filigrane :</strong> Votre établissement ne compte aucun patient pour le moment. Les données ci-dessous sont affichées à titre d&apos;exemple indicatif sans impact sur vos statistiques. Cliquez sur « Nouveau Patient » pour ajouter votre premier patient réel.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Barre de Recherche */}
       <div className="bg-surface p-4 rounded-2xl border border-surface-border shadow-xs">
@@ -120,7 +135,7 @@ export default async function PatientsPage(props: {
                 <th className="py-3 px-4">Groupe Sanguin</th>
                 <th className="py-3 px-4">Couverture / Mutuelle</th>
                 <th className="py-3 px-4">Téléphone</th>
-                <th className="py-3 px-4 text-right">Actions Rapides</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border/60">
@@ -128,12 +143,26 @@ export default async function PatientsPage(props: {
                 const org = p.organismes_assurances
 
                 return (
-                  <tr key={p.id} className="hover:bg-background/40 transition-colors">
+                  <tr
+                    key={p.id}
+                    className={`transition-colors ${
+                      !aDesPatientsReels
+                        ? 'opacity-65 bg-amber-500/5 hover:bg-amber-500/10'
+                        : 'hover:bg-background/40'
+                    }`}
+                  >
                     {/* IPP & Nom */}
                     <td className="py-3.5 px-4">
-                      <span className="font-bold text-foreground block text-sm">
-                        {p.nom} {p.prenom}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-foreground block text-sm">
+                          {p.nom} {p.prenom}
+                        </span>
+                        {!aDesPatientsReels && (
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/25">
+                            Exemple
+                          </span>
+                        )}
+                      </div>
                       <span className="font-mono text-[11px] text-primary font-bold">
                         {p.ipp}
                       </span>
@@ -186,22 +215,11 @@ export default async function PatientsPage(props: {
 
                     {/* Actions */}
                     <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/triage?patient_id=${p.id}&ipp=${p.ipp}`}
-                          className="px-2.5 py-1.5 rounded-lg bg-danger/10 text-danger hover:bg-danger/20 text-xs font-bold transition-colors"
-                          title="Prendre les constantes"
-                        >
-                          Constantes
-                        </Link>
-                        <Link
-                          href={`/consultations?patient_id=${p.id}`}
-                          className="px-2.5 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors"
-                          title="Ouvrir consultation"
-                        >
-                          Consulter
-                        </Link>
-                      </div>
+                      <PatientRowActions
+                        patient={p}
+                        organismes={organismes}
+                        isExempleFiligrane={!aDesPatientsReels}
+                      />
                     </td>
                   </tr>
                 )

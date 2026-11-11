@@ -41,20 +41,8 @@ const DEFAULT_PATIENTS = [
 ]
 
 export async function ensurePatientExists(patientId: string, structureId?: string | null) {
-  const defaultPat = DEFAULT_PATIENTS.find((p) => p.id === patientId)
-  if (!defaultPat) return
-  const supabase = await createClient()
-  try {
-    await supabase.from('patients').upsert(
-      {
-        ...defaultPat,
-        structure_id: structureId || '00000000-0000-0000-0000-000000000001',
-      },
-      { onConflict: 'id' }
-    )
-  } catch (err) {
-    console.warn('ensurePatientExists warn:', err)
-  }
+  // Ne plus insérer de faux patients de démo dans la base de données réelle
+  return
 }
 
 export async function getPatients(recherche?: string) {
@@ -78,32 +66,14 @@ export async function getPatients(recherche?: string) {
 
     const { data, error } = await query
 
-    if (data && data.length > 0) {
-      return { patients: data }
+    if (error) {
+      console.warn('Note lecture patients:', error.message)
+      return { patients: [] }
     }
 
-    // Auto-seed si la base n'a pas encore de patients
-    const structureId = tenant?.structureId || '00000000-0000-0000-0000-000000000001'
-    try {
-      const seedList = DEFAULT_PATIENTS.map((p) => ({
-        ...p,
-        structure_id: structureId,
-      }))
-      const { data: inserted, error: seedErr } = await supabase
-        .from('patients')
-        .upsert(seedList, { onConflict: 'id' })
-        .select('*, organismes_assurances(nom, type_organisme, taux_couverture_defaut)')
-
-      if (!seedErr && inserted && inserted.length > 0) {
-        return { patients: inserted }
-      }
-    } catch {
-      // Ignorer et retourner les valeurs par défaut
-    }
-
-    return { patients: DEFAULT_PATIENTS }
+    return { patients: data || [] }
   } catch (err: any) {
-    return { patients: DEFAULT_PATIENTS, error: err.message }
+    return { patients: [], error: err.message }
   }
 }
 
@@ -197,6 +167,83 @@ export async function ajouterPatient(formData: FormData) {
     return { success: true, patient: newPatient }
   } catch (err: any) {
     return { error: err.message || 'Erreur lors de l’enregistrement du patient' }
+  }
+}
+
+export async function modifierPatient(patientId: string, formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const nom = (formData.get('nom') as string)?.trim()
+  const prenom = (formData.get('prenom') as string)?.trim()
+  const date_naissance = (formData.get('date_naissance') as string) || null
+  const sexe = (formData.get('sexe') as string) || 'M'
+  const groupe_sanguin = (formData.get('groupe_sanguin') as string) || null
+  const telephone = (formData.get('telephone') as string)?.trim() || null
+  const adresse = (formData.get('adresse') as string)?.trim() || null
+  const contact_nom = (formData.get('personne_contact_nom') as string)?.trim() || null
+  const contact_tel = (formData.get('personne_contact_telephone') as string)?.trim() || null
+  const assurance_id = (formData.get('organisme_assurance_id') as string) || null
+  const numero_assure = (formData.get('numero_assure') as string)?.trim() || null
+  const taux_couverture = parseFloat((formData.get('taux_couverture') as string) || '0')
+
+  if (!nom || !prenom) {
+    return { error: 'Le nom et le prénom du patient sont obligatoires' }
+  }
+
+  try {
+    let query = supabase
+      .from('patients')
+      .update({
+        nom,
+        prenom,
+        date_naissance,
+        sexe,
+        groupe_sanguin,
+        telephone,
+        adresse,
+        personne_contact_nom: contact_nom,
+        personne_contact_telephone: contact_tel,
+        organisme_assurance_id: assurance_id || null,
+        numero_assure: numero_assure || null,
+        taux_couverture: isNaN(taux_couverture) ? 0 : taux_couverture,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', patientId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/patients')
+    revalidatePath(`/patients/${patientId}`)
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la modification du patient' }
+  }
+}
+
+export async function supprimerPatient(patientId: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  try {
+    let query = supabase.from('patients').delete().eq('id', patientId)
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/patients')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression du patient' }
   }
 }
 

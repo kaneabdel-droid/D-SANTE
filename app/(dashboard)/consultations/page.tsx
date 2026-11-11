@@ -1,11 +1,11 @@
 import { getConsultations, getServicesMedicaux } from './actions'
 import { getPatients } from '../patients/actions'
 import NouvelleConsultationModal from './NouvelleConsultationModal'
-import { DownloadOrdonnanceButton } from '@/components/DownloadOrdonnanceButton'
+import ConsultationRowActions from './ConsultationRowActions'
 import Link from 'next/link'
 import {
   Stethoscope, Search, Pill, FileText, Calendar,
-  User, CheckCircle2, AlertCircle, Filter, Printer
+  User, CheckCircle2, AlertCircle, Filter, Sparkles
 } from 'lucide-react'
 
 export default async function ConsultationsPage(props: {
@@ -21,14 +21,15 @@ export default async function ConsultationsPage(props: {
     getPatients(),
   ])
 
-  // Données de secours / démo si base neuve
-  const consultationsAffichees =
-    consultations && consultations.length > 0
-      ? consultations
-      : [
+  const aDesConsultationsReelles = Boolean(consultations && consultations.length > 0)
+
+  // Données de secours / démo indicatives en filigrane si base neuve
+  const consultationsAffichees = aDesConsultationsReelles
+    ? consultations
+    : [
         {
           id: 'demo-cs-1',
-          numero_consultation: 'CS-2610-0012',
+          numero_consultation: 'CS-EX-0012',
           date_consultation: '2026-10-30',
           type_consultation: 'generale',
           motif: 'Fièvre, céphalées, courbatures depuis 48h',
@@ -38,14 +39,14 @@ export default async function ConsultationsPage(props: {
           patients: {
             nom: 'Diallo',
             prenom: 'Aminata',
-            ipp: 'PAT-2610-001',
+            ipp: 'PAT-EX-001',
             sexe: 'F',
             date_naissance: '1992-04-15',
           },
           prescriptions: [
             {
               id: 'ord-1',
-              numero_ordonnance: 'ORD-2610-0012',
+              numero_ordonnance: 'ORD-EX-0012',
               lignes_prescriptions: [
                 { id: 'l1', designation: 'Artéméther/Luméfantrine 20/120mg', posologie: '4 cp/j pendant 3j' },
                 { id: 'l2', designation: 'Paracétamol 1g comprimé', posologie: '1 cp toutes les 6h en cas de douleur/fièvre' },
@@ -55,7 +56,7 @@ export default async function ConsultationsPage(props: {
         },
         {
           id: 'demo-cs-2',
-          numero_consultation: 'CS-2610-0013',
+          numero_consultation: 'CS-EX-0013',
           date_consultation: '2026-10-29',
           type_consultation: 'prenatale',
           motif: 'Consultation prénatale du 3ème trimestre',
@@ -65,14 +66,14 @@ export default async function ConsultationsPage(props: {
           patients: {
             nom: 'Ba',
             prenom: 'Aïssatou',
-            ipp: 'PAT-2610-003',
+            ipp: 'PAT-EX-003',
             sexe: 'F',
             date_naissance: '2001-08-05',
           },
           prescriptions: [
             {
               id: 'ord-2',
-              numero_ordonnance: 'ORD-2610-0013',
+              numero_ordonnance: 'ORD-EX-0013',
               lignes_prescriptions: [
                 { id: 'l3', designation: 'Fer + Acide Folique', posologie: '1 comprimé par jour' },
               ],
@@ -98,44 +99,55 @@ export default async function ConsultationsPage(props: {
             Consultations Médicales & Ordonnances
           </h2>
           <p className="text-xs text-foreground-muted">
-            Observations cliniques, diagnostics CIM-10 et prescriptions d&apos;ordonnances sécurisées.
+            Diagnostics cliniques (CIM-10), examens médicaux et génération d&apos;ordonnances.
           </p>
         </div>
 
-        <NouvelleConsultationModal
-          patients={patients || []}
-          services={services || []}
-          preselectedPatientId={patientId}
-        />
+        <NouvelleConsultationModal patients={patients || []} services={services || []} />
       </div>
 
-      {/* Filtres par Spécialité / Type */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-foreground-muted mr-1 flex items-center gap-1">
-          <Filter className="w-3.5 h-3.5" /> Type :
-        </span>
-        {[
-          { id: 'tous', label: 'Toutes les consultations' },
-          { id: 'generale', label: 'Générale' },
-          { id: 'urgence', label: 'Urgences' },
-          { id: 'prenatale', label: 'Prénatale (CPN)' },
-          { id: 'pediatrique', label: 'Pédiatrie' },
-          { id: 'specialiste', label: 'Spécialistes' },
-        ].map((t) => {
-          const isActive = selectedType === t.id
-          return (
+      {/* Bannière filigrane sans impact */}
+      {!aDesConsultationsReelles && (
+        <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 rounded-2xl text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Exemples en filigrane :</strong> Votre établissement ne compte aucune consultation pour le moment. Les données ci-dessous sont présentées à titre indicatif et sans impact. Cliquez sur « Nouvelle Consultation » pour enregistrer votre premier diagnostic réel.
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Barre de filtres */}
+      <div className="bg-surface p-4 rounded-2xl border border-surface-border shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-xs font-semibold text-foreground-muted flex items-center gap-1.5 mr-1">
+            <Filter className="w-3.5 h-3.5" />
+            Types :
+          </span>
+          {['tous', 'generale', 'urgence', 'prenatale', 'pediatrique'].map((t) => (
             <Link
-              key={t.id}
-              href={`/consultations?type=${t.id}`}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${isActive
+              key={t}
+              href={`/consultations?type=${t}${patientId ? `&patient_id=${patientId}` : ''}`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                selectedType === t
                   ? 'bg-primary text-white shadow-xs'
-                  : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
-                }`}
+                  : 'bg-surface-border/40 text-foreground-muted hover:bg-surface-border hover:text-foreground'
+              }`}
             >
-              {t.label}
+              {t === 'tous' ? 'Toutes' : typeLabels[t] || t}
             </Link>
-          )
-        })}
+          ))}
+        </div>
+
+        {patientId && (
+          <Link
+            href="/consultations"
+            className="text-xs text-primary font-bold hover:underline self-center"
+          >
+            ✕ Réinitialiser le filtre patient
+          </Link>
+        )}
       </div>
 
       {error && (
@@ -147,124 +159,108 @@ export default async function ConsultationsPage(props: {
 
       {/* Liste des Consultations */}
       <div className="space-y-4">
-        {consultationsAffichees.map((cs: any) => {
-          const pat = cs.patients
-          const presc = cs.prescriptions?.[0]
-          const lignes = presc?.lignes_prescriptions || []
+        {consultationsAffichees.map((c: any) => {
+          const pat = c.patients
+          const ord = c.prescriptions?.[0]
+          const lignes = ord?.lignes_prescriptions || []
 
           return (
             <div
-              key={cs.id}
-              className="bg-surface rounded-3xl p-5 sm:p-6 border border-surface-border shadow-xs space-y-4 hover:border-primary/40 transition-colors"
+              key={c.id}
+              className={`rounded-3xl border border-surface-border p-4 sm:p-5 shadow-xs transition-all ${
+                !aDesConsultationsReelles
+                  ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
+                  : 'bg-surface hover:border-primary/40'
+              }`}
             >
-              {/* En-tête de la consultation */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-surface-border/60 pb-3">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-surface-border/60">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-bold font-mono text-xs shrink-0">
                     <Stethoscope className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="font-bold text-foreground block text-sm">
-                      {pat ? `${pat.nom} ${pat.prenom}` : 'Patient non renseigné'}
-                    </span>
-                    <span className="text-[11px] font-mono text-primary font-bold">
-                      {pat?.ipp} • {cs.numero_consultation}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase">
-                    {typeLabels[cs.type_consultation] || cs.type_consultation}
-                  </span>
-                  <span className="text-xs text-foreground-muted font-mono">
-                    {cs.date_consultation}
-                  </span>
-                </div>
-              </div>
-
-              {/* Détails cliniques */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div>
-                  <span className="font-semibold text-foreground-muted block mb-0.5">
-                    Motif de Consultation
-                  </span>
-                  <p className="text-foreground font-medium">{cs.motif}</p>
-                </div>
-
-                <div>
-                  <span className="font-semibold text-foreground-muted block mb-0.5">
-                    Diagnostic Retenu (CIM-10)
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-foreground">{cs.diagnostic_principal}</span>
-                    {cs.code_cim10 && (
-                      <span className="px-2 py-0.5 rounded bg-surface-border text-foreground font-mono text-[10px] font-bold">
-                        {cs.code_cim10}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {cs.conduite_a_tenir && (
-                <div className="text-xs p-3 rounded-2xl bg-background border border-surface-border/50">
-                  <span className="font-semibold text-foreground-muted block text-[11px] mb-0.5">
-                    Conduite à tenir / Consignes
-                  </span>
-                  <p className="text-foreground font-medium">{cs.conduite_a_tenir}</p>
-                </div>
-              )}
-
-              {/* Ordonnance / Prescriptions rattachées */}
-              {lignes.length > 0 && (
-                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                      <Pill className="w-4 h-4 text-primary" />
-                      Ordonnance Médicale ({presc?.numero_ordonnance})
-                    </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-foreground-muted mr-1">
-                        {lignes.length} spécialité(s)
-                      </span>
-                      <DownloadOrdonnanceButton
-                        data={{
-                          structureNom: 'D-Santé Médical',
-                          medecinNom: 'Médecin Traitant',
-                          patientNom: pat?.nom || 'Patient',
-                          patientPrenom: pat?.prenom || '',
-                          patientIpp: pat?.ipp || 'N/A',
-                          datePrescription: presc?.date_prescription || cs.date_consultation || new Date().toISOString().split('T')[0],
-                          lignes: lignes.map((lig: any) => ({
-                            medicamentNom: lig.designation,
-                            posologie: lig.posologie,
-                            dureeJours: lig.duree_jours || 7,
-                            instructions: lig.instructions,
-                          })),
-                          notes: cs.conduite_a_tenir,
-                        }}
-                      />
+                      <h4 className="font-bold text-foreground text-sm sm:text-base">
+                        {pat ? `${pat.nom} ${pat.prenom}` : 'Patient non rattaché'}
+                      </h4>
+                      {pat?.ipp && (
+                        <span className="font-mono text-xs text-primary font-bold bg-primary/5 px-2 py-0.5 rounded-md">
+                          {pat.ipp}
+                        </span>
+                      )}
+                      {!aDesConsultationsReelles && (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/25">
+                          Exemple
+                        </span>
+                      )}
                     </div>
-                  </div>
-
-                  <div className="space-y-1.5 pt-1">
-                    {lignes.map((l: any, idx: number) => (
-                      <div
-                        key={l.id || idx}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between text-xs p-2 rounded-xl bg-surface border border-surface-border/50 gap-1"
-                      >
-                        <span className="font-bold text-foreground">
-                          {idx + 1}. {l.designation}
-                        </span>
-                        <span className="text-foreground-muted font-medium">
-                          {l.posologie}
-                        </span>
-                      </div>
-                    ))}
+                    <p className="text-[11px] text-foreground-muted flex items-center gap-2 mt-0.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                      {new Date(c.date_consultation || c.created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                      <span>•</span>
+                      <span className="capitalize font-medium text-foreground">
+                        {typeLabels[c.type_consultation] || c.type_consultation}
+                      </span>
+                    </p>
                   </div>
                 </div>
-              )}
+
+                <div className="flex items-center gap-2 self-end sm:self-center">
+                  <ConsultationRowActions
+                    consultation={c}
+                    isExempleFiligrane={!aDesConsultationsReelles}
+                  />
+                </div>
+              </div>
+
+              {/* Contenu Diagnostic & Motif */}
+              <div className="mt-3.5 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="space-y-1.5">
+                  <p className="text-[11px] font-bold text-foreground-muted uppercase tracking-wider">
+                    Motif de Consultation
+                  </p>
+                  <p className="text-foreground font-medium bg-background/50 p-2.5 rounded-xl border border-surface-border/40">
+                    {c.motif}
+                  </p>
+
+                  {c.diagnostic_principal && (
+                    <div className="pt-1 flex items-center gap-2">
+                      <span className="font-bold text-foreground">Diagnostic :</span>
+                      <span className="font-semibold text-primary">{c.diagnostic_principal}</span>
+                      {c.code_cim10 && (
+                        <span className="font-mono text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+                          CIM-10 : {c.code_cim10}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <p className="text-[11px] font-bold text-foreground-muted uppercase tracking-wider">
+                    Conduite à Tenir & Prescription
+                  </p>
+                  <p className="text-foreground-muted bg-background/50 p-2.5 rounded-xl border border-surface-border/40">
+                    {c.conduite_a_tenir || 'Aucune consigne spécifique renseignée.'}
+                  </p>
+
+                  {lignes.length > 0 && (
+                    <div className="pt-1 text-[11px] text-foreground flex items-center gap-1.5 flex-wrap">
+                      <Pill className="w-3.5 h-3.5 text-primary shrink-0" />
+                      <span className="font-bold">Prescription :</span>
+                      {lignes.map((l: any, idx: number) => (
+                        <span key={l.id || idx} className="bg-surface-border/50 px-2 py-0.5 rounded text-[10px]">
+                          {l.designation} {l.posologie ? `(${l.posologie})` : ''}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )
         })}

@@ -1,10 +1,11 @@
 import { getLitsEtHospitalisations } from './actions'
 import { getPatients } from '../patients/actions'
 import AdmissionModal from './AdmissionModal'
-import CloturerSortieModal from './CloturerSortieModal'
+import NouveauLitModal from './NouveauLitModal'
+import HospitalisationRowActions from './HospitalisationRowActions'
 import {
   BedDouble, CheckCircle2, Clock, AlertTriangle,
-  User, Calendar, LogOut, ArrowRight, Activity
+  User, Calendar, LogOut, ArrowRight, Activity, Sparkles
 } from 'lucide-react'
 
 export default async function HospitalisationPage() {
@@ -13,38 +14,46 @@ export default async function HospitalisationPage() {
     getPatients(),
   ])
 
-  // Données de secours / démo si base neuve
-  const litsAffiches = lits && lits.length > 0 ? lits : [
-    { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
-    { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1', categorie: 'standard', statut: 'libre' },
-    { id: 'lit-3', numero_lit: 'L103', chambre: 'Chambre 2', categorie: 'standard', statut: 'libre' },
-    { id: 'lit-4', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'occupe' },
-    { id: 'lit-5', numero_lit: 'USI-01', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'occupe' },
-    { id: 'lit-6', numero_lit: 'USI-02', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'nettoyage' },
-  ]
+  const aDesLitsReels = Boolean(lits && lits.length > 0)
+  const aDesHospitalisationsReelles = Boolean(hospitalisations && hospitalisations.length > 0)
+  const estBaseNeuve = !aDesLitsReels && !aDesHospitalisationsReelles
 
-  const hospitalisationsAffichees = hospitalisations && hospitalisations.length > 0 ? hospitalisations : [
-    {
-      id: 'hosp-1',
-      numero_sejour: 'SEJ-2610-001',
-      date_entree: '2026-10-28T09:30:00Z',
-      motif_admission: 'Pneumopathie infectieuse avec désaturation',
-      statut: 'en_cours',
-      lit_id: 'lit-1',
-      patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2610-001', groupe_sanguin: 'O+' },
-      lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
-    },
-    {
-      id: 'hosp-2',
-      numero_sejour: 'SEJ-2610-002',
-      date_entree: '2026-10-29T14:15:00Z',
-      motif_admission: 'Surveillance post-césarienne programmée',
-      statut: 'en_cours',
-      lit_id: 'lit-4',
-      patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-2610-003', groupe_sanguin: 'A-' },
-      lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
-    },
-  ]
+  // Données indicatives d'exemple en filigrane si base neuve
+  const litsAffiches = aDesLitsReels
+    ? lits
+    : [
+        { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
+        { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1', categorie: 'standard', statut: 'libre' },
+        { id: 'lit-3', numero_lit: 'L103', chambre: 'Chambre 2', categorie: 'standard', statut: 'libre' },
+        { id: 'lit-4', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'occupe' },
+        { id: 'lit-5', numero_lit: 'USI-01', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'occupe' },
+        { id: 'lit-6', numero_lit: 'USI-02', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'nettoyage' },
+      ]
+
+  const hospitalisationsAffichees = aDesHospitalisationsReelles
+    ? hospitalisations
+    : [
+        {
+          id: 'hosp-1',
+          numero_sejour: 'SEJ-EX-001',
+          date_entree: '2026-10-28T09:30:00Z',
+          motif_admission: 'Pneumopathie infectieuse avec désaturation',
+          statut: 'en_cours',
+          lit_id: 'lit-1',
+          patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-EX-001', groupe_sanguin: 'O+' },
+          lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
+        },
+        {
+          id: 'hosp-2',
+          numero_sejour: 'SEJ-EX-002',
+          date_entree: '2026-10-29T14:15:00Z',
+          motif_admission: 'Surveillance post-césarienne programmée',
+          statut: 'en_cours',
+          lit_id: 'lit-4',
+          patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003', groupe_sanguin: 'A-' },
+          lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
+        },
+      ]
 
   const litsLibres = litsAffiches.filter((l: any) => l.statut === 'libre')
 
@@ -60,14 +69,14 @@ export default async function HospitalisationPage() {
       label: 'Occupé',
     },
     nettoyage: {
-      badge: 'bg-amber-400 text-black',
-      card: 'border-amber-400/30 bg-amber-400/5 hover:border-amber-400',
+      badge: 'bg-amber-500 text-white',
+      card: 'border-amber-500/30 bg-amber-500/5 hover:border-amber-500',
       label: 'Désinfection',
     },
     maintenance: {
-      badge: 'bg-red-500 text-white',
-      card: 'border-red-500/30 bg-red-500/5 hover:border-red-500',
-      label: 'Maintenance',
+      badge: 'bg-danger text-white',
+      card: 'border-danger/30 bg-danger/5 hover:border-danger',
+      label: 'Hors service',
     },
   }
 
@@ -77,137 +86,145 @@ export default async function HospitalisationPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-black font-heading text-foreground">
-            Hospitalisation & Plan des Lits
+            Hospitalisation & Gestion des Lits
           </h2>
           <p className="text-xs text-foreground-muted">
-            Gestion des chambres, séjours en cours, tournées de soins et libération de lits.
+            Occupation en temps réel, admissions cliniques et clôtures de séjours.
           </p>
         </div>
 
-        <AdmissionModal
-          patients={patients || []}
-          litsDisponibles={litsLibres}
-        />
+        <div className="flex items-center gap-2">
+          <NouveauLitModal />
+          <AdmissionModal patients={patients || []} litsDisponibles={litsLibres} />
+        </div>
       </div>
 
-      {/* Cartographie Visuelle des Lits */}
-      <div className="bg-surface rounded-3xl p-6 border border-surface-border shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold font-heading text-foreground flex items-center gap-2">
-            <BedDouble className="w-4 h-4 text-indigo-600" />
-            Occupation des Lits en Temps Réel ({litsLibres.length} libre(s) sur {litsAffiches.length})
-          </h3>
+      {/* Bannière filigrane sans impact */}
+      {estBaseNeuve && (
+        <div className="p-3.5 bg-amber-500/10 border border-amber-500/20 text-amber-800 dark:text-amber-300 rounded-2xl text-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Exemples en filigrane :</strong> Votre établissement ne compte aucun lit ni séjour enregistré pour le moment. Les éléments ci-dessous sont présentés à titre indicatif et sans impact. Cliquez sur « Ajouter un Lit » ou « Nouvelle Admission » pour configurer votre service.
+            </span>
+          </div>
+        </div>
+      )}
 
-          <div className="flex items-center gap-2 text-[10px] font-bold">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600">
-              ● Libre
+      {/* Plan Visuel des Lits */}
+      <div className="bg-surface p-5 sm:p-6 rounded-3xl border border-surface-border shadow-xs space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="font-bold text-foreground text-sm sm:text-base flex items-center gap-2">
+            <BedDouble className="w-5 h-5 text-primary" />
+            Plan de Chambre & Disponibilité
+          </h3>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="font-bold text-emerald-600">
+              {aDesLitsReels ? litsLibres.length : 0} libre(s)
             </span>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600">
-              ● Occupé
-            </span>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600">
-              ● Désinfection
+            <span className="text-foreground-muted">/</span>
+            <span className="font-bold text-foreground">
+              {aDesLitsReels ? litsAffiches.length : 0} lit(s)
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
           {litsAffiches.map((lit: any) => {
-            const conf = statutCouleurs[lit.statut] || statutCouleurs.libre
+            const st = statutCouleurs[lit.statut] || statutCouleurs.libre
 
             return (
               <div
                 key={lit.id}
-                className={`p-3.5 rounded-2xl border transition-all flex flex-col justify-between h-28 ${conf.card}`}
+                className={`p-3 rounded-2xl border transition-all ${st.card} ${
+                  estBaseNeuve ? 'opacity-70' : ''
+                }`}
               >
-                <div className="flex justify-between items-start">
-                  <span className="text-xs font-black font-heading text-foreground">
+                <div className="flex justify-between items-start mb-2">
+                  <span className="font-mono font-black text-sm text-foreground">
                     {lit.numero_lit}
                   </span>
-                  <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded-md ${conf.badge}`}>
-                    {conf.label}
+                  <span className={`text-[9px] uppercase font-bold px-1.5 py-0.5 rounded-full ${st.badge}`}>
+                    {st.label}
                   </span>
                 </div>
-
-                <div className="text-[11px] leading-tight">
-                  <span className="text-foreground font-semibold block truncate">
-                    {lit.chambre}
-                  </span>
-                  <span className="text-[10px] text-foreground-muted capitalize">
-                    {lit.categorie?.replace('_', ' ')}
-                  </span>
-                </div>
+                <p className="text-[11px] font-semibold text-foreground truncate">
+                  {lit.chambre}
+                </p>
+                <p className="text-[10px] text-foreground-muted capitalize">
+                  {lit.categorie?.replace('_', ' ')}
+                </p>
               </div>
             )
           })}
         </div>
       </div>
 
-      {/* Tableau des Séjours d'Hospitalisation en Cours */}
-      <div className="bg-surface rounded-3xl border border-surface-border overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-surface-border flex items-center justify-between">
-          <h3 className="text-sm font-bold font-heading text-foreground">
-            Séjours d&apos;Hospitalisation en Cours ({hospitalisationsAffichees.length})
-          </h3>
-        </div>
+      {/* Séjours en cours */}
+      <div className="space-y-3">
+        <h3 className="font-bold text-foreground text-sm sm:text-base flex items-center gap-2">
+          <Activity className="w-4 h-4 text-primary" />
+          Patients Actuellement Hospitalisés
+        </h3>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-background text-foreground-muted uppercase tracking-wider text-[11px] font-bold border-b border-surface-border">
-              <tr>
-                <th className="py-3 px-4">Patient (IPP)</th>
-                <th className="py-3 px-4">Lit & Chambre</th>
-                <th className="py-3 px-4">Date d&apos;Entrée</th>
-                <th className="py-3 px-4">Motif d&apos;Admission</th>
-                <th className="py-3 px-4 text-right">Action Soignante</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-surface-border/60">
-              {hospitalisationsAffichees.map((h: any) => {
-                const pat = h.patients
-                const lit = h.lits
+        <div className="space-y-3">
+          {hospitalisationsAffichees.map((h: any) => {
+            const pat = h.patients
+            const lit = h.lits
 
-                return (
-                  <tr key={h.id} className="hover:bg-background/40 transition-colors">
-                    {/* Patient */}
-                    <td className="py-3.5 px-4">
-                      <span className="font-bold text-foreground block text-sm">
-                        {pat ? `${pat.nom} ${pat.prenom}` : 'Patient non renseigné'}
+            return (
+              <div
+                key={h.id}
+                className={`p-4 sm:p-5 rounded-3xl border border-surface-border shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all ${
+                  estBaseNeuve
+                    ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
+                    : 'bg-surface hover:border-primary/40'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-bold text-sm shrink-0">
+                    <User className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-foreground text-sm sm:text-base">
+                        {pat?.nom} {pat?.prenom}
                       </span>
-                      <span className="font-mono text-[11px] text-primary font-bold">
-                        {pat?.ipp} • {h.numero_sejour}
-                      </span>
-                    </td>
-
-                    {/* Lit */}
-                    <td className="py-3.5 px-4 text-xs">
-                      <span className="font-mono font-bold text-indigo-600 block">
-                        Lit {lit?.numero_lit}
-                      </span>
-                      <span className="text-[11px] text-foreground-muted">
-                        {lit?.chambre}
-                      </span>
-                    </td>
-
-                    {/* Date entrée */}
-                    <td className="py-3.5 px-4 font-mono text-xs text-foreground-muted">
-                      {new Date(h.date_entree).toLocaleDateString('fr-FR')}
-                    </td>
-
-                    {/* Motif */}
-                    <td className="py-3.5 px-4 text-xs font-medium text-foreground max-w-xs">
+                      {pat?.ipp && (
+                        <span className="font-mono text-xs text-primary font-bold bg-primary/5 px-2 py-0.5 rounded-md">
+                          {pat.ipp}
+                        </span>
+                      )}
+                      {estBaseNeuve && (
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/25">
+                          Exemple
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-foreground-muted mt-0.5">
                       {h.motif_admission}
-                    </td>
+                    </p>
+                  </div>
+                </div>
 
-                    {/* Action libération */}
-                    <td className="py-3.5 px-4 text-right">
-                      <CloturerSortieModal hospitalisation={h} />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+                <div className="flex items-center gap-4 text-xs self-stretch sm:self-auto justify-between sm:justify-end">
+                  <div className="text-right hidden sm:block">
+                    <span className="font-bold text-foreground block">
+                      {lit?.chambre} • Lit {lit?.numero_lit}
+                    </span>
+                    <span className="text-[11px] text-foreground-muted">
+                      Admis le {new Date(h.date_entree).toLocaleDateString('fr-FR')}
+                    </span>
+                  </div>
+
+                  <HospitalisationRowActions
+                    hospitalisation={h}
+                    isExempleFiligrane={estBaseNeuve}
+                  />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

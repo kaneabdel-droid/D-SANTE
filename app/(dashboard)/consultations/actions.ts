@@ -161,3 +161,66 @@ export async function creerConsultation(formData: FormData, prescriptionsLignesJ
     return { error: err.message || 'Erreur inattendue lors de la consultation' }
   }
 }
+
+export async function modifierConsultation(consultationId: string, formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const motif = (formData.get('motif') as string)?.trim()
+  const type_consultation = (formData.get('type_consultation') as string) || 'generale'
+  const diagnostic_principal = (formData.get('diagnostic_principal') as string)?.trim() || null
+  const code_cim10 = (formData.get('code_cim10') as string)?.trim() || null
+  const conduite_a_tenir = (formData.get('conduite_a_tenir') as string)?.trim() || null
+
+  if (!motif) {
+    return { error: 'Le motif de consultation est obligatoire.' }
+  }
+
+  try {
+    let query = supabase
+      .from('consultations')
+      .update({
+        motif,
+        type_consultation,
+        diagnostic_principal,
+        code_cim10,
+        conduite_a_tenir,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', consultationId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/consultations')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la mise à jour de la consultation' }
+  }
+}
+
+export async function supprimerConsultation(consultationId: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  try {
+    let query = supabase.from('consultations').delete().eq('id', consultationId)
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/consultations')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression de la consultation' }
+  }
+}

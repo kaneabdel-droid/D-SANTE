@@ -2,9 +2,11 @@ import Link from 'next/link'
 import {
   Users, Activity, BedDouble, Receipt, Stethoscope,
   HeartPulse, AlertTriangle, ArrowUpRight, Clock, Plus,
-  ShieldCheck, CheckCircle2, ChevronRight, Pill
+  ShieldCheck, CheckCircle2, ChevronRight, Pill, Sparkles
 } from 'lucide-react'
 import { getDictionary } from '@/dictionaries'
+import { createClient } from '@/utils/supabase/server'
+import { getTenantContext } from '@/utils/supabase/tenant'
 
 export default async function DashboardPage() {
   const dict = await getDictionary()
@@ -12,20 +14,59 @@ export default async function DashboardPage() {
   const actions = dict?.actions || {}
   const nav = dict?.nav || {}
 
-  // Données synthétiques du cockpit de santé
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  let totalPatients = 0
+  let totalLits = 0
+  let litsOccupes = 0
+  let recetteJour = 0
+  let tiersPayantEnAttente = 0
+
+  if (tenant?.structureId) {
+    try {
+      const [
+        { count: pCount },
+        { count: lCount },
+        { count: loCount },
+        { data: facs },
+      ] = await Promise.all([
+        supabase.from('patients').select('*', { count: 'exact', head: true }).eq('structure_id', tenant.structureId),
+        supabase.from('lits').select('*', { count: 'exact', head: true }).eq('structure_id', tenant.structureId),
+        supabase.from('lits').select('*', { count: 'exact', head: true }).eq('structure_id', tenant.structureId).eq('statut', 'occupe'),
+        supabase.from('factures_sante').select('montant_regle_patient, part_assurance, statut_paiement_assurance').eq('structure_id', tenant.structureId),
+      ])
+
+      totalPatients = pCount || 0
+      totalLits = lCount || 0
+      litsOccupes = loCount || 0
+      if (facs) {
+        recetteJour = facs.reduce((acc, f) => acc + Number(f.montant_regle_patient || 0), 0)
+        tiersPayantEnAttente = facs
+          .filter((f) => f.statut_paiement_assurance === 'en_attente')
+          .reduce((acc, f) => acc + Number(f.part_assurance || 0), 0)
+      }
+    } catch (err) {
+      console.warn('Erreur lecture stats réelles dashboard santé:', err)
+    }
+  }
+
+  const estNouvelEtablissement = totalPatients === 0 && totalLits === 0 && recetteJour === 0
+
+  // Si établissement avec données, utiliser les vrais chiffres. Sinon afficher zéro réel avec exemples en filigrane
   const stats = {
-    patientsDuJour: 38,
-    urgencesTriage: 5,
-    litsOccupes: 18,
-    totalLits: 24,
-    recetteJour: 485000,
-    tiersPayantEnAttente: 320000,
+    patientsDuJour: totalPatients,
+    urgencesTriage: 0,
+    litsOccupes: litsOccupes,
+    totalLits: totalLits,
+    recetteJour: recetteJour,
+    tiersPayantEnAttente: tiersPayantEnAttente,
   }
 
   const fileAttenteUrgences = [
     {
       id: '1',
-      ipp: 'PAT-2610-001',
+      ipp: 'PAT-EX-001',
       nom: 'Diallo Oumar',
       age: '34 ans',
       constantes: 'TA 180/100 • Pouls 110 • SpO2 93%',
@@ -35,7 +76,7 @@ export default async function DashboardPage() {
     },
     {
       id: '2',
-      ipp: 'PAT-2610-004',
+      ipp: 'PAT-EX-004',
       nom: 'Sow Fatoumata',
       age: '5 ans',
       constantes: 'T° 39.8°C • Pouls 130',
@@ -45,7 +86,7 @@ export default async function DashboardPage() {
     },
     {
       id: '3',
-      ipp: 'PAT-2610-007',
+      ipp: 'PAT-EX-007',
       nom: 'Ba Amadou',
       age: '62 ans',
       constantes: 'Glycémie 3.4 g/L • TA 140/85',
@@ -55,7 +96,7 @@ export default async function DashboardPage() {
     },
     {
       id: '4',
-      ipp: 'PAT-2610-011',
+      ipp: 'PAT-EX-011',
       nom: 'Ndiaye Awa',
       age: '28 ans',
       constantes: 'TA 110/70 • T° 37.1°C',
@@ -68,7 +109,7 @@ export default async function DashboardPage() {
   const formatCFA = (montant: number) =>
     new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(montant) + ' FCFA'
 
-  const tauxOccupation = Math.round((stats.litsOccupes / stats.totalLits) * 100)
+  const tauxOccupation = stats.totalLits > 0 ? Math.round((stats.litsOccupes / stats.totalLits) * 100) : 0
 
   return (
     <div className="space-y-6">
@@ -106,13 +147,28 @@ export default async function DashboardPage() {
         </div>
       </div>
 
+      {/* Message de bienvenue établissement neuf */}
+      {estNouvelEtablissement && (
+        <div className="p-4 bg-primary/10 border border-primary/20 text-primary rounded-2xl text-xs flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-5 h-5 shrink-0" />
+            <div>
+              <p className="font-bold text-sm">Bienvenue dans votre nouvel établissement !</p>
+              <p className="text-foreground-muted mt-0.5">
+                Votre base est prête et vierge. Vos données de démo indicatives sont présentées en filigrane sans impact sur vos statistiques réelles. Utilisez les boutons du haut pour créer vos premiers patients et consultations.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Cartes KPI Principales */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* KPI 1 : Patients */}
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-foreground-muted">
-              {d.kpi_patients_today || 'Patients du Jour'}
+              {d.kpi_patients_today || 'Patients Enregistrés'}
             </span>
             <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
               <Users className="w-5 h-5" />
@@ -121,8 +177,8 @@ export default async function DashboardPage() {
           <p className="text-3xl font-black font-heading text-foreground mt-3">
             {stats.patientsDuJour}
           </p>
-          <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-1">
-            <ArrowUpRight className="w-3.5 h-3.5" /> +12%
+          <span className="text-[11px] text-foreground-muted font-medium flex items-center gap-1 mt-1">
+            Fichier central actif
           </span>
         </div>
 
@@ -139,8 +195,8 @@ export default async function DashboardPage() {
           <p className="text-3xl font-black font-heading text-danger mt-3">
             {stats.urgencesTriage}
           </p>
-          <span className="text-[11px] text-danger font-medium mt-1 block">
-            {fileAttenteUrgences.filter((f) => f.gravite === 'rouge').length} prioritaire(s)
+          <span className="text-[11px] text-foreground-muted font-medium mt-1 block">
+            File d&apos;attente active
           </span>
         </div>
 
@@ -172,157 +228,79 @@ export default async function DashboardPage() {
         <div className="bg-surface rounded-3xl p-5 border border-surface-border shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-foreground-muted">
-              {d.kpi_daily_revenue || 'Recettes Journalières'}
+              {d.kpi_daily_revenue || 'Recettes Encaissées'}
             </span>
             <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
               <Receipt className="w-5 h-5" />
             </div>
           </div>
-          <p className="text-xl font-bold font-mono text-foreground mt-3">
+          <p className="text-2xl font-black font-heading text-foreground mt-3 truncate">
             {formatCFA(stats.recetteJour)}
           </p>
-          <span className="text-[11px] text-amber-600 font-semibold block mt-1">
-            {d.hmo_pending || 'IPM / Mutuelles :'} {formatCFA(stats.tiersPayantEnAttente)}
+          <span className="text-[11px] text-amber-600 font-bold block mt-1">
+            {formatCFA(stats.tiersPayantEnAttente)} en attente IPM
           </span>
         </div>
       </div>
 
-      {/* Section 2 : File de Triage & Urgences Récentes */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-surface rounded-3xl p-6 border border-surface-border shadow-xs">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold font-heading text-foreground flex items-center gap-2">
-                <Activity className="w-4 h-4 text-danger animate-pulse" />
-                {d.recent_triage || 'Derniers Triages Enregistrés'}
-              </h3>
-              <p className="text-xs text-foreground-muted">
-                {d.triage_queue_desc || 'Patients en attente d\'orientation ou de consultation médicale.'}
-              </p>
-            </div>
-            <Link
-              href="/triage"
-              className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
-            >
-              {d.view_all || 'Voir tout'} <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
+      {/* File d'attente Triage & Urgences (avec filigrane si établissement neuf) */}
+      <div className="bg-surface rounded-3xl border border-surface-border p-5 sm:p-6 shadow-xs">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-foreground text-sm sm:text-base">
+              File d&apos;Attente Triage Médical
+            </h3>
+            {estNouvelEtablissement && (
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                Exemple indicatif en filigrane
+              </span>
+            )}
           </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-background text-foreground-muted uppercase tracking-wider text-[10px] font-bold border-b border-surface-border">
-                <tr>
-                  <th className="py-2.5 px-3">{d.gravity || 'Gravité'}</th>
-                  <th className="py-2.5 px-3">{d.patient || 'Patient (IPP)'}</th>
-                  <th className="py-2.5 px-3">{d.vitals || 'Constantes'}</th>
-                  <th className="py-2.5 px-3">{d.reason || 'Motif'}</th>
-                  <th className="py-2.5 px-3 text-right">{d.waiting || 'Attente'}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-surface-border/60">
-                {fileAttenteUrgences.map((p) => {
-                  const graviteColors: Record<string, string> = {
-                    rouge: 'bg-red-500 text-white animate-pulse',
-                    orange: 'bg-orange-500 text-white',
-                    jaune: 'bg-amber-400 text-black',
-                    vert: 'bg-emerald-500 text-white',
-                  }
-
-                  return (
-                    <tr key={p.id} className="hover:bg-background/40 transition-colors">
-                      <td className="py-3 px-3">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-black uppercase ${
-                            graviteColors[p.gravite] || 'bg-gray-400 text-white'
-                          }`}
-                        >
-                          Code {p.gravite}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className="font-bold text-foreground block">{p.nom}</span>
-                        <span className="text-[10px] font-mono text-foreground-muted">{p.ipp} • {p.age}</span>
-                      </td>
-                      <td className="py-3 px-3 font-mono text-[11px] text-foreground-muted">
-                        {p.constantes}
-                      </td>
-                      <td className="py-3 px-3 text-foreground font-medium">
-                        {p.motif}
-                      </td>
-                      <td className="py-3 px-3 text-right font-mono font-bold text-foreground-muted">
-                        {p.tempsAttente}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+          <Link href="/triage" className="text-xs text-primary font-bold hover:underline">
+            Voir le flux complet ➔
+          </Link>
         </div>
 
-        {/* Accès Rapides Soignants & Matériel */}
-        <div className="space-y-4">
-          <div className="bg-surface rounded-3xl p-6 border border-surface-border shadow-xs">
-            <h3 className="text-base font-bold font-heading text-foreground mb-3 flex items-center gap-2">
-              <Stethoscope className="w-4 h-4 text-primary" />
-              {d.quick_access || 'Accès Rapides Soignants'}
-            </h3>
+        <div className="divide-y divide-surface-border/60">
+          {fileAttenteUrgences.map((p) => (
+            <div
+              key={p.id}
+              className={`py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 ${
+                estNouvelEtablissement ? 'opacity-65' : ''
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={`w-3 h-3 rounded-full shrink-0 ${
+                    p.gravite === 'rouge'
+                      ? 'bg-danger animate-ping'
+                      : p.gravite === 'orange'
+                      ? 'bg-amber-500'
+                      : p.gravite === 'jaune'
+                      ? 'bg-yellow-400'
+                      : 'bg-emerald-500'
+                  }`}
+                />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-foreground text-xs sm:text-sm">
+                      {p.nom}
+                    </span>
+                    <span className="text-[11px] text-foreground-muted">({p.age})</span>
+                    <span className="font-mono text-[10px] text-primary">{p.ipp}</span>
+                  </div>
+                  <p className="text-[11px] text-foreground-muted">{p.motif}</p>
+                </div>
+              </div>
 
-            <div className="space-y-2">
-              <Link
-                href="/patients"
-                className="flex items-center justify-between p-3 rounded-2xl bg-background hover:bg-black/5 transition-colors border border-surface-border/60 text-xs font-bold"
-              >
-                <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-primary" />
-                  {nav.patients || 'Patients (IPP)'}
+              <div className="text-right text-[11px] self-end sm:self-auto">
+                <span className="font-mono text-foreground font-semibold block">
+                  {p.constantes}
                 </span>
-                <ChevronRight className="w-4 h-4 text-foreground-muted" />
-              </Link>
-
-              <Link
-                href="/hospitalisation"
-                className="flex items-center justify-between p-3 rounded-2xl bg-background hover:bg-black/5 transition-colors border border-surface-border/60 text-xs font-bold"
-              >
-                <span className="flex items-center gap-2">
-                  <BedDouble className="w-4 h-4 text-indigo-600" />
-                  {nav.hospitalisation || 'Hospitalisation & Lits'}
-                </span>
-                <ChevronRight className="w-4 h-4 text-foreground-muted" />
-              </Link>
-
-              <Link
-                href="/pharmacie"
-                className="flex items-center justify-between p-3 rounded-2xl bg-background hover:bg-black/5 transition-colors border border-surface-border/60 text-xs font-bold"
-              >
-                <span className="flex items-center gap-2">
-                  <Pill className="w-4 h-4 text-emerald-600" />
-                  {nav.pharmacie || 'Pharmacie & Stocks'}
-                </span>
-                <ChevronRight className="w-4 h-4 text-foreground-muted" />
-              </Link>
-
-              <Link
-                href="/facturation"
-                className="flex items-center justify-between p-3 rounded-2xl bg-background hover:bg-black/5 transition-colors border border-surface-border/60 text-xs font-bold"
-              >
-                <span className="flex items-center gap-2">
-                  <Receipt className="w-4 h-4 text-amber-600" />
-                  {nav.facturation || 'Caisse & Tiers-Payant'}
-                </span>
-                <ChevronRight className="w-4 h-4 text-foreground-muted" />
-              </Link>
+                <span className="text-foreground-muted">Attente : {p.tempsAttente}</span>
+              </div>
             </div>
-          </div>
-
-          <div className="bg-primary/5 rounded-3xl p-5 border border-primary/20 text-xs space-y-2">
-            <span className="font-bold text-primary flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4" /> {d.medical_confidentiality || 'Secret Médical & Données Sécurisées'}
-            </span>
-            <p className="text-foreground-muted text-[11px] leading-relaxed">
-              {d.medical_confidentiality_desc || 'Toutes les données de santé sont cloisonnées par établissement. Traçabilité complète de l\'ouverture des dossiers patients.'}
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </div>

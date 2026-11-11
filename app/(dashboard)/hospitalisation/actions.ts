@@ -133,3 +133,123 @@ export async function libererLit(
     return { error: err.message || 'Erreur lors de la sortie' }
   }
 }
+
+export async function supprimerHospitalisation(hospitalisationId: string, litId?: string | null) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  try {
+    let query = supabase.from('hospitalisations').delete().eq('id', hospitalisationId)
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    if (litId) {
+      await supabase.from('lits').update({ statut: 'libre' }).eq('id', litId)
+    }
+
+    revalidatePath('/hospitalisation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression' }
+  }
+}
+
+export async function ajouterLit(formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const numero_lit = (formData.get('numero_lit') as string)?.trim()
+  const chambre = (formData.get('chambre') as string)?.trim() || 'Chambre 1'
+  const categorie = (formData.get('categorie') as string) || 'standard'
+  const service_id = (formData.get('service_id') as string) || null
+
+  if (!numero_lit) {
+    return { error: 'Le numéro de lit est obligatoire.' }
+  }
+
+  const structureId = tenant?.structureId || '00000000-0000-0000-0000-000000000001'
+
+  try {
+    const { error } = await supabase.from('lits').insert({
+      structure_id: structureId,
+      numero_lit,
+      chambre,
+      categorie,
+      service_id,
+      statut: 'libre',
+      actif: true,
+    })
+
+    if (error) return { error: error.message }
+
+    revalidatePath('/hospitalisation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de l’ajout du lit' }
+  }
+}
+
+export async function modifierLit(litId: string, formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const numero_lit = (formData.get('numero_lit') as string)?.trim()
+  const chambre = (formData.get('chambre') as string)?.trim() || 'Chambre 1'
+  const categorie = (formData.get('categorie') as string) || 'standard'
+  const statut = (formData.get('statut') as string) || 'libre'
+
+  if (!numero_lit) {
+    return { error: 'Le numéro de lit est obligatoire.' }
+  }
+
+  try {
+    let query = supabase
+      .from('lits')
+      .update({
+        numero_lit,
+        chambre,
+        categorie,
+        statut,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', litId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/hospitalisation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la modification du lit' }
+  }
+}
+
+export async function supprimerLit(litId: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  try {
+    let query = supabase.from('lits').delete().eq('id', litId)
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/hospitalisation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression du lit' }
+  }
+}

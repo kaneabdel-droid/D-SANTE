@@ -144,3 +144,68 @@ export async function encaisserFacture(
     return { error: err.message || 'Erreur lors de l’encaissement' }
   }
 }
+
+export async function modifierFacture(factureId: string, formData: FormData) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const montant_total = parseFloat(formData.get('montant_total') as string || '0')
+  const taux_couverture = parseFloat(formData.get('taux_couverture') as string || '0')
+  const organisme_id = (formData.get('organisme_assurance_id') as string) || null
+  const moyen_paiement = (formData.get('moyen_paiement') as string) || 'especes'
+
+  if (montant_total <= 0) {
+    return { error: 'Le montant total doit être supérieur à zéro.' }
+  }
+
+  const part_assurance = Math.round((montant_total * taux_couverture) / 100)
+  const part_patient = montant_total - part_assurance
+
+  try {
+    let query = supabase
+      .from('factures_sante')
+      .update({
+        montant_total_brut: montant_total,
+        part_patient,
+        part_assurance,
+        organisme_assurance_id: organisme_id,
+        moyen_paiement,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', factureId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/facturation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la modification de la facture' }
+  }
+}
+
+export async function supprimerFacture(factureId: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  try {
+    let query = supabase.from('factures_sante').delete().eq('id', factureId)
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/facturation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression de la facture' }
+  }
+}
