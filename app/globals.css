@@ -71,6 +71,12 @@
   --color-warning: var(--warning);
   --color-info: var(--info);
 
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-border: var(--surface-border);
+  --color-muted: var(--background);
+  --color-muted-foreground: var(--foreground-muted);
+
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
@@ -81,6 +87,53 @@ body {
   font-family: var(--font-sans);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ── OPACITÉ ET LISIBILITÉ ABSOLUE DES FORMULAIRES & MODALES (D-SANTÉ) ── */
+.bg-surface {
+  background-color: var(--surface, #FFFFFF) !important;
+}
+
+.bg-card {
+  background-color: var(--surface, #FFFFFF) !important;
+}
+
+/* Arrière-plan sombre et contrasté pour les modales */
+.fixed.inset-0.z-50 {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Conteneurs modaux : fond blanc 100% opaque sans translucidité */
+.fixed.inset-0.z-50 > div:not(.bg-slate-900):not(.bg-black) {
+  background-color: #FFFFFF !important;
+  opacity: 1 !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Champs de saisie : fond blanc pur opaque et bordure nette */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not(.login-dark-input),
+select:not(.login-dark-input),
+textarea:not(.login-dark-input) {
+  background-color: #FFFFFF !important;
+  color: var(--foreground, #09090B) !important;
+  border-color: var(--surface-border, #CBD5E1) !important;
+  opacity: 1 !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not(.login-dark-input):focus,
+select:not(.login-dark-input):focus,
+textarea:not(.login-dark-input):focus {
+  background-color: #FFFFFF !important;
+  border-color: var(--primary, #0D9488) !important;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25) !important;
+  outline: none !important;
+}
+
+/* Placeholders lisibles */
+input::placeholder,
+textarea::placeholder {
+  color: var(--foreground-muted, #64748B) !important;
+  opacity: 0.8 !important;
 }
 
 /* Scrollbar soignée */

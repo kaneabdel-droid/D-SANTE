@@ -22,43 +22,43 @@ export default async function PatientsPage(props: {
   const patientsAffiches = aDesPatientsReels
     ? patients
     : [
-        {
-          id: 'demo-1',
-          ipp: 'PAT-EX-001',
-          nom: 'Diallo',
-          prenom: 'Aminata',
-          date_naissance: '1992-04-15',
-          sexe: 'F',
-          groupe_sanguin: 'O+',
-          telephone: '+221 77 452 10 99',
-          taux_couverture: 80,
-          organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
-        },
-        {
-          id: 'demo-2',
-          ipp: 'PAT-EX-002',
-          nom: 'Sow',
-          prenom: 'Moussa',
-          date_naissance: '1985-11-20',
-          sexe: 'M',
-          groupe_sanguin: 'B+',
-          telephone: '+221 70 882 14 30',
-          taux_couverture: 0,
-          organismes_assurances: null,
-        },
-        {
-          id: 'demo-3',
-          ipp: 'PAT-EX-003',
-          nom: 'Ba',
-          prenom: 'Aïssatou',
-          date_naissance: '2001-08-05',
-          sexe: 'F',
-          groupe_sanguin: 'A-',
-          telephone: '+221 78 312 90 44',
-          taux_couverture: 50,
-          organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
-        },
-      ]
+      {
+        id: 'demo-1',
+        ipp: 'PAT-EX-001',
+        nom: 'Diallo',
+        prenom: 'Aminata',
+        date_naissance: '1992-04-15',
+        sexe: 'F',
+        groupe_sanguin: 'O+',
+        telephone: '+221 77 452 10 99',
+        taux_couverture: 80,
+        organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
+      },
+      {
+        id: 'demo-2',
+        ipp: 'PAT-EX-002',
+        nom: 'Sow',
+        prenom: 'Moussa',
+        date_naissance: '1985-11-20',
+        sexe: 'M',
+        groupe_sanguin: 'B+',
+        telephone: '+221 70 882 14 30',
+        taux_couverture: 0,
+        organismes_assurances: null,
+      },
+      {
+        id: 'demo-3',
+        ipp: 'PAT-EX-003',
+        nom: 'Ba',
+        prenom: 'Aïssatou',
+        date_naissance: '2001-08-05',
+        sexe: 'F',
+        groupe_sanguin: 'A-',
+        telephone: '+221 78 312 90 44',
+        taux_couverture: 50,
+        organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
+      },
+    ]
 
   const calculerAge = (dateStr?: string) => {
     if (!dateStr) return '—'
@@ -145,11 +145,10 @@ export default async function PatientsPage(props: {
                 return (
                   <tr
                     key={p.id}
-                    className={`transition-colors ${
-                      !aDesPatientsReels
+                    className={`transition-colors ${!aDesPatientsReels
                         ? 'opacity-65 bg-amber-500/5 hover:bg-amber-500/10'
                         : 'hover:bg-background/40'
-                    }`}
+                      }`}
                   >
                     {/* IPP & Nom */}
                     <td className="py-3.5 px-4">

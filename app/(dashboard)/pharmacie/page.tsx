@@ -19,59 +19,59 @@ export default async function PharmaciePage(props: {
   const stocksAffiches = aDesStocksReels
     ? stocks
     : [
-        {
-          id: 'med-1',
-          code_medicament: 'MED-EX-001',
-          dci: 'Paracétamol',
-          nom_commercial: 'Doliprane',
-          forme: 'comprime',
-          dosage: '1000 mg',
-          quantite_en_stock: 140,
-          seuil_alerte: 20,
-          prix_vente: 1500,
-          numero_lot: 'LT-88102',
-          date_peremption: '2027-08-30',
-        },
-        {
-          id: 'med-2',
-          code_medicament: 'MED-EX-002',
-          dci: 'Amoxicilline',
-          nom_commercial: 'Clamoxyl',
-          forme: 'gellule',
-          dosage: '500 mg',
-          quantite_en_stock: 12,
-          seuil_alerte: 15,
-          prix_vente: 3200,
-          numero_lot: 'LT-77401',
-          date_peremption: '2026-12-15',
-        },
-        {
-          id: 'med-3',
-          code_medicament: 'MED-EX-003',
-          dci: 'Artéméther + Luméfantrine',
-          nom_commercial: 'Coartem',
-          forme: 'comprime',
-          dosage: '20/120 mg',
-          quantite_en_stock: 45,
-          seuil_alerte: 10,
-          prix_vente: 2500,
-          numero_lot: 'LT-99210',
-          date_peremption: '2027-04-10',
-        },
-        {
-          id: 'med-4',
-          code_medicament: 'MED-EX-004',
-          dci: 'Sérum Glucosé 5%',
-          nom_commercial: 'Perfusion Glucosée',
-          forme: 'solute',
-          dosage: '500 ml',
-          quantite_en_stock: 4,
-          seuil_alerte: 10,
-          prix_vente: 1800,
-          numero_lot: 'LT-44109',
-          date_peremption: '2026-11-20',
-        },
-      ]
+      {
+        id: 'med-1',
+        code_medicament: 'MED-EX-001',
+        dci: 'Paracétamol',
+        nom_commercial: 'Doliprane',
+        forme: 'comprime',
+        dosage: '1000 mg',
+        quantite_en_stock: 140,
+        seuil_alerte: 20,
+        prix_vente: 1500,
+        numero_lot: 'LT-88102',
+        date_peremption: '2027-08-30',
+      },
+      {
+        id: 'med-2',
+        code_medicament: 'MED-EX-002',
+        dci: 'Amoxicilline',
+        nom_commercial: 'Clamoxyl',
+        forme: 'gellule',
+        dosage: '500 mg',
+        quantite_en_stock: 12,
+        seuil_alerte: 15,
+        prix_vente: 3200,
+        numero_lot: 'LT-77401',
+        date_peremption: '2026-12-15',
+      },
+      {
+        id: 'med-3',
+        code_medicament: 'MED-EX-003',
+        dci: 'Artéméther + Luméfantrine',
+        nom_commercial: 'Coartem',
+        forme: 'comprime',
+        dosage: '20/120 mg',
+        quantite_en_stock: 45,
+        seuil_alerte: 10,
+        prix_vente: 2500,
+        numero_lot: 'LT-99210',
+        date_peremption: '2027-04-10',
+      },
+      {
+        id: 'med-4',
+        code_medicament: 'MED-EX-004',
+        dci: 'Sérum Glucosé 5%',
+        nom_commercial: 'Perfusion Glucosée',
+        forme: 'solute',
+        dosage: '500 ml',
+        quantite_en_stock: 4,
+        seuil_alerte: 10,
+        prix_vente: 1800,
+        numero_lot: 'LT-44109',
+        date_peremption: '2026-11-20',
+      },
+    ]
 
   const formatCFA = (montant: number) =>
     new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(montant) + ' FCFA'
@@ -79,15 +79,15 @@ export default async function PharmaciePage(props: {
   // Calcul KPI (sans impact si en filigrane)
   const valeurStockTotale = aDesStocksReels
     ? stocksAffiches.reduce(
-        (acc: number, m: any) => acc + (Number(m.quantite_en_stock) * Number(m.prix_vente)),
-        0
-      )
+      (acc: number, m: any) => acc + (Number(m.quantite_en_stock) * Number(m.prix_vente)),
+      0
+    )
     : 0
 
   const articlesEnAlerte = aDesStocksReels
     ? stocksAffiches.filter(
-        (m: any) => Number(m.quantite_en_stock) <= Number(m.seuil_alerte)
-      ).length
+      (m: any) => Number(m.quantite_en_stock) <= Number(m.seuil_alerte)
+    ).length
     : 0
 
   return (
@@ -208,11 +208,10 @@ export default async function PharmaciePage(props: {
                 return (
                   <tr
                     key={m.id}
-                    className={`transition-colors ${
-                      !aDesStocksReels
+                    className={`transition-colors ${!aDesStocksReels
                         ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
                         : 'hover:bg-background/40'
-                    }`}
+                      }`}
                   >
                     {/* DCI & Nom */}
                     <td className="py-3.5 px-4">
@@ -244,9 +243,8 @@ export default async function PharmaciePage(props: {
                     {/* Stock */}
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
-                        <span className={`font-mono font-bold text-sm ${
-                          estRupture ? 'text-danger' : estAlerte ? 'text-amber-500' : 'text-emerald-500'
-                        }`}>
+                        <span className={`font-mono font-bold text-sm ${estRupture ? 'text-danger' : estAlerte ? 'text-amber-500' : 'text-emerald-500'
+                          }`}>
                           {m.quantite_en_stock}
                         </span>
                         {estRupture ? (

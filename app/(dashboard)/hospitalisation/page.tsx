@@ -22,38 +22,38 @@ export default async function HospitalisationPage() {
   const litsAffiches = aDesLitsReels
     ? lits
     : [
-        { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
-        { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1', categorie: 'standard', statut: 'libre' },
-        { id: 'lit-3', numero_lit: 'L103', chambre: 'Chambre 2', categorie: 'standard', statut: 'libre' },
-        { id: 'lit-4', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'occupe' },
-        { id: 'lit-5', numero_lit: 'USI-01', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'occupe' },
-        { id: 'lit-6', numero_lit: 'USI-02', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'nettoyage' },
-      ]
+      { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
+      { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1', categorie: 'standard', statut: 'libre' },
+      { id: 'lit-3', numero_lit: 'L103', chambre: 'Chambre 2', categorie: 'standard', statut: 'libre' },
+      { id: 'lit-4', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'occupe' },
+      { id: 'lit-5', numero_lit: 'USI-01', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'occupe' },
+      { id: 'lit-6', numero_lit: 'USI-02', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'nettoyage' },
+    ]
 
   const hospitalisationsAffichees = aDesHospitalisationsReelles
     ? hospitalisations
     : [
-        {
-          id: 'hosp-1',
-          numero_sejour: 'SEJ-EX-001',
-          date_entree: '2026-10-28T09:30:00Z',
-          motif_admission: 'Pneumopathie infectieuse avec désaturation',
-          statut: 'en_cours',
-          lit_id: 'lit-1',
-          patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-EX-001', groupe_sanguin: 'O+' },
-          lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
-        },
-        {
-          id: 'hosp-2',
-          numero_sejour: 'SEJ-EX-002',
-          date_entree: '2026-10-29T14:15:00Z',
-          motif_admission: 'Surveillance post-césarienne programmée',
-          statut: 'en_cours',
-          lit_id: 'lit-4',
-          patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003', groupe_sanguin: 'A-' },
-          lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
-        },
-      ]
+      {
+        id: 'hosp-1',
+        numero_sejour: 'SEJ-EX-001',
+        date_entree: '2026-10-28T09:30:00Z',
+        motif_admission: 'Pneumopathie infectieuse avec désaturation',
+        statut: 'en_cours',
+        lit_id: 'lit-1',
+        patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-EX-001', groupe_sanguin: 'O+' },
+        lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
+      },
+      {
+        id: 'hosp-2',
+        numero_sejour: 'SEJ-EX-002',
+        date_entree: '2026-10-29T14:15:00Z',
+        motif_admission: 'Surveillance post-césarienne programmée',
+        statut: 'en_cours',
+        lit_id: 'lit-4',
+        patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003', groupe_sanguin: 'A-' },
+        lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
+      },
+    ]
 
   const litsLibres = litsAffiches.filter((l: any) => l.statut === 'libre')
 
@@ -136,9 +136,8 @@ export default async function HospitalisationPage() {
             return (
               <div
                 key={lit.id}
-                className={`p-3 rounded-2xl border transition-all ${st.card} ${
-                  estBaseNeuve ? 'opacity-70' : ''
-                }`}
+                className={`p-3 rounded-2xl border transition-all ${st.card} ${estBaseNeuve ? 'opacity-70' : ''
+                  }`}
               >
                 <div className="flex justify-between items-start mb-2">
                   <span className="font-mono font-black text-sm text-foreground">
@@ -175,11 +174,10 @@ export default async function HospitalisationPage() {
             return (
               <div
                 key={h.id}
-                className={`p-4 sm:p-5 rounded-3xl border border-surface-border shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all ${
-                  estBaseNeuve
+                className={`p-4 sm:p-5 rounded-3xl border border-surface-border shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all ${estBaseNeuve
                     ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
                     : 'bg-surface hover:border-primary/40'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-bold text-sm shrink-0">

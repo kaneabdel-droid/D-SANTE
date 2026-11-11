@@ -69,7 +69,7 @@ export default async function LoginPage(props: {
                 name="email"
                 required
                 placeholder="medecin@hopital.com ou 77 123 45 67"
-                className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-surface-border bg-background text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border-2 border-surface-border bg-white text-xs sm:text-sm text-foreground font-medium focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-xs"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ export default async function LoginPage(props: {
                 name="password"
                 required
                 placeholder="••••••••"
-                className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-surface-border bg-background text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border-2 border-surface-border bg-white text-xs sm:text-sm text-foreground font-medium focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-xs"
               />
             </div>
           </div>

@@ -197,7 +197,7 @@ export default function ModifierPatientModal({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl border border-surface-border bg-background/50 space-y-2.5">
+                <div className="p-3.5 rounded-2xl border border-surface-border bg-slate-50 dark:bg-zinc-800/80 space-y-2.5">
                   <h4 className="text-xs font-bold text-foreground">
                     Assurance / Mutuelle / IPM
                   </h4>
