@@ -11,7 +11,7 @@ import {
   HeartPulse, LayoutDashboard, Users, Activity, Stethoscope,
   BedDouble, Syringe, Pill, Receipt, BookOpen, Wrench,
   UserCog, CreditCard, Settings, Menu, X, Bell, ChevronDown,
-  LogOut, ShieldAlert, Sparkles, Building2, Network
+  LogOut, ShieldAlert, Sparkles, Building2, Network, Smartphone
 } from 'lucide-react'
 
 type NavItem = {
@@ -86,6 +86,7 @@ export default function ClientLayout({
     { key: 'nav.soins', name: 'Soins Infirmiers', href: '/soins', icon: Syringe },
     { key: 'nav.pharmacie', name: 'Pharmacie & Stocks', href: '/pharmacie', icon: Pill },
     { key: 'nav.facturation', name: 'Caisse & Tiers-Payant', href: '/facturation', icon: Receipt },
+    { key: 'nav.encaissements_directs', name: 'Encaissements Directs (0%)', href: '/facturation/encaissements-directs', icon: Smartphone },
     { key: 'nav.interop', name: 'Liaison Pharma & IPM', href: '/interop', icon: Network, badgeKey: 'badges.network', fallbackBadge: 'Réseau' },
     { key: 'nav.comptabilite', name: 'Comptabilité SYSCOHADA', href: '/comptabilite', icon: BookOpen },
     { key: 'nav.materiel', name: 'Matériel Biomédical', href: '/materiel', icon: Wrench },

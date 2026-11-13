@@ -13,6 +13,7 @@
     "soins": "Nursing Care",
     "pharmacie": "Pharmacy & Drugs",
     "facturation": "Cashier & Insurance",
+    "encaissements_directs": "Direct Payments (0%)",
     "interop": "Pharma & HMO Network",
     "comptabilite": "SYSCOHADA Accounting",
     "materiel": "Biomedical Equipment",

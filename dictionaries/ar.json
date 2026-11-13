@@ -13,6 +13,7 @@
     "soins": "التمريض والعناية",
     "pharmacie": "الصيدلية والمخزون",
     "facturation": "الصندوق والتأمين الصحي",
+    "encaissements_directs": "التحصيل المباشر (0%)",
     "interop": "الربط الصيدلي والتأميني",
     "comptabilite": "المحاسبة الطبية SYSCOHADA",
     "materiel": "المعدات الطبية الحيوية",

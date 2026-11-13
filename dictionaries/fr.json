@@ -13,6 +13,7 @@
     "soins": "Soins Infirmiers",
     "pharmacie": "Pharmacie & Stocks",
     "facturation": "Caisse & Tiers-Payant",
+    "encaissements_directs": "Encaissements Directs (0%)",
     "interop": "Liaison Pharma & IPM",
     "comptabilite": "Comptabilité SYSCOHADA",
     "materiel": "Matériel Biomédical",

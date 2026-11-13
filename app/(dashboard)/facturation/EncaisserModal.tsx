@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Wallet, X, AlertCircle, Loader2, CheckCircle2, User, Receipt } from 'lucide-react'
+import { Wallet, X, AlertCircle, Loader2, CheckCircle2, User, Receipt, Smartphone } from 'lucide-react'
 import { encaisserFacture } from './actions'
+import { ModalEncaissementDirect } from '@/components/ModalEncaissementDirect'
 
 interface FactureItem {
   id: string
@@ -28,6 +29,7 @@ export default function EncaisserModal({
   const resteAPayer = Math.max(0, Number(facture.part_patient || 0) - Number(facture.montant_regle_patient || 0))
   const [montant, setMontant] = useState(resteAPayer)
   const [moyenPaiement, setMoyenPaiement] = useState('especes')
+  const [modalDirectOuvert, setModalDirectOuvert] = useState(false)
 
   const handleEncaisser = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -160,6 +162,17 @@ export default function EncaisserModal({
                 </select>
               </div>
 
+              {montant > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setModalDirectOuvert(true)}
+                  className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition"
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>Encaissement Direct Patient (QR Wave / OM / TPE 0% Frais)</span>
+                </button>
+              )}
+
               </div>
 
               {/* Actions fixes en bas */}
@@ -184,6 +197,23 @@ export default function EncaisserModal({
             </form>
           </div>
         </div>
+      )}
+      {modalDirectOuvert && (
+        <ModalEncaissementDirect
+          montant={Number(montant)}
+          clientNom={patientNom}
+          commandeRef={`Facture ${facture.numero_facture}`}
+          pointDeVente="Accueil & Facturation Centrale"
+          onClose={() => setModalDirectOuvert(false)}
+          onSuccess={async (tx) => {
+            setModalDirectOuvert(false)
+            setIsSubmitting(true)
+            const methodeDb = tx.methode === 'tpe_carte' ? 'carte' : tx.methode
+            await encaisserFacture(facture.id, methodeDb, Number(montant))
+            setIsSubmitting(false)
+            setIsOpen(false)
+          }}
+        />
       )}
     </>
   )
