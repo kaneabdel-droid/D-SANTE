@@ -112,9 +112,8 @@ export default function ClientLayout({
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 start-0 z-50 w-72 bg-sidebar border-e border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : isRTL ? 'translate-x-full' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 start-0 z-50 w-72 bg-sidebar border-e border-surface-border flex flex-col transition-transform duration-200 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : isRTL ? 'translate-x-full' : '-translate-x-full'
+          }`}
       >
         {/* Brand header */}
         <div className="h-16 px-6 border-b border-surface-border flex items-center justify-between">
@@ -145,11 +144,10 @@ export default function ClientLayout({
             <Building2 className="w-3.5 h-3.5 text-primary" />
             {structureType.replace('_', ' ')}
           </span>
-          <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[9px] ${
-            isDemo
+          <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[9px] ${isDemo
               ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
               : 'bg-primary/10 text-primary'
-          }`}>
+            }`}>
             {isDemo ? 'Démo Intégrale' : subscriptionTier}
           </span>
         </div>
@@ -167,11 +165,10 @@ export default function ClientLayout({
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  active
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${active
                     ? 'bg-primary text-white shadow-sm'
                     : 'text-foreground-muted hover:text-foreground hover:bg-black/5'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-primary'}`} />
@@ -179,9 +176,8 @@ export default function ClientLayout({
                 </div>
                 {badgeLabel && (
                   <span
-                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
-                      active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
-                    }`}
+                    className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${active ? 'bg-white/20 text-white' : 'bg-danger/10 text-danger'
+                      }`}
                   >
                     {badgeLabel}
                   </span>
@@ -201,9 +197,8 @@ export default function ClientLayout({
                   key={th.id}
                   onClick={() => changeTheme(th.id)}
                   title={th.label}
-                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${
-                    currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
-                  }`}
+                  className={`w-4 h-4 rounded-full ${th.color} transition-transform ${currentTheme === th.id ? 'ring-2 ring-primary ring-offset-2 scale-110' : 'opacity-60 hover:opacity-100'
+                    }`}
                 />
               ))}
             </div>
@@ -225,7 +220,7 @@ export default function ClientLayout({
                 try {
                   localStorage.removeItem('dsante_demo_role')
                   localStorage.removeItem('d-sante-theme')
-                } catch {}
+                } catch { }
                 window.location.href = '/auth/logout'
               }}
               title={t('common.logout', 'Déconnexion')}

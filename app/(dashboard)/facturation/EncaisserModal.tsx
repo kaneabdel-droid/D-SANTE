@@ -109,69 +109,69 @@ export default function EncaisserModal({
               <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
                 {/* Récapitulatif facture */}
                 <div className="p-3.5 bg-background rounded-2xl border border-surface-border space-y-2 mb-2 text-xs">
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-foreground flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-primary" />
-                  {patientNom}
-                </span>
-                <span className="font-mono text-foreground-muted text-[11px] flex items-center gap-1">
-                  <Receipt className="w-3 h-3" />
-                  {facture.numero_facture}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-1 border-t border-surface-border/60">
-                <span className="text-foreground-muted">Reste dû par le patient :</span>
-                <span className="font-bold font-mono text-emerald-600 text-sm">
-                  {formatCFA(resteAPayer)}
-                </span>
-              </div>
-            </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-foreground flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-primary" />
+                      {patientNom}
+                    </span>
+                    <span className="font-mono text-foreground-muted text-[11px] flex items-center gap-1">
+                      <Receipt className="w-3 h-3" />
+                      {facture.numero_facture}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-1 border-t border-surface-border/60">
+                    <span className="text-foreground-muted">Reste dû par le patient :</span>
+                    <span className="font-bold font-mono text-emerald-600 text-sm">
+                      {formatCFA(resteAPayer)}
+                    </span>
+                  </div>
+                </div>
 
-              {/* Montant encaissé */}
-              <div>
-                <label className="block text-xs font-semibold text-foreground mb-1.5">
-                  Montant encaissé (FCFA) <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="number"
-                  required
-                  min={1}
-                  max={resteAPayer > 0 ? resteAPayer : undefined}
-                  value={montant}
-                  onChange={(e) => setMontant(Number(e.target.value))}
-                  className={champ}
-                />
-              </div>
+                {/* Montant encaissé */}
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1.5">
+                    Montant encaissé (FCFA) <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min={1}
+                    max={resteAPayer > 0 ? resteAPayer : undefined}
+                    value={montant}
+                    onChange={(e) => setMontant(Number(e.target.value))}
+                    className={champ}
+                  />
+                </div>
 
-              {/* Moyen de paiement */}
-              <div>
-                <label className="block text-xs font-semibold text-foreground mb-1.5">
-                  Mode de règlement <span className="text-danger">*</span>
-                </label>
-                <select
-                  value={moyenPaiement}
-                  onChange={(e) => setMoyenPaiement(e.target.value)}
-                  className={champ}
-                >
-                  <option value="especes">Espèces (Caisse)</option>
-                  <option value="wave">Wave Mobile Money</option>
-                  <option value="orange_money">Orange Money</option>
-                  <option value="carte">Carte Bancaire</option>
-                  <option value="cheque">Chèque bancaire</option>
-                  <option value="prise_en_charge">Prise en charge directe</option>
-                </select>
-              </div>
+                {/* Moyen de paiement */}
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1.5">
+                    Mode de règlement <span className="text-danger">*</span>
+                  </label>
+                  <select
+                    value={moyenPaiement}
+                    onChange={(e) => setMoyenPaiement(e.target.value)}
+                    className={champ}
+                  >
+                    <option value="especes">Espèces (Caisse)</option>
+                    <option value="wave">Wave Mobile Money</option>
+                    <option value="orange_money">Orange Money</option>
+                    <option value="carte">Carte Bancaire</option>
+                    <option value="cheque">Chèque bancaire</option>
+                    <option value="prise_en_charge">Prise en charge directe</option>
+                  </select>
+                </div>
 
-              {montant > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setModalDirectOuvert(true)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition"
-                >
-                  <Smartphone className="w-4 h-4" />
-                  <span>Encaissement Direct Patient (QR Wave / OM / TPE 0% Frais)</span>
-                </button>
-              )}
+                {montant > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setModalDirectOuvert(true)}
+                    className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 transition"
+                  >
+                    <Smartphone className="w-4 h-4" />
+                    <span>Encaissement Direct Patient (QR Wave / OM / TPE 0% Frais)</span>
+                  </button>
+                )}
 
               </div>
 

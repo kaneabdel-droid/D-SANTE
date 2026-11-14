@@ -149,9 +149,8 @@ export function ModalEncaissementDirect({
         setErreur("Veuillez saisir le N° d'autorisation ou STAN imprimé sur le ticket du TPE physique.");
         return;
       }
-      referenceExterne = `STAN-${tpeStanAutorisation.trim()}${
-        tpeDerniersChiffres ? ` / Carte **** ${tpeDerniersChiffres.trim()}` : ""
-      }`;
+      referenceExterne = `STAN-${tpeStanAutorisation.trim()}${tpeDerniersChiffres ? ` / Carte **** ${tpeDerniersChiffres.trim()}` : ""
+        }`;
       methodeLibelle = `TPE Carte Bancaire (${compteTpeActuel?.banqueOuOperateur || "Banque"} - ${tpeReseauCarte})`;
       terminalNom = compteTpeActuel?.nom || "TPE Bancaire Clinique";
     } else if (methodeActive === "especes") {
@@ -294,11 +293,10 @@ export function ModalEncaissementDirect({
               <button
                 type="button"
                 onClick={() => setMethodeActive("wave")}
-                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${
-                  methodeActive === "wave"
+                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${methodeActive === "wave"
                     ? "border-sky-500 bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold shadow-xs"
                     : "border-surface-border text-foreground-muted hover:bg-black/5 dark:hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <Smartphone className="w-5 h-5 text-sky-500" />
                 <span className="text-xs">Wave Direct</span>
@@ -310,11 +308,10 @@ export function ModalEncaissementDirect({
               <button
                 type="button"
                 onClick={() => setMethodeActive("orange_money")}
-                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${
-                  methodeActive === "orange_money"
+                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${methodeActive === "orange_money"
                     ? "border-orange-500 bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold shadow-xs"
                     : "border-surface-border text-foreground-muted hover:bg-black/5 dark:hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <Smartphone className="w-5 h-5 text-orange-500" />
                 <span className="text-xs">Orange Money</span>
@@ -326,11 +323,10 @@ export function ModalEncaissementDirect({
               <button
                 type="button"
                 onClick={() => setMethodeActive("tpe_carte")}
-                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${
-                  methodeActive === "tpe_carte"
+                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${methodeActive === "tpe_carte"
                     ? "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs"
                     : "border-surface-border text-foreground-muted hover:bg-black/5 dark:hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <CreditCard className="w-5 h-5 text-emerald-500" />
                 <span className="text-xs">TPE Bancaire</span>
@@ -342,11 +338,10 @@ export function ModalEncaissementDirect({
               <button
                 type="button"
                 onClick={() => setMethodeActive("especes")}
-                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${
-                  methodeActive === "especes"
+                className={`p-3 rounded-2xl border text-center transition flex flex-col items-center gap-1.5 ${methodeActive === "especes"
                     ? "border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold shadow-xs"
                     : "border-surface-border text-foreground-muted hover:bg-black/5 dark:hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <Banknote className="w-5 h-5 text-amber-500" />
                 <span className="text-xs">Espèces</span>

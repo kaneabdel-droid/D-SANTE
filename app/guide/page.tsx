@@ -144,18 +144,16 @@ export default function GuideDSantePage() {
                 <button
                   key={ch.id}
                   onClick={() => setActiveChapter(ch.id)}
-                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${
-                    isSelected
+                  className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${isSelected
                       ? 'bg-emerald-500/10 border-emerald-500/50 text-white shadow-lg shadow-emerald-500/5'
                       : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   <div
-                    className={`p-2 rounded-xl shrink-0 mt-0.5 ${
-                      isSelected
+                    className={`p-2 rounded-xl shrink-0 mt-0.5 ${isSelected
                         ? 'bg-emerald-500 text-slate-950 font-bold'
                         : 'bg-slate-800 text-slate-400'
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                   </div>
@@ -441,7 +439,13 @@ export default function GuideDSantePage() {
                     <li className="flex items-start gap-3">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-1" />
                       <div>
-                        <strong className="text-white">Multi-moyens de paiement :</strong> Espèces, Wave, Orange Money, Carte Bancaire avec reçu imprimé ou SMS.
+                        <strong className="text-white">Multi-moyens de paiement & Reçus officiels :</strong> Espèces, Wave, Orange Money, Carte Bancaire avec reçu imprimé ou SMS.
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-1" />
+                      <div>
+                        <strong className="text-white">Paiements directs 0% commission (Sans intermédiaire) :</strong> Encaissement direct sur les appareils et comptes marchands de l&apos;établissement (QR Wave direct, Orange Money direct, TPE Carte Bancaire de la clinique). Aucun intermédiaire n&apos;ampute les revenus des consultations et actes médicaux avec des frais de 2% à 3.5%.
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
