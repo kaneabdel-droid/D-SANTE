@@ -23,7 +23,7 @@ export async function adminLogin(formData: FormData) {
         await supabase.auth.signOut()
         return { error: "Ce compte n'est pas autorisé pour l'espace SuperAdmin." }
       }
-      redirect('/admin')
+      redirect('/admin/sante')
     }
   } catch (err: any) {
     if (err?.digest?.startsWith?.('NEXT_REDIRECT')) throw err
@@ -51,7 +51,7 @@ export async function adminLogin(formData: FormData) {
       maxAge: 60 * 60 * 24 * 7,
     })
 
-    redirect('/admin')
+    redirect('/admin/sante')
   }
 
   return { error: 'Identifiants SuperAdmin incorrects ou non autorisés.' }

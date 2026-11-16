@@ -27,7 +27,7 @@ const produits = [
   {
     nom: 'SIGGIE',
     description: 'Gestion des GIE agricoles — membres, campagnes, intrants, trésorerie.',
-    href: 'https://siggie.dembasolution.com/admin',
+    href: 'https://siggie.dembasolution.com/admin/siggie',
     externe: true,
     icon: Building2,
     statut: 'en_ligne' as const,
@@ -35,7 +35,7 @@ const produits = [
   {
     nom: 'D-HOTEL',
     description: 'Gestion hôtelière complète — PMS chambres, POS restaurant/bar, MICE séminaires et RevPAR.',
-    href: 'https://d-hotel.dembasolution.com/admin',
+    href: 'https://d-hotel.dembasolution.com/admin/hotel',
     externe: true,
     icon: BedDouble,
     statut: 'en_ligne' as const,
