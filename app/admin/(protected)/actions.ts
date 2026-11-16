@@ -330,3 +330,176 @@ export async function supprimerPaiementAbonnementSante(paiementId: string) {
   }
 }
 
+export async function creerStructureSuperAdmin(formData: FormData) {
+  const nom = (formData.get('nom') as string)?.trim()
+  const type = (formData.get('type') as string)?.trim() || 'clinique'
+  const ville = (formData.get('ville') as string)?.trim() || 'Dakar'
+  const contact = (formData.get('contact') as string)?.trim() || '+221 33 000 00 00'
+  const email = (formData.get('email') as string)?.trim() || `contact@${nom.toLowerCase().replace(/[^a-z0-9]/g, '')}.sn`
+  const password = (formData.get('password') as string) || 'Demba@2026!'
+  const tier = (formData.get('tier') as string)?.trim() || 'clinique'
+  const statut = (formData.get('statut') as string)?.trim() || 'actif'
+
+  if (!nom) return { error: 'Le nom de la structure est requis.' }
+
+  try {
+    const admin = createAdminClient()
+
+    // 1. Création compte auth
+    const { data: userData, error: userError } = await admin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        nom_structure: nom,
+        type_structure: type,
+        telephone: contact,
+        tier,
+        ville,
+      },
+    })
+
+    if (userError) console.warn('Notice création auth user:', userError.message)
+
+    // 2. Insertion dans structures_sante
+    let createdId = userData?.user?.id
+    try {
+      const { data: structData } = await admin
+        .from('structures_sante')
+        .insert({
+          nom,
+          type_structure: type,
+          telephone: contact,
+          email,
+          region: ville,
+          subscription_tier: tier,
+          compte_verrouille: statut === 'suspendu',
+        })
+        .select('id')
+        .maybeSingle()
+      if (structData?.id) createdId = structData.id
+    } catch (e) {
+      console.warn('Notice insert structures_sante:', e)
+    }
+
+    revalidatePath('/admin/structures')
+    revalidatePath('/admin/sante')
+    revalidatePath('/admin')
+
+    const newStruct: StructureItem = {
+      id: createdId || `str-${Date.now()}`,
+      nom,
+      type,
+      ville,
+      pays: 'Sénégal',
+      contact,
+      email,
+      tier,
+      lits: tier === 'hopital' ? 80 : tier === 'clinique' ? 25 : 8,
+      medecins: tier === 'hopital' ? 20 : 5,
+      status: statut === 'suspendu' ? 'suspendu' : 'actif',
+      compte_verrouille: statut === 'suspendu',
+      source: 'supabase',
+    }
+
+    return { success: true, structure: newStruct }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la création de la structure' }
+  }
+}
+
+export async function modifierStructureSuperAdmin(formData: FormData) {
+  const id = (formData.get('id') as string)?.trim()
+  const nom = (formData.get('nom') as string)?.trim()
+  const type = (formData.get('type') as string)?.trim() || 'clinique'
+  const ville = (formData.get('ville') as string)?.trim() || 'Dakar'
+  const contact = (formData.get('contact') as string)?.trim() || '+221 33 000 00 00'
+  const email = (formData.get('email') as string)?.trim()
+  const tier = (formData.get('tier') as string)?.trim() || 'clinique'
+  const statut = (formData.get('statut') as string)?.trim() || 'actif'
+  const bloquer = statut === 'suspendu'
+
+  if (!id) return { error: 'ID structure manquant.' }
+  if (!nom) return { error: 'Le nom est requis.' }
+
+  try {
+    const admin = createAdminClient()
+
+    // 1. Mise à jour structures_sante
+    try {
+      await admin
+        .from('structures_sante')
+        .update({
+          nom,
+          type_structure: type,
+          telephone: contact,
+          email,
+          region: ville,
+          subscription_tier: tier,
+          compte_verrouille: bloquer,
+        })
+        .eq('id', id)
+    } catch (e) {
+      console.warn('Notice update structures_sante:', e)
+    }
+
+    // 2. Mise à jour auth user
+    try {
+      await admin.auth.admin.updateUserById(id, {
+        email: email || undefined,
+        ban_duration: bloquer ? '87600h' : 'none',
+        user_metadata: {
+          nom_structure: nom,
+          type_structure: type,
+          telephone: contact,
+          tier,
+          ville,
+        },
+      })
+    } catch (e) {
+      console.warn('Notice update auth user:', e)
+    }
+
+    revalidatePath('/admin/structures')
+    revalidatePath('/admin/sante')
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la modification de la structure' }
+  }
+}
+
+export async function supprimerStructureSuperAdmin(structureId: string) {
+  if (!structureId) return { error: 'ID structure manquant.' }
+
+  try {
+    const admin = createAdminClient()
+
+    // 1. Suppression dans structures_sante
+    try {
+      await admin.from('structures_sante').delete().eq('id', structureId)
+    } catch (e) {
+      console.warn('Notice delete structures_sante:', e)
+    }
+
+    try {
+      await admin.from('utilisateurs').delete().eq('structure_id', structureId)
+    } catch {}
+
+    // 2. Suppression auth user
+    try {
+      await admin.auth.admin.deleteUser(structureId)
+    } catch (e) {
+      console.warn('Notice delete auth user:', e)
+    }
+
+    revalidatePath('/admin/structures')
+    revalidatePath('/admin/sante')
+    revalidatePath('/admin')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de la suppression' }
+  }
+}
+
+

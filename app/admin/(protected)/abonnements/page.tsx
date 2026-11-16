@@ -14,11 +14,11 @@ export default async function AdminSanteAbonnementsPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-          <CreditCard className="w-8 h-8 text-emerald-400" />
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+          <CreditCard className="w-8 h-8 text-emerald-600" />
           Abonnements & Licences D-SANTÉ
         </h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="mt-1 text-sm text-foreground-muted">
           Supervision des règlements Maketou, Chariow, virements bancaires et règlements en caisse avec validation en 1 clic.
         </p>
       </div>

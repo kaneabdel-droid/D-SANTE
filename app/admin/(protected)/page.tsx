@@ -1,12 +1,139 @@
-import { SuperAdminDashboardClient } from '@/components/admin/SuperAdminDashboardClient'
+import Link from 'next/link'
+import {
+  Building2,
+  Wrench,
+  Package,
+  Wheat,
+  GraduationCap,
+  Handshake,
+  ArrowUpRight,
+  Clock,
+  Bird,
+  BedDouble,
+  Activity,
+} from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'SuperAdmin Dashboard Médical • D-SANTÉ',
-  description: 'Gestion centrale des structures médicales et passerelles Maketou et Chariow.',
-}
+const produits = [
+  {
+    nom: 'D-SANTÉ',
+    description: 'Système hospitalier et clinique — DPI, consultations, triage, lits, pharmacie et tiers-payant IPM.',
+    href: '/admin/sante',
+    externe: false,
+    icon: Activity,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'SIGGIE',
+    description: 'Gestion des GIE agricoles — membres, campagnes, intrants, trésorerie.',
+    href: 'https://siggie.dembasolution.com/admin',
+    externe: true,
+    icon: Building2,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-HOTEL',
+    description: 'Gestion hôtelière complète — PMS chambres, POS restaurant/bar, MICE séminaires et RevPAR.',
+    href: 'https://d-hotel.dembasolution.com/admin',
+    externe: true,
+    icon: BedDouble,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-PHARMA',
+    description: 'Gestion des pharmacies — ventes (POS), stocks, commandes, assurances.',
+    href: 'https://d-pharma.dembasolution.com/admin/pharmacie',
+    externe: true,
+    icon: Package,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-FERME',
+    description: "Gestion d'élevage multi-espèces — volailles, bovins, ovins, prophylaxie, stocks & alimentation.",
+    href: 'https://d-ferme.dembasolution.com/admin/elevage',
+    externe: true,
+    icon: Bird,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-QUINCA',
+    description: 'Gestion de quincailleries — stock, ventes, trésorerie multi-magasins.',
+    href: 'https://d-quinca.dembasolution.com/admin',
+    externe: true,
+    icon: Wrench,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-INTRANTS',
+    description: "Gestion de boutiques d'intrants agricoles — stock, ventes, trésorerie multi-magasins.",
+    href: 'https://d-intrants.dembasolution.com/admin',
+    externe: true,
+    icon: Package,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-AGROBUSINESS',
+    description: 'Chaîne de valeur agro-industrielle — financement, production, usine, RH et comptabilité analytique.',
+    href: 'https://d-agro.dembasolution.com/admin',
+    externe: true,
+    icon: Wheat,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'D-SCHOLAR',
+    description: 'Gestion scolaire — élèves, classes, enseignants, notes, assiduité, passages et abonnements.',
+    href: 'https://scholar.dembasolution.com/admin',
+    externe: true,
+    icon: GraduationCap,
+    statut: 'en_ligne' as const,
+  },
+  {
+    nom: 'PCAS',
+    description: 'Commercialisation agricole — producteurs, clients, banques : offres, commandes supervisées, factures.',
+    href: 'https://pcas.dembasolution.com/auth/sso?next=/admin/entreprises',
+    externe: true,
+    icon: Handshake,
+    statut: 'en_ligne' as const,
+  },
+]
 
-export default function AdminDashboardPage() {
-  return <SuperAdminDashboardClient />
+export default function AdminHomePage() {
+  return (
+    <div>
+      <h1 className="text-2xl font-bold font-heading mb-2 text-foreground">Demba Admin — Supervision Centrale</h1>
+      <p className="text-sm text-foreground-muted mb-6">
+        Accédez à l&apos;espace d&apos;administration de chaque solution Demba. Grâce à la connexion unique SuperAdmin (SSO), votre session est partagée sur l&apos;ensemble des tableaux de bord.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {produits.map(({ nom, description, href, externe, icon: Icon, statut }) => (
+          <Link
+            key={nom}
+            href={href}
+            target={externe ? '_blank' : undefined}
+            rel={externe ? 'noopener noreferrer' : undefined}
+            className="group bg-background rounded-xl p-5 border border-surface-border hover:border-primary transition-colors flex flex-col gap-3 shadow-xs"
+          >
+            <div className="flex items-start justify-between">
+              <Icon className="w-6 h-6 text-primary" />
+              <ArrowUpRight className="w-4 h-4 text-foreground-muted group-hover:text-primary transition-colors" />
+            </div>
+            <div>
+              <p className="font-semibold font-heading text-foreground">{nom}</p>
+              <p className="text-sm text-foreground-muted mt-1">{description}</p>
+            </div>
+            <span className="text-xs font-medium text-emerald-600">
+              {statut === 'en_ligne' ? 'En ligne' : 'Bientôt disponible'}
+            </span>
+          </Link>
+        ))}
+
+        <div className="rounded-xl p-5 border border-dashed border-surface-border flex flex-col items-center justify-center text-center gap-2 text-foreground-muted">
+          <Clock className="w-5 h-5" />
+          <p className="text-sm">Les prochains produits DembaSolution apparaîtront ici à leur lancement.</p>
+        </div>
+      </div>
+    </div>
+  )
 }
