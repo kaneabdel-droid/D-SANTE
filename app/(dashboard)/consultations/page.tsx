@@ -1,5 +1,6 @@
 import { getConsultations, getServicesMedicaux } from './actions'
 import { getPatients } from '../patients/actions'
+import { getTenantContext } from '@/utils/supabase/tenant'
 import NouvelleConsultationModal from './NouvelleConsultationModal'
 import ConsultationRowActions from './ConsultationRowActions'
 import Link from 'next/link'
@@ -15,12 +16,14 @@ export default async function ConsultationsPage(props: {
   const selectedType = searchParams.type || 'tous'
   const patientId = searchParams.patient_id
 
-  const [{ consultations, error }, { services }, { patients }] = await Promise.all([
+  const [{ consultations, error }, { services }, { patients }, tenant] = await Promise.all([
     getConsultations(selectedType, patientId),
     getServicesMedicaux(),
     getPatients(),
+    getTenantContext(),
   ])
 
+  const userRole = tenant?.role || 'medecin'
   const aDesConsultationsReelles = Boolean(consultations && consultations.length > 0)
 
   // Données de secours / démo indicatives en filigrane si base neuve
@@ -213,6 +216,7 @@ export default async function ConsultationsPage(props: {
                   <ConsultationRowActions
                     consultation={c}
                     isExempleFiligrane={!aDesConsultationsReelles}
+                    role={userRole}
                   />
                 </div>
               </div>

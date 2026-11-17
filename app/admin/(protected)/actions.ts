@@ -19,15 +19,15 @@ export interface StructureItem {
   source?: 'supabase' | 'demo'
 }
 
-const DEMO_STRUCTURES: StructureItem[] = [
+let demoStructuresStore: StructureItem[] = [
   {
     id: 'str-01',
-    nom: 'Clinique de la Madeleine',
+    nom: 'Clinique Modèle de Dakar',
     type: 'clinique',
     ville: 'Dakar Plateau',
     pays: 'Sénégal',
     contact: '+221 33 889 94 70',
-    email: 'contact@madeleine.sn',
+    email: 'contact@clinique-modele.sn',
     tier: 'hopital',
     lits: 45,
     medecins: 18,
@@ -37,45 +37,15 @@ const DEMO_STRUCTURES: StructureItem[] = [
   },
   {
     id: 'str-02',
-    nom: 'Polyclinique Cheikh Anta Diop',
-    type: 'hopital',
-    ville: 'Fann Résidence',
-    pays: 'Sénégal',
-    contact: '+221 33 825 00 00',
-    email: 'direction@polyclinique-ucad.sn',
-    tier: 'hopital',
-    lits: 80,
-    medecins: 32,
-    status: 'actif',
-    compte_verrouille: false,
-    source: 'demo',
-  },
-  {
-    id: 'str-03',
-    nom: 'Centre Médical Noflaye',
+    nom: 'Centre Médical Modèle Noflaye',
     type: 'poste_sante',
     ville: 'Rufisque',
     pays: 'Sénégal',
     contact: '+221 77 412 88 90',
-    email: 'sante.noflaye@gmail.com',
+    email: 'sante.modele@gmail.com',
     tier: 'poste_sante',
     lits: 8,
     medecins: 3,
-    status: 'actif',
-    compte_verrouille: false,
-    source: 'demo',
-  },
-  {
-    id: 'str-04',
-    nom: 'Cabinet Pédiatrique & Maternité Al-Baraka',
-    type: 'cabinet',
-    ville: 'Thiès',
-    pays: 'Sénégal',
-    contact: '+221 78 520 11 22',
-    email: 'albaraka.sante@gmail.com',
-    tier: 'clinique',
-    lits: 12,
-    medecins: 5,
     status: 'actif',
     compte_verrouille: false,
     source: 'demo',
@@ -113,12 +83,12 @@ export async function getStructuresSuperAdmin(): Promise<StructureItem[]> {
     }
 
     if (realStructures.length > 0) {
-      return [...realStructures, ...DEMO_STRUCTURES]
+      return [...realStructures, ...demoStructuresStore]
     }
-    return DEMO_STRUCTURES
+    return [...demoStructuresStore]
   } catch (err) {
     console.warn('[d-sante:admin] Erreur getStructuresSuperAdmin:', err)
-    return DEMO_STRUCTURES
+    return [...demoStructuresStore]
   }
 }
 
@@ -156,10 +126,18 @@ export async function toggleVerrouillerStructure(structureId: string, bloquer: b
             })
           }
         }
-      } catch {}
+      } catch { }
+    }
+
+    // 3. Mise à jour dans demoStructuresStore si démo
+    const dIdx = demoStructuresStore.findIndex(s => s.id === structureId)
+    if (dIdx !== -1) {
+      demoStructuresStore[dIdx].compte_verrouille = bloquer
+      demoStructuresStore[dIdx].status = bloquer ? 'suspendu' : 'actif'
     }
 
     revalidatePath('/admin/structures')
+    revalidatePath('/admin/sante')
     revalidatePath('/admin')
     return { success: true, bloquer }
   } catch (err: any) {
@@ -402,6 +380,8 @@ export async function creerStructureSuperAdmin(formData: FormData) {
       source: 'supabase',
     }
 
+    demoStructuresStore.unshift(newStruct)
+
     return { success: true, structure: newStruct }
   } catch (err: any) {
     return { error: err.message || 'Erreur lors de la création de la structure' }
@@ -460,6 +440,22 @@ export async function modifierStructureSuperAdmin(formData: FormData) {
       console.warn('Notice update auth user:', e)
     }
 
+    // 3. Mise à jour de la liste locale / démo
+    const index = demoStructuresStore.findIndex(s => s.id === id)
+    if (index !== -1) {
+      demoStructuresStore[index] = {
+        ...demoStructuresStore[index],
+        nom,
+        type,
+        ville,
+        contact,
+        email,
+        tier,
+        status: bloquer ? 'suspendu' : 'actif',
+        compte_verrouille: bloquer,
+      }
+    }
+
     revalidatePath('/admin/structures')
     revalidatePath('/admin/sante')
     revalidatePath('/admin')
@@ -484,7 +480,7 @@ export async function supprimerStructureSuperAdmin(structureId: string) {
 
     try {
       await admin.from('utilisateurs').delete().eq('structure_id', structureId)
-    } catch {}
+    } catch { }
 
     // 2. Suppression auth user
     try {
@@ -492,6 +488,9 @@ export async function supprimerStructureSuperAdmin(structureId: string) {
     } catch (e) {
       console.warn('Notice delete auth user:', e)
     }
+
+    // 3. Suppression dans la liste locale / démo
+    demoStructuresStore = demoStructuresStore.filter(s => s.id !== structureId)
 
     revalidatePath('/admin/structures')
     revalidatePath('/admin/sante')

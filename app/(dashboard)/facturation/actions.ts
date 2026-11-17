@@ -149,6 +149,12 @@ export async function modifierFacture(factureId: string, formData: FormData) {
   const supabase = await createClient()
   const tenant = await getTenantContext()
 
+  const role = (tenant?.role || 'caissier').toLowerCase()
+  const peutModifier = ['administrateur', 'direction', 'caissier', 'caissier_principal', 'medecin'].includes(role)
+  if (!peutModifier) {
+    return { error: 'Votre profil ne dispose pas du niveau requis pour modifier cette facture.' }
+  }
+
   const montant_total = parseFloat(formData.get('montant_total') as string || '0')
   const taux_couverture = parseFloat(formData.get('taux_couverture') as string || '0')
   const organisme_id = (formData.get('organisme_assurance_id') as string) || null
@@ -189,9 +195,51 @@ export async function modifierFacture(factureId: string, formData: FormData) {
   }
 }
 
+export async function annulerFacture(factureId: string, motif?: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'caissier').toLowerCase()
+  const peutAnnuler = ['administrateur', 'direction', 'caissier_principal', 'caissier'].includes(role)
+  if (!peutAnnuler) {
+    return { error: 'Votre profil ne dispose pas du niveau requis pour annuler cette facture.' }
+  }
+
+  try {
+    let query = supabase
+      .from('factures_sante')
+      .update({
+        statut_paiement_patient: 'annulee',
+        statut_paiement_assurance: 'annulee',
+        moyen_paiement: motif ? `[ANNULÉE] ${motif}` : '[ANNULÉE]',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', factureId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/facturation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || "Erreur lors de l'annulation de la facture" }
+  }
+}
+
 export async function supprimerFacture(factureId: string) {
   const supabase = await createClient()
   const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'caissier').toLowerCase()
+  const peutSupprimer = ['administrateur', 'direction'].includes(role)
+  if (!peutSupprimer) {
+    return { error: 'Seule la direction ou un administrateur peut supprimer définitivement une pièce de facturation.' }
+  }
 
   try {
     let query = supabase.from('factures_sante').delete().eq('id', factureId)

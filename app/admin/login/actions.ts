@@ -61,7 +61,7 @@ export async function adminLogout() {
   try {
     const supabase = await createAdminIdentityClient()
     await supabase.auth.signOut()
-  } catch {}
+  } catch { }
 
   const cookieStore = await cookies()
   cookieStore.delete('d_sante_admin_session')

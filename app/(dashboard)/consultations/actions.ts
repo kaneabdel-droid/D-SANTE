@@ -166,6 +166,12 @@ export async function modifierConsultation(consultationId: string, formData: For
   const supabase = await createClient()
   const tenant = await getTenantContext()
 
+  const role = (tenant?.role || 'medecin').toLowerCase()
+  const peutModifier = ['administrateur', 'direction', 'medecin', 'medecin_chef'].includes(role)
+  if (!peutModifier) {
+    return { error: 'Votre profil ne dispose pas du niveau requis pour modifier cette consultation.' }
+  }
+
   const motif = (formData.get('motif') as string)?.trim()
   const type_consultation = (formData.get('type_consultation') as string) || 'generale'
   const diagnostic_principal = (formData.get('diagnostic_principal') as string)?.trim() || null
@@ -204,9 +210,50 @@ export async function modifierConsultation(consultationId: string, formData: For
   }
 }
 
+export async function annulerConsultation(consultationId: string, motif?: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'medecin').toLowerCase()
+  const peutAnnuler = ['administrateur', 'direction', 'medecin', 'medecin_chef'].includes(role)
+  if (!peutAnnuler) {
+    return { error: 'Votre profil ne dispose pas du niveau requis pour annuler cette consultation.' }
+  }
+
+  try {
+    let query = supabase
+      .from('consultations')
+      .update({
+        statut: 'annulee',
+        conduite_a_tenir: motif ? `[ANNULÉE] Motif : ${motif}` : '[ANNULÉE]',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', consultationId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    revalidatePath('/consultations')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || "Erreur lors de l'annulation de la consultation" }
+  }
+}
+
 export async function supprimerConsultation(consultationId: string) {
   const supabase = await createClient()
   const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'medecin').toLowerCase()
+  const peutSupprimer = ['administrateur', 'direction', 'medecin_chef'].includes(role)
+  if (!peutSupprimer) {
+    return { error: 'Seule la direction ou le médecin chef dispose du niveau requis pour supprimer définitivement une consultation.' }
+  }
 
   try {
     let query = supabase.from('consultations').delete().eq('id', consultationId)

@@ -146,6 +146,12 @@ export async function modifierMedicament(medicamentId: string, formData: FormDat
     return { error: 'Veuillez renseigner la DCI et un prix de vente valide.' }
   }
 
+  const role = tenant?.role || 'pharmacien'
+  const rolesAutorises = ['administrateur', 'direction', 'pharmacien', 'responsable_pharmacie']
+  if (!rolesAutorises.includes(role)) {
+    return { error: 'Action non autorisée pour votre profil utilisateur.' }
+  }
+
   try {
     let query = supabase
       .from('pharmacie_stocks')
@@ -182,6 +188,12 @@ export async function modifierMedicament(medicamentId: string, formData: FormDat
 export async function supprimerMedicament(medicamentId: string) {
   const supabase = await createClient()
   const tenant = await getTenantContext()
+
+  const role = tenant?.role || 'pharmacien'
+  const rolesAutorises = ['administrateur', 'direction', 'responsable_pharmacie']
+  if (!rolesAutorises.includes(role)) {
+    return { error: 'Action non autorisée. Seule la direction ou le responsable pharmacie peut supprimer un produit.' }
+  }
 
   try {
     let query = supabase.from('pharmacie_stocks').delete().eq('id', medicamentId)

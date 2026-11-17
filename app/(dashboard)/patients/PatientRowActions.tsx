@@ -10,12 +10,17 @@ export default function PatientRowActions({
   patient,
   organismes = [],
   isExempleFiligrane = false,
+  role = 'medecin',
 }: {
   patient: any
   organismes: any[]
   isExempleFiligrane?: boolean
+  role?: string
 }) {
   const [isDeleting, setIsDeleting] = useState(false)
+  const normalizedRole = (role || 'medecin').toLowerCase()
+  const peutSupprimer = ['administrateur', 'direction', 'medecin'].includes(normalizedRole)
+  const peutModifier = ['administrateur', 'direction', 'medecin', 'infirmier', 'receptionniste'].includes(normalizedRole)
 
   if (isExempleFiligrane) {
     return (
@@ -61,16 +66,20 @@ export default function PatientRowActions({
       >
         Consulter
       </Link>
-      <ModifierPatientModal patient={patient} organismes={organismes} />
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isDeleting}
-        className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
-        title="Supprimer ce patient"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
+      {peutModifier && (
+        <ModifierPatientModal patient={patient} organismes={organismes} />
+      )}
+      {peutSupprimer && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
+          title="Supprimer ce patient"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   )
 }

@@ -1,19 +1,30 @@
 'use client'
 
 import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
-import { supprimerFacture } from './actions'
+import { Trash2, Ban } from 'lucide-react'
+import { supprimerFacture, annulerFacture } from './actions'
 import EncaisserModal from './EncaisserModal'
+import ModifierFactureModal from './ModifierFactureModal'
 import { DownloadFactureButton } from '@/components/DownloadFactureButton'
 
 export default function FacturationRowActions({
   facture,
+  organismes = [],
   isExempleFiligrane = false,
+  role = 'caissier',
 }: {
   facture: any
+  organismes?: any[]
   isExempleFiligrane?: boolean
+  role?: string
 }) {
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
+
+  const normalizedRole = (role || 'caissier').toLowerCase()
+  const peutModifier = ['administrateur', 'direction', 'caissier', 'caissier_principal', 'medecin'].includes(normalizedRole)
+  const peutAnnuler = ['administrateur', 'direction', 'caissier_principal', 'caissier'].includes(normalizedRole)
+  const peutSupprimer = ['administrateur', 'direction'].includes(normalizedRole)
 
   if (isExempleFiligrane) {
     return (
@@ -25,10 +36,28 @@ export default function FacturationRowActions({
     )
   }
 
+  const estAnnulee = facture.statut_paiement_patient === 'annulee'
+
+  const handleAnnuler = async () => {
+    const motif = window.prompt(
+      `Confirmer l'annulation de la facture N° ${facture.numero_facture} ? Précisez le motif :`,
+      'Erreur de facturation ou avoir client'
+    )
+    if (motif === null) return
+
+    setIsCancelling(true)
+    const res = await annulerFacture(facture.id, motif)
+    setIsCancelling(false)
+
+    if (res?.error) {
+      alert(`Erreur : ${res.error}`)
+    }
+  }
+
   const handleDelete = async () => {
     if (
       !window.confirm(
-        `Voulez-vous vraiment supprimer la facture N° ${facture.numero_facture} ?`
+        `Voulez-vous vraiment supprimer définitivement la facture N° ${facture.numero_facture} ? Cette action est irréversible.`
       )
     ) {
       return
@@ -68,21 +97,46 @@ export default function FacturationRowActions({
 
   return (
     <div className="flex items-center justify-end gap-1.5">
+      {estAnnulee && (
+        <span className="px-2 py-0.5 rounded-full bg-danger/10 text-danger border border-danger/20 text-[10px] font-bold">
+          Annulée
+        </span>
+      )}
+
       <DownloadFactureButton data={factureData} />
 
-      {facture.statut_paiement_patient !== 'paye' && (
+      {!estAnnulee && facture.statut_paiement_patient !== 'paye' && (
         <EncaisserModal facture={facture} />
       )}
 
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isDeleting}
-        className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
-        title="Supprimer cette facture"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
+      {!estAnnulee && peutModifier && (
+        <ModifierFactureModal facture={facture} organismes={organismes} />
+      )}
+
+      {!estAnnulee && peutAnnuler && (
+        <button
+          type="button"
+          onClick={handleAnnuler}
+          disabled={isCancelling}
+          className="px-2 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
+          title="Annuler cette facture"
+        >
+          <Ban className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Annuler</span>
+        </button>
+      )}
+
+      {peutSupprimer && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
+          title="Supprimer cette facture"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   )
 }

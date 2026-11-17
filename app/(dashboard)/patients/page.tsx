@@ -1,4 +1,5 @@
 import { getPatients, getOrganismesAssurances } from './actions'
+import { getTenantContext } from '@/utils/supabase/tenant'
 import NouveauPatientModal from './NouveauPatientModal'
 import PatientRowActions from './PatientRowActions'
 import {
@@ -11,21 +12,23 @@ export default async function PatientsPage(props: {
   const searchParams = await props.searchParams
   const q = searchParams.q || ''
 
-  const [{ patients, error }, { organismes }] = await Promise.all([
+  const [{ patients, error }, { organismes }, tenant] = await Promise.all([
     getPatients(q),
     getOrganismesAssurances(),
+    getTenantContext(),
   ])
 
+  const userRole = tenant?.role || 'medecin'
   const aDesPatientsReels = Boolean(patients && patients.length > 0)
 
-  // Données indicatives d'exemple en filigrane (sans impact) si l'établissement est neuf
+  // 1 ou 2 modèles d'exemple avec possibilité de les modifier ou supprimer
   const patientsAffiches = aDesPatientsReels
     ? patients
     : [
       {
         id: 'demo-1',
-        ipp: 'PAT-EX-001',
-        nom: 'Diallo',
+        ipp: 'PAT-MOD-001',
+        nom: 'Diallo (Modèle)',
         prenom: 'Aminata',
         date_naissance: '1992-04-15',
         sexe: 'F',
@@ -36,8 +39,8 @@ export default async function PatientsPage(props: {
       },
       {
         id: 'demo-2',
-        ipp: 'PAT-EX-002',
-        nom: 'Sow',
+        ipp: 'PAT-MOD-002',
+        nom: 'Sow (Modèle)',
         prenom: 'Moussa',
         date_naissance: '1985-11-20',
         sexe: 'M',
@@ -45,18 +48,6 @@ export default async function PatientsPage(props: {
         telephone: '+221 70 882 14 30',
         taux_couverture: 0,
         organismes_assurances: null,
-      },
-      {
-        id: 'demo-3',
-        ipp: 'PAT-EX-003',
-        nom: 'Ba',
-        prenom: 'Aïssatou',
-        date_naissance: '2001-08-05',
-        sexe: 'F',
-        groupe_sanguin: 'A-',
-        telephone: '+221 78 312 90 44',
-        taux_couverture: 50,
-        organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
       },
     ]
 
@@ -218,6 +209,7 @@ export default async function PatientsPage(props: {
                         patient={p}
                         organismes={organismes}
                         isExempleFiligrane={!aDesPatientsReels}
+                        role={userRole}
                       />
                     </td>
                   </tr>

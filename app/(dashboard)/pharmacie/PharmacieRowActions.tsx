@@ -7,15 +7,20 @@ import { modifierMedicament, supprimerMedicament, delivrerMedicament } from './a
 export default function PharmacieRowActions({
   medicament,
   isExempleFiligrane = false,
+  role = 'pharmacien',
 }: {
   medicament: any
   isExempleFiligrane?: boolean
+  role?: string
 }) {
   const [isOpenEdit, setIsOpenEdit] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDelivering, setIsDelivering] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const peutModifier = ['administrateur', 'direction', 'pharmacien', 'responsable_pharmacie'].includes(role)
+  const peutSupprimer = ['administrateur', 'direction', 'responsable_pharmacie'].includes(role)
 
   if (isExempleFiligrane) {
     return (
@@ -90,28 +95,32 @@ export default function PharmacieRowActions({
         <span>Délivrer (-1)</span>
       </button>
 
-      <button
-        type="button"
-        onClick={() => {
-          setIsOpenEdit(true)
-          setError(null)
-        }}
-        className="px-2.5 py-1.5 rounded-lg bg-surface-border/50 hover:bg-surface-border text-foreground text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
-        title="Modifier ce médicament"
-      >
-        <Edit2 className="w-3.5 h-3.5" />
-        <span>Modifier</span>
-      </button>
+      {peutModifier && (
+        <button
+          type="button"
+          onClick={() => {
+            setIsOpenEdit(true)
+            setError(null)
+          }}
+          className="px-2.5 py-1.5 rounded-lg bg-surface-border/50 hover:bg-surface-border text-foreground text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+          title="Modifier ce médicament"
+        >
+          <Edit2 className="w-3.5 h-3.5" />
+          <span>Modifier</span>
+        </button>
+      )}
 
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isDeleting}
-        className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
-        title="Supprimer ce médicament"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
+      {peutSupprimer && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
+          title="Supprimer ce médicament"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
 
       {isOpenEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-hidden text-left">

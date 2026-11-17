@@ -1,4 +1,5 @@
 import { getStocksMedicaments } from './actions'
+import { getTenantContext } from '@/utils/supabase/tenant'
 import NouveauMedicamentModal from './NouveauMedicamentModal'
 import PharmacieRowActions from './PharmacieRowActions'
 import {
@@ -12,10 +13,14 @@ export default async function PharmaciePage(props: {
   const searchParams = await props.searchParams
   const q = searchParams.q || ''
 
-  const { stocks, error } = await getStocksMedicaments(q)
+  const [{ stocks, error }, tenant] = await Promise.all([
+    getStocksMedicaments(q),
+    getTenantContext(),
+  ])
+  const userRole = tenant?.role || 'pharmacien'
   const aDesStocksReels = Boolean(stocks && stocks.length > 0)
 
-  // Données indicatives d'exemple en filigrane si base neuve
+  // Données indicatives d'exemple en filigrane si base neuve (1 ou 2 modèles max)
   const stocksAffiches = aDesStocksReels
     ? stocks
     : [
@@ -44,32 +49,6 @@ export default async function PharmaciePage(props: {
         prix_vente: 3200,
         numero_lot: 'LT-77401',
         date_peremption: '2026-12-15',
-      },
-      {
-        id: 'med-3',
-        code_medicament: 'MED-EX-003',
-        dci: 'Artéméther + Luméfantrine',
-        nom_commercial: 'Coartem',
-        forme: 'comprime',
-        dosage: '20/120 mg',
-        quantite_en_stock: 45,
-        seuil_alerte: 10,
-        prix_vente: 2500,
-        numero_lot: 'LT-99210',
-        date_peremption: '2027-04-10',
-      },
-      {
-        id: 'med-4',
-        code_medicament: 'MED-EX-004',
-        dci: 'Sérum Glucosé 5%',
-        nom_commercial: 'Perfusion Glucosée',
-        forme: 'solute',
-        dosage: '500 ml',
-        quantite_en_stock: 4,
-        seuil_alerte: 10,
-        prix_vente: 1800,
-        numero_lot: 'LT-44109',
-        date_peremption: '2026-11-20',
       },
     ]
 
@@ -279,6 +258,7 @@ export default async function PharmaciePage(props: {
                       <PharmacieRowActions
                         medicament={m}
                         isExempleFiligrane={!aDesStocksReels}
+                        role={userRole}
                       />
                     </td>
                   </tr>

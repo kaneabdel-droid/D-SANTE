@@ -1,21 +1,33 @@
 'use client'
 
 import { useState } from 'react'
-import { Trash2, Edit2, X, Stethoscope, AlertCircle } from 'lucide-react'
-import { modifierConsultation, supprimerConsultation } from './actions'
+import { Trash2, Edit2, X, Stethoscope, AlertCircle, Ban } from 'lucide-react'
+import { modifierConsultation, annulerConsultation, supprimerConsultation } from './actions'
 import { DownloadOrdonnanceButton } from '@/components/DownloadOrdonnanceButton'
 
 export default function ConsultationRowActions({
   consultation,
   isExempleFiligrane = false,
+  role = 'medecin',
+  onDeleteExemple,
 }: {
   consultation: any
   isExempleFiligrane?: boolean
+  role?: string
+  onDeleteExemple?: (id: string) => void
 }) {
   const [isOpenEdit, setIsOpenEdit] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isCancelling, setIsCancelling] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const normalizedRole = (role || 'medecin').toLowerCase()
+  const peutModifier = ['administrateur', 'direction', 'medecin', 'medecin_chef'].includes(normalizedRole)
+  const peutAnnuler = ['administrateur', 'direction', 'medecin', 'medecin_chef'].includes(normalizedRole)
+  const peutSupprimer = ['administrateur', 'direction', 'medecin_chef'].includes(normalizedRole)
+
+  const estAnnulee = consultation.statut === 'annulee'
 
   if (isExempleFiligrane) {
     return (
@@ -27,10 +39,25 @@ export default function ConsultationRowActions({
     )
   }
 
+  const handleAnnuler = async () => {
+    const motif = window.prompt(
+      `Confirmer l'annulation de la consultation ${consultation.numero_consultation} ? Précisez le motif :`,
+      'Annulation demandée par le praticien'
+    )
+    if (motif === null) return
+
+    setIsCancelling(true)
+    const res = await annulerConsultation(consultation.id, motif)
+    setIsCancelling(false)
+    if (res?.error) {
+      alert(`Erreur : ${res.error}`)
+    }
+  }
+
   const handleDelete = async () => {
     if (
       !window.confirm(
-        `Voulez-vous vraiment supprimer la consultation ${consultation.numero_consultation} ?`
+        `Voulez-vous vraiment supprimer définitivement la consultation ${consultation.numero_consultation} ?`
       )
     ) {
       return
@@ -65,23 +92,23 @@ export default function ConsultationRowActions({
   const pat = consultation.patients
   const ordonnanceData = premiereOrdonnance
     ? {
-        structureNom: 'D-Santé Médical',
-        medecinNom: 'Médecin Traitant',
-        patientNom: pat?.nom || 'Patient',
-        patientPrenom: pat?.prenom || '',
-        patientIpp: pat?.ipp || 'N/A',
-        datePrescription:
-          premiereOrdonnance.date_prescription ||
-          consultation.date_consultation ||
-          new Date().toISOString().split('T')[0],
-        lignes: (premiereOrdonnance.lignes_prescriptions || []).map((lig: any) => ({
-          medicamentNom: lig.designation || 'Médicament',
-          posologie: lig.posologie || '',
-          dureeJours: lig.duree_jours || 7,
-          instructions: lig.instructions,
-        })),
-        notes: consultation.conduite_a_tenir,
-      }
+      structureNom: 'D-Santé Médical',
+      medecinNom: 'Médecin Traitant',
+      patientNom: pat?.nom || 'Patient',
+      patientPrenom: pat?.prenom || '',
+      patientIpp: pat?.ipp || 'N/A',
+      datePrescription:
+        premiereOrdonnance.date_prescription ||
+        consultation.date_consultation ||
+        new Date().toISOString().split('T')[0],
+      lignes: (premiereOrdonnance.lignes_prescriptions || []).map((lig: any) => ({
+        medicamentNom: lig.designation || 'Médicament',
+        posologie: lig.posologie || '',
+        dureeJours: lig.duree_jours || 7,
+        instructions: lig.instructions,
+      })),
+      notes: consultation.conduite_a_tenir,
+    }
     : null
 
   const inputStyle =
@@ -89,32 +116,55 @@ export default function ConsultationRowActions({
 
   return (
     <div className="flex items-center justify-end gap-1.5">
+      {estAnnulee && (
+        <span className="px-2 py-0.5 rounded-full bg-danger/10 text-danger border border-danger/20 text-[10px] font-bold">
+          Annulée
+        </span>
+      )}
+
       {ordonnanceData && (
         <DownloadOrdonnanceButton data={ordonnanceData} />
       )}
 
-      <button
-        type="button"
-        onClick={() => {
-          setIsOpenEdit(true)
-          setError(null)
-        }}
-        className="px-2.5 py-1.5 rounded-lg bg-surface-border/50 hover:bg-surface-border text-foreground text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
-        title="Modifier cette consultation"
-      >
-        <Edit2 className="w-3.5 h-3.5" />
-        <span>Modifier</span>
-      </button>
+      {peutModifier && !estAnnulee && (
+        <button
+          type="button"
+          onClick={() => {
+            setIsOpenEdit(true)
+            setError(null)
+          }}
+          className="px-2.5 py-1.5 rounded-lg bg-surface-border/50 hover:bg-surface-border text-foreground text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+          title="Modifier cette consultation"
+        >
+          <Edit2 className="w-3.5 h-3.5" />
+          <span>Modifier</span>
+        </button>
+      )}
 
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={isDeleting}
-        className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
-        title="Supprimer cette consultation"
-      >
-        <Trash2 className="w-3.5 h-3.5" />
-      </button>
+      {peutAnnuler && !estAnnulee && (
+        <button
+          type="button"
+          onClick={handleAnnuler}
+          disabled={isCancelling}
+          className="px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
+          title="Annuler cette consultation"
+        >
+          <Ban className="w-3.5 h-3.5" />
+          <span>Annuler</span>
+        </button>
+      )}
+
+      {peutSupprimer && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="p-1.5 rounded-lg text-danger/70 hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer disabled:opacity-50"
+          title="Supprimer cette consultation"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
 
       {isOpenEdit && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs overflow-hidden text-left">

@@ -134,9 +134,60 @@ export async function libererLit(
   }
 }
 
+export async function annulerHospitalisation(hospitalisationId: string, motif?: string) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'medecin').toLowerCase()
+  const peutAnnuler = ['administrateur', 'direction', 'medecin', 'infirmier_major'].includes(role)
+  if (!peutAnnuler) {
+    return { error: 'Votre profil ne dispose pas du niveau requis pour annuler ce séjour.' }
+  }
+
+  try {
+    const { data: hosp } = await supabase
+      .from('hospitalisations')
+      .select('lit_id')
+      .eq('id', hospitalisationId)
+      .maybeSingle()
+
+    let query = supabase
+      .from('hospitalisations')
+      .update({
+        statut: 'annulee',
+        resume_sortie: motif ? `[ANNULÉ] Motif : ${motif}` : '[ANNULÉ]',
+        date_sortie_reelle: new Date().toISOString(),
+      })
+      .eq('id', hospitalisationId)
+
+    if (tenant?.structureId) {
+      query = query.eq('structure_id', tenant.structureId)
+    }
+
+    const { error } = await query
+    if (error) return { error: error.message }
+
+    if (hosp?.lit_id) {
+      await supabase.from('lits').update({ statut: 'libre' }).eq('id', hosp.lit_id)
+    }
+
+    revalidatePath('/hospitalisation')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Erreur lors de l’annulation du séjour' }
+  }
+}
+
 export async function supprimerHospitalisation(hospitalisationId: string, litId?: string | null) {
   const supabase = await createClient()
   const tenant = await getTenantContext()
+
+  const role = (tenant?.role || 'medecin').toLowerCase()
+  const peutSupprimer = ['administrateur', 'direction', 'medecin_chef'].includes(role)
+  if (!peutSupprimer) {
+    return { error: 'Seule la direction ou le médecin-chef dispose du niveau requis pour supprimer définitivement un séjour.' }
+  }
 
   try {
     let query = supabase.from('hospitalisations').delete().eq('id', hospitalisationId)

@@ -125,41 +125,11 @@ export default async function DashboardPage() {
         created_at: new Date().toISOString(),
         patients: { nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-004' },
       },
-      {
-        id: 'fac-3',
-        numero_facture: 'FAC-2026-087',
-        montant_regle_patient: 65000,
-        mode_reglement: 'Orange Money',
-        date_facture: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        patients: { nom: 'Ba', prenom: 'Amadou', ipp: 'PAT-007' },
-      },
-      {
-        id: 'fac-4',
-        numero_facture: 'FAC-2026-086',
-        montant_regle_patient: 35000,
-        mode_reglement: 'Espèces',
-        date_facture: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        patients: { nom: 'Ndiaye', prenom: 'Awa', ipp: 'PAT-011' },
-      },
-      {
-        id: 'fac-5',
-        numero_facture: 'FAC-2026-085',
-        montant_regle_patient: 80000,
-        mode_reglement: 'Carte Bancaire',
-        date_facture: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        patients: { nom: 'Fall', prenom: 'Cheikh', ipp: 'PAT-014' },
-      },
     ]
 
     recentsPatients = [
       { id: '1', nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2611-001', telephone: '+221 77 452 10 99', created_at: new Date().toISOString() },
       { id: '2', nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-2611-002', telephone: '+221 78 120 44 55', created_at: new Date(Date.now() - 3600000).toISOString() },
-      { id: '3', nom: 'Ba', prenom: 'Amadou', ipp: 'PAT-2611-003', telephone: '+221 70 882 14 30', created_at: new Date(Date.now() - 7200000).toISOString() },
-      { id: '4', nom: 'Ndiaye', prenom: 'Awa', ipp: 'PAT-2611-004', telephone: '+221 76 541 22 11', created_at: new Date(Date.now() - 14400000).toISOString() },
-      { id: '5', nom: 'Fall', prenom: 'Cheikh', ipp: 'PAT-2611-005', telephone: '+221 77 331 90 80', created_at: new Date(Date.now() - 28800000).toISOString() },
     ]
   }
 
@@ -191,26 +161,6 @@ export default async function DashboardPage() {
       gravite: 'rouge',
       tempsAttente: '3 min',
       motif: 'Fièvre aiguë avec convulsion fébrile',
-    },
-    {
-      id: '3',
-      ipp: 'PAT-007',
-      nom: 'Ba Amadou',
-      age: '62 ans',
-      constantes: 'Glycémie 3.4 g/L • TA 140/85',
-      gravite: 'jaune',
-      tempsAttente: '22 min',
-      motif: 'Décompensation diabétique',
-    },
-    {
-      id: '4',
-      ipp: 'PAT-011',
-      nom: 'Ndiaye Awa',
-      age: '28 ans',
-      constantes: 'TA 110/70 • T° 37.1°C',
-      gravite: 'vert',
-      tempsAttente: '35 min',
-      motif: 'Consultation prénatale 2ème trimestre',
     },
   ]
 

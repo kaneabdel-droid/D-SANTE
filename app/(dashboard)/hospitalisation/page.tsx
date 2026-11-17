@@ -1,5 +1,6 @@
 import { getLitsEtHospitalisations } from './actions'
 import { getPatients } from '../patients/actions'
+import { getTenantContext } from '@/utils/supabase/tenant'
 import AdmissionModal from './AdmissionModal'
 import NouveauLitModal from './NouveauLitModal'
 import HospitalisationRowActions from './HospitalisationRowActions'
@@ -9,25 +10,24 @@ import {
 } from 'lucide-react'
 
 export default async function HospitalisationPage() {
-  const [{ lits, hospitalisations }, { patients }] = await Promise.all([
+  const [{ lits, hospitalisations }, { patients }, tenant] = await Promise.all([
     getLitsEtHospitalisations(),
     getPatients(),
+    getTenantContext(),
   ])
+
+  const userRole = tenant?.role || 'medecin'
 
   const aDesLitsReels = Boolean(lits && lits.length > 0)
   const aDesHospitalisationsReelles = Boolean(hospitalisations && hospitalisations.length > 0)
   const estBaseNeuve = !aDesLitsReels && !aDesHospitalisationsReelles
 
-  // Données indicatives d'exemple en filigrane si base neuve
+  // Données indicatives d'exemple en filigrane si base neuve (1 ou 2 modèles max)
   const litsAffiches = aDesLitsReels
     ? lits
     : [
       { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
-      { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1', categorie: 'standard', statut: 'libre' },
-      { id: 'lit-3', numero_lit: 'L103', chambre: 'Chambre 2', categorie: 'standard', statut: 'libre' },
-      { id: 'lit-4', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'occupe' },
-      { id: 'lit-5', numero_lit: 'USI-01', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'occupe' },
-      { id: 'lit-6', numero_lit: 'USI-02', chambre: 'Soins Intensifs', categorie: 'soins_intensifs', statut: 'nettoyage' },
+      { id: 'lit-2', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'libre' },
     ]
 
   const hospitalisationsAffichees = aDesHospitalisationsReelles
@@ -218,6 +218,7 @@ export default async function HospitalisationPage() {
                   <HospitalisationRowActions
                     hospitalisation={h}
                     isExempleFiligrane={estBaseNeuve}
+                    role={userRole}
                   />
                 </div>
               </div>
