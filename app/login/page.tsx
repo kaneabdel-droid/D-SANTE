@@ -98,19 +98,33 @@ export default async function LoginPage(props: {
             <ArrowRight className="w-4 h-4" />
           </button>
 
-          <div className="pt-2 flex items-center justify-between text-[11px] text-foreground-muted border-t border-surface-border/60">
+          <div className="pt-2 flex items-center justify-center text-[11px] text-foreground-muted border-t border-surface-border/60">
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Accès Praticien Sécurisé</span>
+              <span>Accès Praticien Sécurisé (Conforme HDS & Chiffrement SSL)</span>
             </span>
-            <Link
-              href="/signup"
-              className="text-primary hover:underline font-bold"
-            >
-              Créer un compte établissement
-            </Link>
           </div>
         </form>
+
+        {/* Bloc Inscription Établissement Haute Visibilité */}
+        <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-4 text-center transition-all hover:border-primary/50 hover:bg-primary/[0.08]">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-1.5">
+            <Sparkles className="w-3.5 h-3.5" /> Nouvelle clinique ou cabinet ?
+          </div>
+          <h3 className="font-heading font-bold text-foreground text-sm">
+            Créez votre établissement de santé en 2 minutes
+          </h3>
+          <p className="text-[11px] text-foreground-muted mt-0.5">
+            Dossier patient • Consultations • Facturation & Tiers-Payant • Essai 7j
+          </p>
+          <Link
+            href="/signup"
+            className="mt-2.5 inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-primary text-white text-xs sm:text-sm font-bold shadow-sm hover:bg-primary-hover hover:shadow transition-all group"
+          >
+            <span>Créer un compte établissement</span>
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
 
         {/* Accès Démonstration Rapide par Rôles Métier */}
         <div className="pt-6 border-t border-surface-border/80 space-y-3">
