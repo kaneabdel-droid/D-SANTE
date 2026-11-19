@@ -113,20 +113,20 @@ export default function DecouvrirDSantePage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Link
+              href="/demo"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl shadow-emerald-600/25 transition-all"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-200" />
+              Explorer l&apos;Application Hospitalière Complète (Accès Immédiat)
+            </Link>
             <a
               href="#demo-interactive"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl shadow-emerald-600/25 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-200 font-semibold text-sm transition-all"
             >
-              <Play className="w-4 h-4 fill-white" />
-              Lancer la consultation virtuelle (Démo)
+              <Play className="w-4 h-4 fill-emerald-400 text-emerald-400" />
+              Simulateur rapide de consultation
             </a>
-            <Link
-              href="/tarifs"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-900 border border-slate-700 hover:border-slate-500 text-slate-200 font-semibold text-sm transition-all"
-            >
-              Voir les forfaits cliniques
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </div>
       </section>

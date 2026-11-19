@@ -20,40 +20,93 @@ export default async function HospitalisationPage() {
 
   const aDesLitsReels = Boolean(lits && lits.length > 0)
   const aDesHospitalisationsReelles = Boolean(hospitalisations && hospitalisations.length > 0)
+  const isDemoMode = Boolean(tenant?.isDemo)
   const estBaseNeuve = !aDesLitsReels && !aDesHospitalisationsReelles
 
-  // Données indicatives d'exemple en filigrane si base neuve (1 ou 2 modèles max)
+  // En mode démo : service hospitalier complet. Si compte réel neuf : 2 modèles en filigrane
   const litsAffiches = aDesLitsReels
     ? lits
-    : [
-      { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
-      { id: 'lit-2', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'libre' },
-    ]
+    : isDemoMode
+      ? [
+        { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1 (Médecine)', categorie: 'standard', statut: 'occupe' },
+        { id: 'lit-2', numero_lit: 'L102', chambre: 'Chambre 1 (Médecine)', categorie: 'standard', statut: 'libre' },
+        { id: 'lit-3', numero_lit: 'REA-01', chambre: 'Unité Surveillance Continue', categorie: 'soins_intensifs', statut: 'occupe' },
+        { id: 'lit-4', numero_lit: 'MAT-01', chambre: 'Maternité & Suites de Couches', categorie: 'standard', statut: 'occupe' },
+        { id: 'lit-5', numero_lit: 'PED-01', chambre: 'Pédiatrie Chambre 3', categorie: 'standard', statut: 'libre' },
+        { id: 'lit-6', numero_lit: 'VIP-01', chambre: 'Suite VIP Pavillon Clinique', categorie: 'vip', statut: 'occupe' },
+      ]
+      : [
+        { id: 'lit-1', numero_lit: 'L101', chambre: 'Chambre 1', categorie: 'standard', statut: 'occupe' },
+        { id: 'lit-2', numero_lit: 'VIP-01', chambre: 'Suite VIP 1', categorie: 'vip', statut: 'libre' },
+      ]
 
   const hospitalisationsAffichees = aDesHospitalisationsReelles
     ? hospitalisations
-    : [
-      {
-        id: 'hosp-1',
-        numero_sejour: 'SEJ-EX-001',
-        date_entree: '2026-10-28T09:30:00Z',
-        motif_admission: 'Pneumopathie infectieuse avec désaturation',
-        statut: 'en_cours',
-        lit_id: 'lit-1',
-        patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-EX-001', groupe_sanguin: 'O+' },
-        lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
-      },
-      {
-        id: 'hosp-2',
-        numero_sejour: 'SEJ-EX-002',
-        date_entree: '2026-10-29T14:15:00Z',
-        motif_admission: 'Surveillance post-césarienne programmée',
-        statut: 'en_cours',
-        lit_id: 'lit-4',
-        patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003', groupe_sanguin: 'A-' },
-        lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
-      },
-    ]
+    : isDemoMode
+      ? [
+        {
+          id: 'hosp-1',
+          numero_sejour: 'SEJ-EX-001',
+          date_entree: '2026-10-28T09:30:00Z',
+          motif_admission: 'Pneumopathie infectieuse avec désaturation (SpO2 93%)',
+          statut: 'en_cours',
+          lit_id: 'lit-1',
+          patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2610-001', groupe_sanguin: 'O+' },
+          lits: { numero_lit: 'L101', chambre: 'Chambre 1 (Médecine)' },
+        },
+        {
+          id: 'hosp-2',
+          numero_sejour: 'SEJ-EX-002',
+          date_entree: '2026-10-29T14:15:00Z',
+          motif_admission: 'Surveillance post-césarienne programmée J+2',
+          statut: 'en_cours',
+          lit_id: 'lit-4',
+          patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-2610-003', groupe_sanguin: 'A-' },
+          lits: { numero_lit: 'MAT-01', chambre: 'Maternité & Suites de Couches' },
+        },
+        {
+          id: 'hosp-3',
+          numero_sejour: 'SEJ-EX-003',
+          date_entree: '2026-10-30T06:00:00Z',
+          motif_admission: 'Poussée hypertensive sévère (TA 190/110) sous titration',
+          statut: 'en_cours',
+          lit_id: 'lit-3',
+          patients: { nom: 'Ndiaye', prenom: 'Cheikh', ipp: 'PAT-2610-004', groupe_sanguin: 'AB+' },
+          lits: { numero_lit: 'REA-01', chambre: 'Unité Surveillance Continue' },
+        },
+        {
+          id: 'hosp-4',
+          numero_sejour: 'SEJ-EX-004',
+          date_entree: '2026-10-29T18:40:00Z',
+          motif_admission: 'Bilan d\'exploration cardiologique approfondi & coronarographie',
+          statut: 'en_cours',
+          lit_id: 'lit-6',
+          patients: { nom: 'Traoré', prenom: 'Aminata', ipp: 'PAT-2610-005', groupe_sanguin: 'O+' },
+          lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP Pavillon Clinique' },
+        },
+      ]
+      : [
+        {
+          id: 'hosp-1',
+          numero_sejour: 'SEJ-EX-001',
+          date_entree: '2026-10-28T09:30:00Z',
+          motif_admission: 'Pneumopathie infectieuse avec désaturation',
+          statut: 'en_cours',
+          lit_id: 'lit-1',
+          patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-EX-001', groupe_sanguin: 'O+' },
+          lits: { numero_lit: 'L101', chambre: 'Chambre 1' },
+        },
+        {
+          id: 'hosp-2',
+          numero_sejour: 'SEJ-EX-002',
+          date_entree: '2026-10-29T14:15:00Z',
+          motif_admission: 'Surveillance post-césarienne programmée',
+          statut: 'en_cours',
+          lit_id: 'lit-4',
+          patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003', groupe_sanguin: 'A-' },
+          lits: { numero_lit: 'VIP-01', chambre: 'Suite VIP 1' },
+        },
+      ]
 
   const litsLibres = litsAffiches.filter((l: any) => l.statut === 'libre')
 

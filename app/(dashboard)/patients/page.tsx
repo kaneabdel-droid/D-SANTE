@@ -20,36 +20,100 @@ export default async function PatientsPage(props: {
 
   const userRole = tenant?.role || 'medecin'
   const aDesPatientsReels = Boolean(patients && patients.length > 0)
+  const isDemoMode = Boolean(tenant?.isDemo)
 
-  // 1 ou 2 modèles d'exemple avec possibilité de les modifier ou supprimer
+  // En mode démo : cohorte complète et représentative. Si compte réel neuf : 2 modèles d'exemple
   const patientsAffiches = aDesPatientsReels
     ? patients
-    : [
-      {
-        id: 'demo-1',
-        ipp: 'PAT-MOD-001',
-        nom: 'Diallo (Modèle)',
-        prenom: 'Aminata',
-        date_naissance: '1992-04-15',
-        sexe: 'F',
-        groupe_sanguin: 'O+',
-        telephone: '+221 77 452 10 99',
-        taux_couverture: 80,
-        organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
-      },
-      {
-        id: 'demo-2',
-        ipp: 'PAT-MOD-002',
-        nom: 'Sow (Modèle)',
-        prenom: 'Moussa',
-        date_naissance: '1985-11-20',
-        sexe: 'M',
-        groupe_sanguin: 'B+',
-        telephone: '+221 70 882 14 30',
-        taux_couverture: 0,
-        organismes_assurances: null,
-      },
-    ]
+    : isDemoMode
+      ? [
+        {
+          id: 'demo-1',
+          ipp: 'PAT-2610-001',
+          nom: 'Diallo',
+          prenom: 'Oumar',
+          date_naissance: '1990-06-12',
+          sexe: 'M',
+          groupe_sanguin: 'O+',
+          telephone: '+221 77 452 10 99',
+          taux_couverture: 80,
+          organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
+        },
+        {
+          id: 'demo-2',
+          ipp: 'PAT-2610-002',
+          nom: 'Sow',
+          prenom: 'Fatoumata',
+          date_naissance: '2021-03-14',
+          sexe: 'F',
+          groupe_sanguin: 'B+',
+          telephone: '+221 78 120 44 55',
+          taux_couverture: 0,
+          organismes_assurances: null,
+        },
+        {
+          id: 'demo-3',
+          ipp: 'PAT-2610-003',
+          nom: 'Ba',
+          prenom: 'Aïssatou',
+          date_naissance: '2001-08-05',
+          sexe: 'F',
+          groupe_sanguin: 'A-',
+          telephone: '+221 76 991 32 10',
+          taux_couverture: 100,
+          organismes_assurances: { nom: 'Ascoma Santé', type_organisme: 'assurance' },
+        },
+        {
+          id: 'demo-4',
+          ipp: 'PAT-2610-004',
+          nom: 'Ndiaye',
+          prenom: 'Cheikh',
+          date_naissance: '1974-11-20',
+          sexe: 'M',
+          groupe_sanguin: 'AB+',
+          telephone: '+221 70 882 14 30',
+          taux_couverture: 80,
+          organismes_assurances: { nom: 'IPM Port Autonome', type_organisme: 'ipm' },
+        },
+        {
+          id: 'demo-5',
+          ipp: 'PAT-2610-005',
+          nom: 'Traoré',
+          prenom: 'Aminata',
+          date_naissance: '1985-04-15',
+          sexe: 'F',
+          groupe_sanguin: 'O+',
+          telephone: '+221 77 600 22 11',
+          taux_couverture: 90,
+          organismes_assurances: { nom: 'Amsa Assurances', type_organisme: 'assurance' },
+        },
+      ]
+      : [
+        {
+          id: 'demo-1',
+          ipp: 'PAT-MOD-001',
+          nom: 'Diallo (Modèle)',
+          prenom: 'Aminata',
+          date_naissance: '1992-04-15',
+          sexe: 'F',
+          groupe_sanguin: 'O+',
+          telephone: '+221 77 452 10 99',
+          taux_couverture: 80,
+          organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
+        },
+        {
+          id: 'demo-2',
+          ipp: 'PAT-MOD-002',
+          nom: 'Sow (Modèle)',
+          prenom: 'Moussa',
+          date_naissance: '1985-11-20',
+          sexe: 'M',
+          groupe_sanguin: 'B+',
+          telephone: '+221 70 882 14 30',
+          taux_couverture: 0,
+          organismes_assurances: null,
+        },
+      ]
 
   const calculerAge = (dateStr?: string) => {
     if (!dateStr) return '—'

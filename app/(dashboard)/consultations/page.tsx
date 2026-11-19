@@ -25,11 +25,122 @@ export default async function ConsultationsPage(props: {
 
   const userRole = tenant?.role || 'medecin'
   const aDesConsultationsReelles = Boolean(consultations && consultations.length > 0)
+  const isDemoMode = Boolean(tenant?.isDemo)
 
-  // Données de secours / démo indicatives en filigrane si base neuve
+  // En mode démo : ensemble riche multi-spécialités. Si base neuve : 2 modèles en filigrane
   const consultationsAffichees = aDesConsultationsReelles
     ? consultations
-    : [
+    : isDemoMode
+      ? [
+        {
+          id: 'demo-cs-1',
+          numero_consultation: 'CS-EX-0012',
+          date_consultation: '2026-10-30',
+          type_consultation: 'generale',
+          motif: 'Fièvre, céphalées, courbatures depuis 48h',
+          diagnostic_principal: 'Accès palustre simple',
+          code_cim10: 'B54',
+          conduite_a_tenir: 'CTA 3 jours, paracétamol si fièvre > 38.5°C',
+          patients: {
+            nom: 'Diallo',
+            prenom: 'Oumar',
+            ipp: 'PAT-2610-001',
+            sexe: 'M',
+            date_naissance: '1990-06-12',
+          },
+          prescriptions: [
+            {
+              id: 'ord-1',
+              numero_ordonnance: 'ORD-EX-0012',
+              lignes_prescriptions: [
+                { id: 'l1', designation: 'Artéméther/Luméfantrine 20/120mg', posologie: '4 cp/j pendant 3j' },
+                { id: 'l2', designation: 'Paracétamol 1g comprimé', posologie: '1 cp toutes les 6h en cas de douleur/fièvre' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'demo-cs-2',
+          numero_consultation: 'CS-EX-0013',
+          date_consultation: '2026-10-29',
+          type_consultation: 'prenatale',
+          motif: 'Consultation prénatale du 3ème trimestre',
+          diagnostic_principal: 'Grossesse évolutive de 32 SA sans complication',
+          code_cim10: 'Z34.8',
+          conduite_a_tenir: 'Continuer fer/folates, repos, RDV échographie du T3',
+          patients: {
+            nom: 'Ba',
+            prenom: 'Aïssatou',
+            ipp: 'PAT-2610-003',
+            sexe: 'F',
+            date_naissance: '2001-08-05',
+          },
+          prescriptions: [
+            {
+              id: 'ord-2',
+              numero_ordonnance: 'ORD-EX-0013',
+              lignes_prescriptions: [
+                { id: 'l3', designation: 'Fer + Acide Folique', posologie: '1 comprimé par jour' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'demo-cs-3',
+          numero_consultation: 'CS-EX-0014',
+          date_consultation: '2026-10-28',
+          type_consultation: 'specialiste',
+          motif: 'Bilan de suivi annuel hypertension & diabète de type 2',
+          diagnostic_principal: 'Hypertension artérielle essentielle grade 1 équilibrée',
+          code_cim10: 'I10',
+          conduite_a_tenir: 'Renouvellement Amlodipine 10mg, régime hyposodé, bilan lipidique dans 6 mois',
+          patients: {
+            nom: 'Ndiaye',
+            prenom: 'Cheikh',
+            ipp: 'PAT-2610-004',
+            sexe: 'M',
+            date_naissance: '1974-11-20',
+          },
+          prescriptions: [
+            {
+              id: 'ord-3',
+              numero_ordonnance: 'ORD-EX-0014',
+              lignes_prescriptions: [
+                { id: 'l4', designation: 'Amlodipine 10mg', posologie: '1 comprimé le matin' },
+                { id: 'l5', designation: 'Metformine 1000mg', posologie: '1 comprimé midi et soir au milieu des repas' },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'demo-cs-4',
+          numero_consultation: 'CS-EX-0015',
+          date_consultation: '2026-10-28',
+          type_consultation: 'pediatrique',
+          motif: 'Toux quinteuse nocturne et rhinorrhée claire chez enfant de 5 ans',
+          diagnostic_principal: 'Rhinopharyngite virale aiguë non compliquée',
+          code_cim10: 'J00',
+          conduite_a_tenir: 'Lavages de nez au sérum physiologique 4x/j, hydratation abondante',
+          patients: {
+            nom: 'Sow',
+            prenom: 'Fatoumata',
+            ipp: 'PAT-2610-002',
+            sexe: 'F',
+            date_naissance: '2021-03-14',
+          },
+          prescriptions: [
+            {
+              id: 'ord-4',
+              numero_ordonnance: 'ORD-EX-0015',
+              lignes_prescriptions: [
+                { id: 'l6', designation: 'Sérum Physiologique unidoses', posologie: '1 dosette par narine 3 à 4 fois par jour' },
+                { id: 'l7', designation: 'Paracétamol sirop 2.4%', posologie: '1 dose-poids toutes les 6 heures si T° > 38.5°C' },
+              ],
+            },
+          ],
+        },
+      ]
+      : [
         {
           id: 'demo-cs-1',
           numero_consultation: 'CS-EX-0012',

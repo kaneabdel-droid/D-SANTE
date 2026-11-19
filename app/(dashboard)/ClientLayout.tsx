@@ -11,7 +11,7 @@ import {
   HeartPulse, LayoutDashboard, Users, Activity, Stethoscope,
   BedDouble, Syringe, Pill, Receipt, BookOpen, Wrench,
   UserCog, CreditCard, Settings, Menu, X, Bell, ChevronDown,
-  LogOut, ShieldAlert, Sparkles, Building2, Network, Smartphone
+  LogOut, ShieldAlert, Sparkles, Building2, Network, Smartphone, ArrowRight
 } from 'lucide-react'
 
 type NavItem = {
@@ -145,8 +145,8 @@ export default function ClientLayout({
             {structureType.replace('_', ' ')}
           </span>
           <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[9px] ${isDemo
-              ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
-              : 'bg-primary/10 text-primary'
+            ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30'
+            : 'bg-primary/10 text-primary'
             }`}>
             {isDemo ? 'Démo Intégrale' : subscriptionTier}
           </span>
@@ -166,8 +166,8 @@ export default function ClientLayout({
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${active
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'text-foreground-muted hover:text-foreground hover:bg-black/5'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-foreground-muted hover:text-foreground hover:bg-black/5'
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -281,6 +281,50 @@ export default function ClientLayout({
             </Link>
           </div>
         </header>
+
+        {isDemo && (
+          <div className="bg-emerald-950/80 border-b border-emerald-800/60 px-4 py-2.5 text-xs text-emerald-200 flex flex-wrap items-center justify-between gap-3 shadow-inner">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-emerald-400 shrink-0 animate-pulse" />
+              <span className="font-bold text-white">
+                Démonstration Médicale Interactive • {structureName}
+              </span>
+              <span className="hidden md:inline text-emerald-300/80 text-[11px]">
+                (Licence Hôpital Débloquée • DPI, Triage, Hospitalisation, Pharmacie & Caisse IPM)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-emerald-300 hidden sm:inline">Tester par rôle :</span>
+              <div className="flex items-center gap-1">
+                {[
+                  { r: 'medecin', l: 'Médecin' },
+                  { r: 'infirmier', l: 'Infirmier / Triage' },
+                  { r: 'pharmacien', l: 'Pharmacie' },
+                  { r: 'caissier', l: 'Caisse IPM' },
+                  { r: 'directeur', l: 'Direction' },
+                ].map((item) => (
+                  <a
+                    key={item.r}
+                    href={`/demo?role=${item.r}`}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${role === item.r
+                        ? 'bg-emerald-500 text-slate-950 shadow-xs'
+                        : 'bg-emerald-900/60 text-emerald-200 hover:bg-emerald-800'
+                      }`}
+                  >
+                    {item.l}
+                  </a>
+                ))}
+              </div>
+              <Link
+                href="/signup"
+                className="ms-2 px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs shadow-md transition-all flex items-center gap-1"
+              >
+                <span>Créer mon compte</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* Page Content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">

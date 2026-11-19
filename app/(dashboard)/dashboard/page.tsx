@@ -111,10 +111,10 @@ export default async function DashboardPage() {
         id: 'fac-1',
         numero_facture: 'FAC-2026-089',
         montant_regle_patient: 45000,
-        mode_reglement: 'Wave',
+        mode_reglement: 'Wave Direct (0%)',
         date_facture: new Date().toISOString(),
         created_at: new Date().toISOString(),
-        patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-001' },
+        patients: { nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2610-001' },
       },
       {
         id: 'fac-2',
@@ -123,13 +123,33 @@ export default async function DashboardPage() {
         mode_reglement: 'Espèces',
         date_facture: new Date().toISOString(),
         created_at: new Date().toISOString(),
-        patients: { nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-004' },
+        patients: { nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-2610-002' },
+      },
+      {
+        id: 'fac-3',
+        numero_facture: 'FAC-2026-087',
+        montant_regle_patient: 35000,
+        mode_reglement: 'TPE Carte Bancaire',
+        date_facture: new Date().toISOString(),
+        created_at: new Date(Date.now() - 7200000).toISOString(),
+        patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-2610-003' },
+      },
+      {
+        id: 'fac-4',
+        numero_facture: 'FAC-2026-086',
+        montant_regle_patient: 18500,
+        mode_reglement: 'Orange Money Direct (0%)',
+        date_facture: new Date().toISOString(),
+        created_at: new Date(Date.now() - 14400000).toISOString(),
+        patients: { nom: 'Ndiaye', prenom: 'Cheikh', ipp: 'PAT-2610-004' },
       },
     ]
 
     recentsPatients = [
-      { id: '1', nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2611-001', telephone: '+221 77 452 10 99', created_at: new Date().toISOString() },
-      { id: '2', nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-2611-002', telephone: '+221 78 120 44 55', created_at: new Date(Date.now() - 3600000).toISOString() },
+      { id: '1', nom: 'Diallo', prenom: 'Oumar', ipp: 'PAT-2610-001', telephone: '+221 77 452 10 99', created_at: new Date().toISOString() },
+      { id: '2', nom: 'Sow', prenom: 'Fatoumata', ipp: 'PAT-2610-002', telephone: '+221 78 120 44 55', created_at: new Date(Date.now() - 3600000).toISOString() },
+      { id: '3', nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-2610-003', telephone: '+221 76 991 32 10', created_at: new Date(Date.now() - 7200000).toISOString() },
+      { id: '4', nom: 'Ndiaye', prenom: 'Cheikh', ipp: 'PAT-2610-004', telephone: '+221 70 882 14 30', created_at: new Date(Date.now() - 14400000).toISOString() },
     ]
   }
 

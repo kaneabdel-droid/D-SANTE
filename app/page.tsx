@@ -127,7 +127,7 @@ export default async function HomePage() {
               <a href="#modules" className="hover:text-primary transition-colors">
                 {t.nav_modules}
               </a>
-              <Link href="/decouvrir-dsante" className="hover:text-primary transition-colors flex items-center gap-1">
+              <Link href="/demo" className="hover:text-primary transition-colors flex items-center gap-1 font-bold text-primary">
                 <Sparkles className="w-3.5 h-3.5 text-primary" />
                 <span>{t.nav_demo}</span>
               </Link>
@@ -189,8 +189,8 @@ export default async function HomePage() {
             </Link>
 
             <Link
-              href="/decouvrir-dsante"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl border border-surface-border bg-surface hover:bg-surface-hover text-foreground font-bold text-sm transition-all flex items-center justify-center gap-2"
+              href="/demo"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-xs"
             >
               <Sparkles className="w-4 h-4 text-primary" />
               <span>{t.hero_btn_demo}</span>
@@ -389,7 +389,8 @@ export default async function HomePage() {
           <div className="flex items-center gap-6">
             <Link href="/guide" className="hover:text-foreground">{t.nav_guide}</Link>
             <Link href="/tarifs" className="hover:text-foreground">{t.nav_pricing}</Link>
-            <Link href="/decouvrir-dsante" className="hover:text-foreground">{t.nav_demo}</Link>
+            <Link href="/demo" className="hover:text-foreground font-semibold text-primary">{t.nav_demo}</Link>
+            <Link href="/decouvrir-dsante" className="hover:text-foreground">Présentation</Link>
             <Link href="/espace-patient" className="hover:text-foreground">{t.nav_patient_portal}</Link>
             <Link href="/login" className="hover:text-foreground">{t.nav_login}</Link>
           </div>

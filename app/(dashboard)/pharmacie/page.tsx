@@ -19,51 +19,133 @@ export default async function PharmaciePage(props: {
   ])
   const userRole = tenant?.role || 'pharmacien'
   const aDesStocksReels = Boolean(stocks && stocks.length > 0)
+  const isDemoMode = Boolean(tenant?.isDemo)
 
-  // Données indicatives d'exemple en filigrane si base neuve (1 ou 2 modèles max)
+  // En mode démo : pharmacie hospitalière complète. Si compte réel neuf : 2 modèles en filigrane
   const stocksAffiches = aDesStocksReels
     ? stocks
-    : [
-      {
-        id: 'med-1',
-        code_medicament: 'MED-EX-001',
-        dci: 'Paracétamol',
-        nom_commercial: 'Doliprane',
-        forme: 'comprime',
-        dosage: '1000 mg',
-        quantite_en_stock: 140,
-        seuil_alerte: 20,
-        prix_vente: 1500,
-        numero_lot: 'LT-88102',
-        date_peremption: '2027-08-30',
-      },
-      {
-        id: 'med-2',
-        code_medicament: 'MED-EX-002',
-        dci: 'Amoxicilline',
-        nom_commercial: 'Clamoxyl',
-        forme: 'gellule',
-        dosage: '500 mg',
-        quantite_en_stock: 12,
-        seuil_alerte: 15,
-        prix_vente: 3200,
-        numero_lot: 'LT-77401',
-        date_peremption: '2026-12-15',
-      },
-    ]
+    : isDemoMode
+      ? [
+        {
+          id: 'med-1',
+          code_medicament: 'MED-EX-001',
+          dci: 'Paracétamol',
+          nom_commercial: 'Doliprane',
+          forme: 'comprime',
+          dosage: '1000 mg',
+          quantite_en_stock: 140,
+          seuil_alerte: 20,
+          prix_vente: 1500,
+          numero_lot: 'LT-88102',
+          date_peremption: '2027-08-30',
+        },
+        {
+          id: 'med-2',
+          code_medicament: 'MED-EX-002',
+          dci: 'Amoxicilline',
+          nom_commercial: 'Clamoxyl',
+          forme: 'gellule',
+          dosage: '500 mg',
+          quantite_en_stock: 12,
+          seuil_alerte: 15,
+          prix_vente: 3200,
+          numero_lot: 'LT-77401',
+          date_peremption: '2026-12-15',
+        },
+        {
+          id: 'med-3',
+          code_medicament: 'MED-EX-003',
+          dci: 'Sérum Physiologique NaCl 0.9%',
+          nom_commercial: 'Perfusion Salée',
+          forme: 'flacon',
+          dosage: '500 ml',
+          quantite_en_stock: 85,
+          seuil_alerte: 25,
+          prix_vente: 2000,
+          numero_lot: 'LT-99210',
+          date_peremption: '2028-01-30',
+        },
+        {
+          id: 'med-4',
+          code_medicament: 'MED-EX-004',
+          dci: 'Artéméther injectable',
+          nom_commercial: 'Paluther',
+          forme: 'ampoule',
+          dosage: '80 mg/ml',
+          quantite_en_stock: 35,
+          seuil_alerte: 10,
+          prix_vente: 4500,
+          numero_lot: 'LT-45012',
+          date_peremption: '2027-05-15',
+        },
+        {
+          id: 'med-5',
+          code_medicament: 'MED-EX-005',
+          dci: 'Ciprofloxacine',
+          nom_commercial: 'Ciflox',
+          forme: 'comprime',
+          dosage: '500 mg',
+          quantite_en_stock: 48,
+          seuil_alerte: 15,
+          prix_vente: 4000,
+          numero_lot: 'LT-33091',
+          date_peremption: '2027-11-20',
+        },
+        {
+          id: 'med-6',
+          code_medicament: 'DISP-EX-001',
+          dci: 'Gants Stériles à Usage Unique',
+          nom_commercial: 'Gants Latex T7.5',
+          forme: 'autre',
+          dosage: 'Taille 7.5',
+          quantite_en_stock: 220,
+          seuil_alerte: 50,
+          prix_vente: 500,
+          numero_lot: 'LT-00982',
+          date_peremption: '2029-03-31',
+        },
+      ]
+      : [
+        {
+          id: 'med-1',
+          code_medicament: 'MED-EX-001',
+          dci: 'Paracétamol',
+          nom_commercial: 'Doliprane',
+          forme: 'comprime',
+          dosage: '1000 mg',
+          quantite_en_stock: 140,
+          seuil_alerte: 20,
+          prix_vente: 1500,
+          numero_lot: 'LT-88102',
+          date_peremption: '2027-08-30',
+        },
+        {
+          id: 'med-2',
+          code_medicament: 'MED-EX-002',
+          dci: 'Amoxicilline',
+          nom_commercial: 'Clamoxyl',
+          forme: 'gellule',
+          dosage: '500 mg',
+          quantite_en_stock: 12,
+          seuil_alerte: 15,
+          prix_vente: 3200,
+          numero_lot: 'LT-77401',
+          date_peremption: '2026-12-15',
+        },
+      ]
 
   const formatCFA = (montant: number) =>
     new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(montant) + ' FCFA'
 
-  // Calcul KPI (sans impact si en filigrane)
-  const valeurStockTotale = aDesStocksReels
+  // Calcul KPI (actif en mode réel ou démo)
+  const valeurStockTotale = (aDesStocksReels || isDemoMode)
     ? stocksAffiches.reduce(
       (acc: number, m: any) => acc + (Number(m.quantite_en_stock) * Number(m.prix_vente)),
       0
     )
     : 0
 
-  const articlesEnAlerte = aDesStocksReels
+  const articlesEnAlerte = (aDesStocksReels || isDemoMode)
     ? stocksAffiches.filter(
       (m: any) => Number(m.quantite_en_stock) <= Number(m.seuil_alerte)
     ).length
@@ -188,8 +270,8 @@ export default async function PharmaciePage(props: {
                   <tr
                     key={m.id}
                     className={`transition-colors ${!aDesStocksReels
-                        ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
-                        : 'hover:bg-background/40'
+                      ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
+                      : 'hover:bg-background/40'
                       }`}
                   >
                     {/* DCI & Nom */}

@@ -8,6 +8,7 @@ const PUBLIC_PREFIXES = [
   "/signup",
   "/mot-de-passe-oublie",
   "/auth",
+  "/demo",
   "/api",
   "/robots.txt",
   "/favicon.ico",
@@ -81,9 +82,14 @@ export async function updateSession(request: NextRequest) {
 
   const { data: sessionData } = await supabase.auth.getUser();
   const connecte = Boolean(sessionData?.user);
+  const aSessionDemo = Boolean(
+    request.cookies.get("dsante_demo_role")?.value ||
+    request.cookies.get("dsante_demo_session")?.value === "1"
+  );
+  const estAutorise = connecte || aSessionDemo;
   const estPublic = pathname === "/" || PUBLIC_PREFIXES.some((p) => pathname.startsWith(p));
 
-  if (!connecte && !estPublic) {
+  if (!estAutorise && !estPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

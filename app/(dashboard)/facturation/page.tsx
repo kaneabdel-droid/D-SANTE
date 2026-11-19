@@ -1,6 +1,5 @@
 import { getFactures } from './actions'
 import { getPatients, getOrganismesAssurances } from '../patients/actions'
-import { getTenantContext } from '@/utils/supabase/tenant'
 import NouvelleFactureModal from './NouvelleFactureModal'
 import FacturationRowActions from './FacturationRowActions'
 import {
@@ -14,49 +13,61 @@ export default async function FacturationPage(props: {
   const searchParams = await props.searchParams
   const selectedStatut = searchParams.statut || 'tous'
 
-  const [{ factures }, { patients }, { organismes }, tenant] = await Promise.all([
+  const [{ factures }, { patients }, { organismes }] = await Promise.all([
     getFactures(selectedStatut),
     getPatients(),
     getOrganismesAssurances(),
-    getTenantContext(),
   ])
 
-  const userRole = tenant?.role || 'caissier'
   const aDesFacturesReelles = Boolean(factures && factures.length > 0)
 
-  // 1 ou 2 modèles d'exemple seulement en filigrane si la structure est neuve
+  // Données de secours / démo indicatives en filigrane si base neuve
   const facturesAffichees = aDesFacturesReelles
     ? factures
     : [
-        {
-          id: 'fac-1',
-          numero_facture: 'FAC-MOD-001',
-          date_facture: '2026-10-30',
-          montant_total_brut: 15000,
-          part_patient: 3000,
-          part_assurance: 12000,
-          montant_regle_patient: 3000,
-          statut_paiement_patient: 'paye',
-          statut_paiement_assurance: 'en_attente',
-          moyen_paiement: 'wave',
-          patients: { nom: 'Diallo', prenom: 'Aminata', ipp: 'PAT-MOD-001' },
-          organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
-        },
-        {
-          id: 'fac-2',
-          numero_facture: 'FAC-MOD-002',
-          date_facture: '2026-10-30',
-          montant_total_brut: 5000,
-          part_patient: 5000,
-          part_assurance: 0,
-          montant_regle_patient: 0,
-          statut_paiement_patient: 'en_attente',
-          statut_paiement_assurance: 'exonere',
-          moyen_paiement: 'especes',
-          patients: { nom: 'Sow', prenom: 'Moussa', ipp: 'PAT-MOD-002' },
-          organismes_assurances: null,
-        },
-      ]
+      {
+        id: 'fac-1',
+        numero_facture: 'FAC-EX-0091',
+        date_facture: '2026-10-30',
+        montant_total_brut: 15000,
+        part_patient: 3000,
+        part_assurance: 12000,
+        montant_regle_patient: 3000,
+        statut_paiement_patient: 'paye',
+        statut_paiement_assurance: 'en_attente',
+        moyen_paiement: 'wave',
+        patients: { nom: 'Diallo', prenom: 'Aminata', ipp: 'PAT-EX-001' },
+        organismes_assurances: { nom: 'IPM Sonatel', type_organisme: 'ipm' },
+      },
+      {
+        id: 'fac-2',
+        numero_facture: 'FAC-EX-0092',
+        date_facture: '2026-10-30',
+        montant_total_brut: 5000,
+        part_patient: 5000,
+        part_assurance: 0,
+        montant_regle_patient: 5000,
+        statut_paiement_patient: 'paye',
+        statut_paiement_assurance: 'exonere',
+        moyen_paiement: 'especes',
+        patients: { nom: 'Sow', prenom: 'Moussa', ipp: 'PAT-EX-002' },
+        organismes_assurances: null,
+      },
+      {
+        id: 'fac-3',
+        numero_facture: 'FAC-EX-0093',
+        date_facture: '2026-10-29',
+        montant_total_brut: 45000,
+        part_patient: 22500,
+        part_assurance: 22500,
+        montant_regle_patient: 0,
+        statut_paiement_patient: 'en_attente',
+        statut_paiement_assurance: 'en_attente',
+        moyen_paiement: 'especes',
+        patients: { nom: 'Ba', prenom: 'Aïssatou', ipp: 'PAT-EX-003' },
+        organismes_assurances: { nom: 'CMU Sénégal', type_organisme: 'cmu' },
+      },
+    ]
 
   const formatCFA = (montant: number) =>
     new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(montant) + ' FCFA'
@@ -68,14 +79,14 @@ export default async function FacturationPage(props: {
 
   const totalCreancesTiersPayant = aDesFacturesReelles
     ? facturesAffichees
-        .filter((f: any) => f.statut_paiement_assurance === 'en_attente')
-        .reduce((acc: number, f: any) => acc + Number(f.part_assurance || 0), 0)
+      .filter((f: any) => f.statut_paiement_assurance === 'en_attente')
+      .reduce((acc: number, f: any) => acc + Number(f.part_assurance || 0), 0)
     : 0
 
   const totalResteARecouvrer = aDesFacturesReelles
     ? facturesAffichees
-        .filter((f: any) => f.statut_paiement_patient !== 'paye')
-        .reduce((acc: number, f: any) => acc + (Number(f.part_patient || 0) - Number(f.montant_regle_patient || 0)), 0)
+      .filter((f: any) => f.statut_paiement_patient !== 'paye')
+      .reduce((acc: number, f: any) => acc + (Number(f.part_patient || 0) - Number(f.montant_regle_patient || 0)), 0)
     : 0
 
   return (
@@ -169,11 +180,10 @@ export default async function FacturationPage(props: {
                 return (
                   <tr
                     key={f.id}
-                    className={`transition-colors ${
-                      !aDesFacturesReelles
-                        ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
-                        : 'hover:bg-background/40'
-                    }`}
+                    className={`transition-colors ${!aDesFacturesReelles
+                      ? 'opacity-70 bg-amber-500/5 hover:bg-amber-500/10'
+                      : 'hover:bg-background/40'
+                      }`}
                   >
                     {/* Facture & Date */}
                     <td className="py-3.5 px-4">
@@ -237,9 +247,8 @@ export default async function FacturationPage(props: {
 
                     {/* Statut Paiement */}
                     <td className="py-3.5 px-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                        estPaye ? 'bg-emerald-500/10 text-emerald-600' : 'bg-danger/10 text-danger'
-                      }`}>
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${estPaye ? 'bg-emerald-500/10 text-emerald-600' : 'bg-danger/10 text-danger'
+                        }`}>
                         {estPaye ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                         {estPaye ? 'Encaissé' : 'En attente'}
                       </span>
@@ -249,9 +258,7 @@ export default async function FacturationPage(props: {
                     <td className="py-3.5 px-4 text-right">
                       <FacturationRowActions
                         facture={f}
-                        organismes={organismes || []}
                         isExempleFiligrane={!aDesFacturesReelles}
-                        role={userRole}
                       />
                     </td>
                   </tr>
